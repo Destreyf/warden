@@ -26,6 +26,8 @@ export function validateActionLayout(options: ValidateActionLayoutOptions): stri
   if (options.requireDist) {
     expectFile(join(options.repoRoot, 'dist/action/index.js'), errors);
     expectFile(join(options.repoRoot, 'dist/action/package.json'), errors);
+    expectFile(join(options.repoRoot, 'dist/action/src/builtin-skills/code-review/SKILL.md'), errors);
+    expectFile(join(options.repoRoot, 'dist/action/src/builtin-skills/security-review/SKILL.md'), errors);
   }
 
   return errors;

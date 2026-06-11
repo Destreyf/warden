@@ -197,6 +197,23 @@ describe('BUILTIN_SKILL_DIRECTORIES', () => {
     expect(resolvePackageRootCandidates()).toContain(join(monorepoRoot, 'packages', 'warden'));
   });
 
+  it('includes bundled action assets under GITHUB_ACTION_PATH', () => {
+    const previousActionPath = process.env['GITHUB_ACTION_PATH'];
+    const actionPath = mkdtempSync(join(tmpdir(), 'warden-action-path-'));
+    try {
+      process.env['GITHUB_ACTION_PATH'] = actionPath;
+
+      expect(resolvePackageRootCandidates()).toContain(join(actionPath, 'dist', 'action'));
+    } finally {
+      if (previousActionPath === undefined) {
+        delete process.env['GITHUB_ACTION_PATH'];
+      } else {
+        process.env['GITHUB_ACTION_PATH'] = previousActionPath;
+      }
+      rmSync(actionPath, { recursive: true, force: true });
+    }
+  });
+
   it('does not trust cwd package-shaped paths as new built-in skill names', async () => {
     const cwd = process.cwd();
     const repoRoot = mkdtempSync(join(tmpdir(), 'warden-fake-builtin-'));

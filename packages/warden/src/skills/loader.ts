@@ -94,10 +94,13 @@ export function resolveSkillPath(nameOrPath: string, repoRoot?: string): string 
 export function resolvePackageRootCandidates(): string[] {
   const __filename = fileURLToPath(import.meta.url);
   const moduleRoot = join(dirname(__filename), '..', '..');
+  const actionPath = process.env['GITHUB_ACTION_PATH'];
   const candidates = [
     moduleRoot,
     join(moduleRoot, 'packages', 'warden'),
-    process.env['GITHUB_ACTION_PATH'] ? join(process.env['GITHUB_ACTION_PATH'], 'packages', 'warden') : undefined,
+    join(moduleRoot, 'dist', 'action'),
+    actionPath ? join(actionPath, 'dist', 'action') : undefined,
+    actionPath ? join(actionPath, 'packages', 'warden') : undefined,
     join(process.cwd(), 'packages', 'warden'),
   ].filter((candidate): candidate is string => candidate !== undefined);
 
@@ -175,7 +178,7 @@ export async function loadSkillFromMarkdown(
   filePath: string,
   options?: LoadSkillFromMarkdownOptions
 ): Promise<SkillDefinition> {
-  let meta;
+  let meta: Awaited<ReturnType<typeof loadSkillMd>>;
   try {
     meta = await loadSkillMd(filePath, { onWarning: options?.onWarning });
   } catch (err) {
