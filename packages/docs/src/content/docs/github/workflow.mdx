@@ -162,6 +162,42 @@ reporting inputs such as `fail-on`, `report-on`, `request-changes`,
 Report mode reads config again from the checkout and applies the report step's
 inputs; the findings file does not store a copy of `warden.toml`.
 
+## Incremental Runs
+
+Set `incremental: true` to analyze only files changed since the last completed
+incremental Warden run on the same pull request. The first incremental run, or a
+run after relevant action/config settings change, analyzes the full pull request.
+Later runs use the local git delta from the previous Warden head SHA to the
+current head SHA.
+
+Incremental mode only updates Warden comments in files included in the current
+delta. Existing Warden comments on untouched files stay in place. If a clean
+incremental run needs to dismiss a previous Warden changes-requested review,
+Warden first checks that no Warden-owned review threads remain unresolved.
+
+Use full checkout history so Warden can compare against the previous run:
+
+```yaml title=".github/workflows/warden.yml"
+- uses: actions/checkout@v4
+  with:
+    ref: ${{ github.event.pull_request.head.sha }}
+    fetch-depth: 0
+
+- name: Analyze
+  id: warden-analyze
+  uses: getsentry/warden@v0
+  with:
+    mode: analyze
+    incremental: true
+
+- name: Report
+  uses: getsentry/warden@v0
+  with:
+    mode: report
+    findings-file: ${{ steps.warden-analyze.outputs.findings-file }}
+    incremental: true
+```
+
 ## Required Status Checks
 
 If Warden is a required status check, require the core `warden` check or a
@@ -265,5 +301,12 @@ that do not actually run for the current event complete as neutral.
       <span class="sentry-property-meta">number</span>
     </dt>
     <dd>Maximum concurrent matched trigger executions and file analyses unless <code>runner.concurrency</code> is set. Default: <code>5</code>.</dd>
+  </div>
+  <div>
+    <dt>
+      <code>incremental</code>
+      <span class="sentry-property-meta">boolean</span>
+    </dt>
+    <dd>Analyze only changes since the last completed incremental Warden run on the same pull request. Requires <code>actions/checkout</code> with <code>fetch-depth: 0</code> after the first run. Default: <code>false</code>.</dd>
   </div>
 </dl>

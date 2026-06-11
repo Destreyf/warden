@@ -3,6 +3,7 @@ import type { EventContext, SkillReport } from '../../types/index.js';
 import {
   AuxiliaryUsageMapSchema,
   FindingSchema,
+  FileReportSchema,
   GitHubEventTypeSchema,
   LocationSchema,
   SkillErrorSchema,
@@ -44,8 +45,19 @@ const ReplaySkillReportSchema = z.object({
   durationMs: z.number().nonnegative().optional(),
   usage: UsageStatsSchema.optional(),
   auxiliaryUsage: AuxiliaryUsageMapSchema.optional(),
+  files: z.array(FileReportSchema).optional(),
   model: z.string().optional(),
 });
+
+export const IncrementalOutputSchema = z.object({
+  enabled: z.boolean(),
+  mode: z.enum(['full', 'delta']),
+  previousHeadSha: z.string().optional(),
+  headSha: z.string(),
+  configFingerprint: z.string().optional(),
+  files: z.array(z.string()),
+});
+export type IncrementalOutput = z.infer<typeof IncrementalOutputSchema>;
 
 export const TriggerRunResultSchema = z.discriminatedUnion('status', [
   TriggerRunResultBaseSchema.extend({
@@ -100,6 +112,7 @@ export const FindingsOutputSchema = z.object({
   })),
   triggerResults: z.array(TriggerRunResultSchema).optional(),
   findingObservations: z.array(FindingObservationSchema),
+  incremental: IncrementalOutputSchema.optional(),
 });
 
 export type FindingsOutput = z.infer<typeof FindingsOutputSchema>;
@@ -116,6 +129,7 @@ interface BuildFindingsOutputOptions {
   timestamp?: string;
   runId?: string;
   triggerResults?: ReplayTriggerResult[];
+  incremental?: IncrementalOutput;
 }
 
 function serializeTriggerError(error: unknown): z.infer<typeof TriggerErrorSchema> {
@@ -137,6 +151,7 @@ function serializeReplayReport(report: SkillReport): z.infer<typeof ReplaySkillR
     durationMs: report.durationMs,
     usage: report.usage,
     auxiliaryUsage: report.auxiliaryUsage,
+    files: report.files,
     model: report.model,
   };
 }
@@ -222,6 +237,7 @@ export function buildFindingsOutput(
       triggerResults: options.triggerResults.map(serializeTriggerResult),
     }),
     findingObservations,
+    ...(options.incremental && { incremental: options.incremental }),
   };
 
   return FindingsOutputSchema.parse(output);

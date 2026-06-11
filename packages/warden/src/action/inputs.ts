@@ -39,6 +39,8 @@ export interface ActionInputs {
   failCheck?: boolean;
   /** Max concurrent trigger executions */
   parallel: number;
+  /** Only analyze changes since the last completed incremental run */
+  incremental: boolean;
 }
 
 // -----------------------------------------------------------------------------
@@ -67,6 +69,16 @@ function parseBooleanInput(value: string): boolean | undefined {
   if (value === 'true') return true;
   if (value === 'false') return false;
   return undefined;
+}
+
+function parseRequiredBooleanInput(name: string, fallback: boolean): boolean {
+  const value = getInput(name);
+  if (!value) return fallback;
+  const parsed = parseBooleanInput(value);
+  if (parsed === undefined) {
+    throw new Error(`Invalid ${name} value "${value}". Expected true or false.`);
+  }
+  return parsed;
 }
 
 function parseModeInput(value: string): ActionMode {
@@ -127,6 +139,7 @@ export function parseActionInputs(): ActionInputs {
     requestChanges,
     failCheck,
     parallel: Number.isNaN(parallelParsed) ? DEFAULT_CONCURRENCY : parallelParsed,
+    incremental: parseRequiredBooleanInput('incremental', false),
   };
 }
 

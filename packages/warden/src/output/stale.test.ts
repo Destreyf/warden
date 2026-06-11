@@ -186,6 +186,23 @@ describe('findStaleComments', () => {
     expect(stale[0]!.id).toBe(1);
   });
 
+  it('ignores comments outside analyzed scope when requested', () => {
+    const comments: ExistingComment[] = [
+      {
+        id: 1,
+        path: 'src/other.ts',
+        line: 42,
+        title: 'Some Issue',
+        description: 'Description',
+        contentHash: 'abc12345',
+        threadId: 'thread-1',
+      },
+    ];
+
+    const stale = findStaleComments(comments, [], scope, { outOfScope: 'ignore' });
+    expect(stale).toHaveLength(0);
+  });
+
   it('matches findings within 5 lines of comment', () => {
     const comments: ExistingComment[] = [
       {

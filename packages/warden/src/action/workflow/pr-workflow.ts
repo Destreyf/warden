@@ -23,7 +23,7 @@ import type {
   LoadedLayeredConfig,
   ResolvedTrigger,
 } from '../../config/loader.js';
-import { buildEventContext } from '../../event/context.js';
+import { buildEventContext, fetchPullRequestFiles } from '../../event/context.js';
 import { matchTrigger, shouldFail, countFindingsAtOrAbove } from '../../triggers/matcher.js';
 import { fetchExistingComments } from '../../output/dedup.js';
 import type { ExistingComment } from '../../output/dedup.js';
@@ -82,8 +82,16 @@ import { renderSkillReport } from '../../output/renderer.js';
 import {
   FindingsOutputSchema,
   type FindingsOutput,
+  type IncrementalOutput,
   type ReplayTriggerResult,
 } from '../reporting/output.js';
+import {
+  buildMutationScope,
+  incrementalExternalId,
+  resolveIncrementalState,
+  type CommentMutationScope,
+  type IncrementalState,
+} from '../incremental.js';
 
 // -----------------------------------------------------------------------------
 // Phase Result Types
@@ -95,6 +103,7 @@ interface InitResult {
   auxiliaryOptions: AuxiliaryWorkflowOptions;
   matchedTriggers: ResolvedTrigger[];
   skippedTriggers: ResolvedTrigger[];
+  incremental: IncrementalState;
   skipCoreCheck?: SkippedCoreCheck;
 }
 
@@ -111,6 +120,7 @@ interface ReviewPhaseResult {
   findingObservations: FindingObservation[];
   shouldFailAction: boolean;
   failureReasons: string[];
+  allWardenCommentsResolved: boolean;
 }
 
 interface FixEvaluationCommentGroups {
@@ -172,6 +182,85 @@ function checkOptionsForPullRequest(context: EventContext): CheckOptions | undef
     owner: context.repository.owner,
     repo: context.repository.name,
     headSha: context.pullRequest.headSha,
+  };
+}
+
+function incrementalOutput(incremental: IncrementalState): IncrementalOutput | undefined {
+  if (!incremental.enabled) {
+    return undefined;
+  }
+  return {
+    enabled: true,
+    mode: incremental.mode,
+    previousHeadSha: incremental.previousHeadSha,
+    headSha: incremental.headSha,
+    configFingerprint: incremental.configFingerprint,
+    files: [...incremental.mutationScope.files].sort(),
+  };
+}
+
+function writeWorkflowFindingsOutput(
+  reports: SkillReport[],
+  context: EventContext,
+  findingObservations: FindingObservation[],
+  incremental: IncrementalState,
+  triggerResults?: ReplayTriggerResult[]
+): string {
+  const incrementalMetadata = incrementalOutput(incremental);
+  const options = {
+    ...(triggerResults ? { triggerResults } : {}),
+    ...(incrementalMetadata ? { incremental: incrementalMetadata } : {}),
+  };
+  return Object.keys(options).length > 0
+    ? writeFindingsOutput(reports, context, findingObservations, options)
+    : writeFindingsOutput(reports, context, findingObservations);
+}
+
+function applyPullRequestFiles(context: EventContext, files: NonNullable<EventContext['pullRequest']>['files']): EventContext {
+  if (!context.pullRequest) {
+    return context;
+  }
+  return {
+    ...context,
+    pullRequest: {
+      ...context.pullRequest,
+      files,
+    },
+  };
+}
+
+function isCommentInScope(comment: ExistingComment, scope: CommentMutationScope): boolean {
+  if (scope.kind === 'full') {
+    return true;
+  }
+  return scope.files.has(comment.path);
+}
+
+function filterCommentsByScope(
+  comments: ExistingComment[],
+  scope: CommentMutationScope
+): ExistingComment[] {
+  if (scope.kind === 'full') {
+    return comments;
+  }
+  return comments.filter((comment) => isCommentInScope(comment, scope));
+}
+
+function scopeFromReports(
+  fallback: CommentMutationScope,
+  reports: SkillReport[]
+): CommentMutationScope {
+  if (fallback.kind === 'full') {
+    return fallback;
+  }
+  const files = reports.flatMap((report) => report.files?.map((file) => file.filename) ?? []);
+  if (files.length === 0) {
+    return fallback;
+  }
+  return {
+    kind: 'incremental',
+    files: new Set(files),
+    allowOutOfScopeStale: false,
   };
 }
 
@@ -294,7 +383,9 @@ async function initializeWorkflow(
 
   let context: EventContext;
   try {
-    context = await buildEventContext(eventName, eventPayload, repoPath, octokit);
+    context = await buildEventContext(eventName, eventPayload, repoPath, octokit, {
+      skipPullRequestFiles: inputs.incremental,
+    });
   } catch (error) {
     Sentry.captureException(error, { tags: { operation: 'build_event_context' } });
     setFailed(`Failed to build event context: ${error}`);
@@ -314,6 +405,13 @@ async function initializeWorkflow(
   let runnerConcurrency: number | undefined;
   let auxiliaryOptions: AuxiliaryWorkflowOptions = { runtime: 'pi' };
   let skillRootsByName: LayeredSkillRootsByName | undefined;
+  let incremental: IncrementalState = {
+    enabled: inputs.incremental,
+    mode: 'full',
+    headSha: context.pullRequest?.headSha ?? '',
+    files: context.pullRequest?.files ?? [],
+    mutationScope: buildMutationScope('full', context.pullRequest?.files ?? []),
+  };
   try {
     const layered = loadLayeredWardenConfig(repoPath, {
       baseConfigPath: inputs.baseConfigPath,
@@ -330,6 +428,51 @@ async function initializeWorkflow(
     auxiliaryOptions = resolveWorkflowAuxiliaryOptions(layered);
     skillRootsByName = buildSkillRootsByName(repoPath, layered, inputs.baseSkillRoot);
     const resolvedTriggers = resolveLayeredSkillConfigs(layered, undefined, skillRootsByName);
+    if (context.pullRequest && inputs.incremental) {
+      incremental = await resolveIncrementalState({
+        octokit,
+        owner: context.repository.owner,
+        repo: context.repository.name,
+        pullNumber: context.pullRequest.number,
+        repoPath,
+        headSha: context.pullRequest.headSha,
+        fullFiles: [],
+        inputs,
+        triggers: resolvedTriggers,
+      });
+
+      if (incremental.mode === 'full' && incremental.files.length === 0) {
+        const files = await fetchPullRequestFiles(
+          octokit,
+          context.repository.owner,
+          context.repository.name,
+          context.pullRequest.number
+        );
+        incremental = {
+          ...incremental,
+          files,
+          mutationScope: buildMutationScope('full', files),
+        };
+      }
+
+      context = applyPullRequestFiles(context, incremental.files);
+      if (incremental.mode === 'delta') {
+        logAction(
+          `Incremental run: analyzing ${incremental.files.length} files changed since ${incremental.previousHeadSha}`
+        );
+      } else {
+        logAction('Incremental run: no reusable baseline found, analyzing full PR diff');
+      }
+    } else {
+      incremental = {
+        enabled: false,
+        mode: 'full',
+        headSha: context.pullRequest?.headSha ?? '',
+        files: context.pullRequest?.files ?? [],
+        mutationScope: buildMutationScope('full', context.pullRequest?.files ?? []),
+      };
+    }
+
     const matchedTriggers = resolvedTriggers.filter((t) => matchTrigger(t, context, 'github'));
     const skippedTriggers = resolvedTriggers.filter(
       (t) => reportsPullRequestCheck(t, context) && !matchedTriggers.includes(t)
@@ -345,7 +488,7 @@ async function initializeWorkflow(
       console.log('No triggers matched for this event');
     }
 
-    return { context, runnerConcurrency, auxiliaryOptions, matchedTriggers, skippedTriggers };
+    return { context, runnerConcurrency, auxiliaryOptions, matchedTriggers, skippedTriggers, incremental };
   } catch (error) {
     if (
       error instanceof ConfigLoadError &&
@@ -358,6 +501,7 @@ async function initializeWorkflow(
         context,
         runnerConcurrency,
         auxiliaryOptions,
+        incremental,
         matchedTriggers: [],
         skippedTriggers: [],
         skipCoreCheck: {
@@ -521,6 +665,7 @@ async function postReviewsAndTrackFailures(
   inputs: ActionInputs,
   auxiliaryOptions: AuxiliaryWorkflowOptions,
   gate: ReviewFeedbackGate,
+  mutationScope: CommentMutationScope,
   options: { failOnPostError?: boolean } = {}
 ): Promise<ReviewPhaseResult> {
   // Skip the comment fetch only when the head has definitively advanced; on an
@@ -546,6 +691,7 @@ async function postReviewsAndTrackFailures(
           `Found ${fetchedComments.length} existing comments for deduplication (${wardenCount} Warden, ${externalCount} external)`
         );
       }
+      existingComments = filterCommentsByScope(existingComments, mutationScope);
     } catch (error) {
       Sentry.captureException(error, { tags: { operation: 'fetch_existing_comments' } });
       warnAction(`Failed to fetch existing comments for deduplication: ${error}`);
@@ -620,6 +766,7 @@ async function postReviewsAndTrackFailures(
     findingObservations,
     shouldFailAction,
     failureReasons,
+    allWardenCommentsResolved: false,
   };
 }
 
@@ -656,6 +803,7 @@ async function evaluateFixesAndResolveStale(
   anthropicApiKey: string,
   auxiliaryOptions: AuxiliaryWorkflowOptions,
   gate: ReviewFeedbackGate,
+  mutationScope: CommentMutationScope,
   options: { failOnWriteError?: boolean } = {}
 ): Promise<{
   allResolved: boolean;
@@ -675,7 +823,7 @@ async function evaluateFixesAndResolveStale(
     findingObservations,
   });
   const commentsForFixEvaluation = wardenComments.filter(
-    (c) => !activeWardenCommentIds.has(c.id)
+    (c) => !activeWardenCommentIds.has(c.id) && isCommentInScope(c, mutationScope)
   );
   const fixEvaluationRuntime = auxiliaryOptions.runtime ?? 'pi';
   const canUseFixEvaluationRuntime = canUseRuntimeAuth({
@@ -754,9 +902,9 @@ async function evaluateFixesAndResolveStale(
       const fixEvaluation = mergeFixEvaluationResults(groupResults);
 
       // Log per-evaluation details
-      fixEvaluation.evaluations.forEach((ev, i) =>
-        logFixEvaluation(ev, i, fixEvaluation.evaluations.length)
-      );
+      fixEvaluation.evaluations.forEach((ev, i) => {
+        logFixEvaluation(ev, i, fixEvaluation.evaluations.length);
+      });
 
       // Resolve successful fixes
       if (fixEvaluation.toResolve.length > 0) {
@@ -779,7 +927,9 @@ async function evaluateFixesAndResolveStale(
           logAction(`Resolved ${resolvedCount} comments via fix evaluation`);
         }
         // Track only actually resolved comments for allResolved check
-        resolvedIds.forEach((id) => commentsResolvedByFixEval.add(id));
+        resolvedIds.forEach((id) => {
+          commentsResolvedByFixEval.add(id);
+        });
         for (const comment of fixEvaluation.toResolve) {
           if (!resolvedIds.has(comment.id)) continue;
           findingObservations.push({
@@ -846,7 +996,9 @@ async function evaluateFixesAndResolveStale(
           !commentsResolvedByFixEval.has(c.id) &&
           !commentsEvaluatedByFixEval.has(c.id)
       );
-      const staleComments = findStaleComments(commentsForStaleCheck, allFindings, scope);
+      const staleComments = findStaleComments(commentsForStaleCheck, allFindings, scope, {
+        outOfScope: mutationScope.allowOutOfScopeStale ? 'stale' : 'ignore',
+      });
 
       if (staleComments.length > 0) {
         if (!await gate.canWrite()) {
@@ -879,7 +1031,9 @@ async function evaluateFixesAndResolveStale(
             emitStaleResolutionMetric(count, skill);
           }
         }
-        resolvedIds.forEach((id) => commentsResolvedByStale.add(id));
+        resolvedIds.forEach((id) => {
+          commentsResolvedByStale.add(id);
+        });
         for (const comment of staleComments) {
           if (!resolvedIds.has(comment.id)) continue;
           findingObservations.push({
@@ -924,6 +1078,8 @@ async function dismissPreviousReviewIfResolved(
   results: TriggerResult[],
   canResolveStale: boolean,
   gate: ReviewFeedbackGate,
+  mutationScope: CommentMutationScope,
+  allWardenCommentsResolved: boolean,
   options: { failOnWriteError?: boolean } = {}
 ): Promise<void> {
   // Dismiss previous CHANGES_REQUESTED if all blocking issues are resolved.
@@ -935,10 +1091,13 @@ async function dismissPreviousReviewIfResolved(
     return shouldFail(filtered, r.failOn);
   });
   const hasActiveFailOn = results.some((r) => r.failOn && r.failOn !== 'off');
+  const incrementalAllowsDismissal =
+    mutationScope.kind === 'full' || allWardenCommentsResolved;
   if (
     context.pullRequest &&
     previousReviewInfo?.state === 'CHANGES_REQUESTED' &&
     canResolveStale &&
+    incrementalAllowsDismissal &&
     !wouldRequestChanges &&
     hasActiveFailOn
   ) {
@@ -980,7 +1139,9 @@ async function finalizeWorkflow(
   failureReasons: string[],
   canResolveStale: boolean,
   gate: ReviewFeedbackGate,
-  triggerErrors: string[]
+  triggerErrors: string[],
+  incremental: IncrementalState,
+  allWardenCommentsResolved: boolean
 ): Promise<void> {
   await dismissPreviousReviewIfResolved(
     octokit,
@@ -988,7 +1149,9 @@ async function finalizeWorkflow(
     previousReviewInfo,
     results,
     canResolveStale,
-    gate
+    gate,
+    incremental.mutationScope,
+    allWardenCommentsResolved
   );
 
   // Set outputs
@@ -997,9 +1160,13 @@ async function finalizeWorkflow(
 
   // Write structured findings to file for external export (GCS, S3, etc.)
   try {
-    const findingsPath = writeFindingsOutput(reports, context, findingObservations, {
-      triggerResults: toReplayTriggerResults(results),
-    });
+    const findingsPath = writeWorkflowFindingsOutput(
+      reports,
+      context,
+      findingObservations,
+      incremental,
+      toReplayTriggerResults(results)
+    );
     logAction(`Findings written to ${findingsPath}`);
   } catch (error) {
     warnAction(`Failed to write findings output: ${error}`);
@@ -1017,6 +1184,7 @@ async function finalizeWorkflow(
       await updateCoreCheck(octokit, coreCheckId, summaryData, coreConclusion, {
         owner: context.repository.owner,
         repo: context.repository.name,
+        externalId: incrementalExternalId(incremental.configFingerprint),
       });
     } catch (error) {
       Sentry.captureException(error, { tags: { operation: 'update_core_check' } });
@@ -1036,7 +1204,8 @@ async function completeSkippedCoreCheck(
   octokit: Octokit,
   context: EventContext,
   coreCheckId: number | undefined,
-  skipped: SkippedCoreCheck
+  skipped: SkippedCoreCheck,
+  externalId?: string
 ): Promise<void> {
   const options = checkOptionsForPullRequest(context);
   if (!coreCheckId || !options) {
@@ -1053,7 +1222,7 @@ async function completeSkippedCoreCheck(
         message: skipped.message,
       },
       'neutral',
-      options
+      { ...options, externalId }
     );
   } catch (error) {
     Sentry.captureException(error, { tags: { operation: 'update_core_check_skipped' } });
@@ -1211,7 +1380,18 @@ function readFindingsFile(inputPath: string | undefined, repoPath: string): Find
  * Ensures a replay artifact was produced for the same repository, event, PR,
  * and head SHA before report mode performs GitHub writes.
  */
-function validateFindingsMatchContext(output: FindingsOutput, context: EventContext): void {
+function sameStringSet(left: string[], right: string[]): boolean {
+  if (left.length !== right.length) return false;
+  const leftSorted = [...left].sort();
+  const rightSorted = [...right].sort();
+  return leftSorted.every((value, index) => value === rightSorted[index]);
+}
+
+function validateFindingsMatchContext(
+  output: FindingsOutput,
+  context: EventContext,
+  incremental: IncrementalState
+): void {
   if (output.repository.fullName !== context.repository.fullName) {
     setFailed(
       `Findings file is for ${output.repository.fullName}, but this workflow is for ${context.repository.fullName}`
@@ -1240,6 +1420,25 @@ function validateFindingsMatchContext(output: FindingsOutput, context: EventCont
     setFailed(
       `Findings file head SHA ${output.pullRequest.headSha} does not match current head SHA ${context.pullRequest.headSha}`
     );
+  }
+
+  const expectedIncremental = incrementalOutput(incremental);
+  if (!expectedIncremental && output.incremental) {
+    setFailed('Findings file was produced with incremental metadata, but this report step is not incremental');
+  }
+  if (expectedIncremental) {
+    if (!output.incremental) {
+      setFailed('Findings file is missing incremental metadata');
+    }
+    if (
+      output.incremental.mode !== expectedIncremental.mode ||
+      output.incremental.previousHeadSha !== expectedIncremental.previousHeadSha ||
+      output.incremental.headSha !== expectedIncremental.headSha ||
+      output.incremental.configFingerprint !== expectedIncremental.configFingerprint ||
+      !sameStringSet(output.incremental.files, expectedIncremental.files)
+    ) {
+      setFailed('Findings file incremental scope does not match the current report step');
+    }
   }
 }
 
@@ -1508,7 +1707,8 @@ async function createCompletedCoreCheckForReport(
   shouldFailAction: boolean,
   outputs: { findingsCount: number },
   overrides: Partial<CoreCheckSummaryData> = {},
-  conclusion?: 'success' | 'failure' | 'neutral'
+  conclusion?: 'success' | 'failure' | 'neutral',
+  externalId?: string
 ): Promise<void> {
   const options = checkOptionsForPullRequest(context);
   if (!options) {
@@ -1522,7 +1722,7 @@ async function createCompletedCoreCheckForReport(
       ...overrides,
     },
     conclusion ?? determineCoreConclusion(shouldFailAction, outputs.findingsCount),
-    options
+    { ...options, externalId }
   );
 }
 
@@ -1572,6 +1772,8 @@ async function finalizeReportWorkflow(
   canResolveStale: boolean,
   gate: ReviewFeedbackGate,
   triggerErrors: string[],
+  incremental: IncrementalState,
+  allWardenCommentsResolved: boolean,
   options: { failOnWriteError?: boolean } = {}
 ): Promise<void> {
   await dismissPreviousReviewIfResolved(
@@ -1580,7 +1782,12 @@ async function finalizeReportWorkflow(
     previousReviewInfo,
     results,
     canResolveStale,
+<<<<<<< HEAD
     gate,
+=======
+    incremental.mutationScope,
+    allWardenCommentsResolved,
+>>>>>>> 9aaf6c2 (feat(action): add incremental PR mode)
     { failOnWriteError: options.failOnWriteError }
   );
 
@@ -1588,9 +1795,13 @@ async function finalizeReportWorkflow(
   setWorkflowOutputs(outputs);
 
   try {
-    const findingsPath = writeFindingsOutput(reports, context, findingObservations, {
-      triggerResults: toReplayTriggerResults(results),
-    });
+    const findingsPath = writeWorkflowFindingsOutput(
+      reports,
+      context,
+      findingObservations,
+      incremental,
+      toReplayTriggerResults(results)
+    );
     logAction(`Findings written to ${findingsPath}`);
   } catch (error) {
     warnAction(`Failed to write findings output: ${error}`);
@@ -1602,7 +1813,10 @@ async function finalizeReportWorkflow(
     results,
     reports,
     shouldFailAction || triggerErrors.length > 0,
-    outputs
+    outputs,
+    {},
+    undefined,
+    incrementalExternalId(incremental.configFingerprint)
   );
 
   if (shouldFailAction) {
@@ -1625,10 +1839,15 @@ async function cleanupOrphanedComments(
   context: EventContext,
   inputs: ActionInputs,
   auxiliaryOptions: AuxiliaryWorkflowOptions,
+  mutationScope: CommentMutationScope,
   options: { failOnWriteError?: boolean } = {}
-): Promise<FindingObservation[]> {
+): Promise<{ findingObservations: FindingObservation[]; allResolved: boolean }> {
   if (!context.pullRequest) {
-    return [];
+    return { findingObservations: [], allResolved: true };
+  }
+
+  if (mutationScope.kind === 'incremental' && mutationScope.files.size === 0) {
+    return { findingObservations: [], allResolved: false };
   }
 
   const gate = new ReviewFeedbackGate(octokit, context);
@@ -1647,12 +1866,12 @@ async function cleanupOrphanedComments(
     );
   } catch (error) {
     warnAction(`Failed to fetch existing comments for cleanup: ${error}`);
-    return [];
+    return { findingObservations: [], allResolved: false };
   }
 
   const wardenComments = existingComments.filter((c) => c.isWarden);
   if (wardenComments.length === 0) {
-    return [];
+    return { findingObservations: [], allResolved: true };
   }
 
   if ((auxiliaryOptions.runtime ?? 'pi') === 'claude') {
@@ -1663,7 +1882,8 @@ async function cleanupOrphanedComments(
 
   const { allResolved, autoResolvedByFixEvaluation, autoResolvedByStaleCheck, findingObservations } =
     await evaluateFixesAndResolveStale(
-      octokit, context, existingComments, [], new Set(), true, inputs.anthropicApiKey, auxiliaryOptions, gate, {
+      octokit, context, existingComments, [], new Set(), true, inputs.anthropicApiKey, auxiliaryOptions,
+      gate, mutationScope, {
         failOnWriteError: options.failOnWriteError,
       }
     );
@@ -1697,7 +1917,7 @@ async function cleanupOrphanedComments(
     }
   }
 
-  return findingObservations;
+  return { findingObservations, allResolved };
 }
 
 /**
@@ -1713,6 +1933,7 @@ async function runAnalyzeMode(
     context,
     runnerConcurrency,
     matchedTriggers,
+    incremental,
     skipCoreCheck,
   } = initResult;
 
@@ -1721,7 +1942,7 @@ async function runAnalyzeMode(
     setOutput('high-count', 0);
     setOutput('summary', skipCoreCheck?.title ?? 'No triggers matched');
     try {
-      const findingsPath = writeFindingsOutput([], context, [], { triggerResults: [] });
+      const findingsPath = writeWorkflowFindingsOutput([], context, [], incremental, []);
       logAction(`Findings written to ${findingsPath}`);
     } catch (error) {
       setFailed(`Failed to write findings output: ${error}`);
@@ -1745,9 +1966,13 @@ async function runAnalyzeMode(
   span.setAttribute('warden.finding.count', reports.flatMap((r) => r.findings).length);
 
   try {
-    const findingsPath = writeFindingsOutput(reports, context, [], {
-      triggerResults: toReplayTriggerResults(results),
-    });
+    const findingsPath = writeWorkflowFindingsOutput(
+      reports,
+      context,
+      [],
+      incremental,
+      toReplayTriggerResults(results)
+    );
     logAction(`Findings written to ${findingsPath}`);
   } catch (error) {
     setFailed(`Failed to write findings output: ${error}`);
@@ -1773,10 +1998,11 @@ async function runReportMode(
     auxiliaryOptions,
     matchedTriggers,
     skippedTriggers,
+    incremental,
     skipCoreCheck,
   } = initResult;
   const findingsOutput = readFindingsFile(inputs.findingsFile, repoPath);
-  validateFindingsMatchContext(findingsOutput, context);
+  validateFindingsMatchContext(findingsOutput, context, incremental);
 
   let results: TriggerResult[] = [];
   let previousReviewInfo: BotReviewInfo | null = null;
@@ -1808,26 +2034,32 @@ async function runReportMode(
           title: skipCoreCheck.title,
           message: skipCoreCheck.message,
         },
-        'neutral'
+        'neutral',
+        incrementalExternalId(incremental.configFingerprint)
       );
       logAction('Analysis complete: 0 total findings');
       return;
     }
 
     if (matchedTriggers.length === 0) {
-      const cleanupFindingObservations = await cleanupOrphanedComments(
+      const cleanupResult = await cleanupOrphanedComments(
         octokit,
         context,
         inputs,
         auxiliaryOptions,
+        incremental.mutationScope,
         { failOnWriteError: true }
       );
       const outputs = { findingsCount: 0, highCount: 0, summary: 'No triggers matched' };
       setWorkflowOutputs(outputs);
       try {
-        const findingsPath = writeFindingsOutput([], context, cleanupFindingObservations, {
-          triggerResults: [],
-        });
+        const findingsPath = writeWorkflowFindingsOutput(
+          [],
+          context,
+          cleanupResult.findingObservations,
+          incremental,
+          []
+        );
         logAction(`Findings written to ${findingsPath}`);
       } catch (error) {
         warnAction(`Failed to write findings output: ${error}`);
@@ -1843,7 +2075,8 @@ async function runReportMode(
           title: 'No triggers matched',
           message: 'No triggers matched for this event.',
         },
-        'neutral'
+        'neutral',
+        incrementalExternalId(incremental.configFingerprint)
       );
       logAction('Analysis complete: 0 total findings');
       return;
@@ -1859,7 +2092,8 @@ async function runReportMode(
     const gate = new ReviewFeedbackGate(octokit, context);
     reviewPhase = await Sentry.startSpan(
       { op: 'workflow.review', name: 'post reviews' },
-      () => postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, gate, {
+      () => postReviewsAndTrackFailures(
+        octokit, context, results, inputs, auxiliaryOptions, gate, incremental.mutationScope, {
         failOnPostError: true,
       }),
     );
@@ -1876,9 +2110,12 @@ async function runReportMode(
           octokit, context, reviewPhase.fetchedComments,
           allFindings, reviewPhase.activeWardenCommentIds,
           canResolveStale, inputs.anthropicApiKey,
-          auxiliaryOptions, gate,
+          auxiliaryOptions,
+          gate,
+          scopeFromReports(incremental.mutationScope, reviewPhase.reports),
           { failOnWriteError: true },
         );
+        reviewPhase.allWardenCommentsResolved = resolutionResult.allResolved;
         resolveSpan.setAttribute(
           'warden.feedback.auto_resolve.fix_eval_count',
           resolutionResult.autoResolvedByFixEvaluation
@@ -1899,6 +2136,8 @@ async function runReportMode(
       canResolveStale,
       gate,
       triggerErrors,
+      incremental,
+      reviewPhase.allWardenCommentsResolved,
       { failOnWriteError: true },
     );
   } catch (error) {
@@ -1940,6 +2179,7 @@ export async function runPRWorkflow(
         auxiliaryOptions,
         matchedTriggers,
         skippedTriggers,
+        incremental,
         skipCoreCheck,
       } = initResult;
       span.setAttribute('warden.trigger.count', matchedTriggers.length);
@@ -1988,34 +2228,53 @@ export async function runPRWorkflow(
         setOutput('high-count', 0);
         setOutput('summary', skipCoreCheck.title);
         try {
-          writeFindingsOutput([], context);
+          const incrementalMetadata = incrementalOutput(incremental);
+          if (incrementalMetadata) {
+            writeFindingsOutput([], context, [], { incremental: incrementalMetadata });
+          } else {
+            writeFindingsOutput([], context);
+          }
         } catch (error) {
           warnAction(`Failed to write findings output: ${error}`);
         }
-        await completeSkippedCoreCheck(octokit, context, coreCheckId, skipCoreCheck);
+        await completeSkippedCoreCheck(
+          octokit,
+          context,
+          coreCheckId,
+          skipCoreCheck,
+          incrementalExternalId(incremental.configFingerprint)
+        );
         return;
       }
 
       if (matchedTriggers.length === 0) {
         await runOrFailCore(octokit, context, coreCheckId, async () => {
-          const cleanupFindingObservations = await cleanupOrphanedComments(
+          const cleanupResult = await cleanupOrphanedComments(
             octokit,
             context,
             inputs,
-            auxiliaryOptions
+            auxiliaryOptions,
+            incremental.mutationScope
           );
           setOutput('findings-count', 0);
           setOutput('high-count', 0);
           setOutput('summary', 'No triggers matched');
           try {
-            writeFindingsOutput([], context, cleanupFindingObservations);
+            const incrementalMetadata = incrementalOutput(incremental);
+            if (incrementalMetadata) {
+              writeFindingsOutput([], context, cleanupResult.findingObservations, {
+                incremental: incrementalMetadata,
+              });
+            } else {
+              writeFindingsOutput([], context, cleanupResult.findingObservations);
+            }
           } catch (error) {
             warnAction(`Failed to write findings output: ${error}`);
           }
           await completeSkippedCoreCheck(octokit, context, coreCheckId, {
             title: 'No triggers matched',
             message: 'No triggers matched for this event.',
-          });
+          }, incrementalExternalId(incremental.configFingerprint));
         });
         return;
       }
@@ -2045,7 +2304,9 @@ export async function runPRWorkflow(
         coreCheckId,
         () => Sentry.startSpan(
           { op: 'workflow.review', name: 'post reviews' },
-          () => postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, gate),
+          () => postReviewsAndTrackFailures(
+            octokit, context, results, inputs, auxiliaryOptions, gate, incremental.mutationScope
+          ),
         ),
       );
 
@@ -2065,8 +2326,11 @@ export async function runPRWorkflow(
               octokit, context, reviewPhase.fetchedComments,
               allFindings, reviewPhase.activeWardenCommentIds,
               canResolveStale, inputs.anthropicApiKey,
-              auxiliaryOptions, gate,
+              auxiliaryOptions,
+              gate,
+              scopeFromReports(incremental.mutationScope, reviewPhase.reports),
             );
+            reviewPhase.allWardenCommentsResolved = resolutionResult.allResolved;
             resolveSpan.setAttribute(
               'warden.feedback.auto_resolve.fix_eval_count',
               resolutionResult.autoResolvedByFixEvaluation
@@ -2088,6 +2352,8 @@ export async function runPRWorkflow(
         canResolveStale,
         gate,
         triggerErrors,
+        incremental,
+        reviewPhase.allWardenCommentsResolved,
       );
 
       handleTriggerErrors(triggerErrors, matchedTriggers.length);

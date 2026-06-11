@@ -55,11 +55,19 @@ export class EventContextError extends Error {
   }
 }
 
+export interface BuildEventContextOptions {
+  /** Use this file list instead of fetching pull request files from GitHub. */
+  pullRequestFiles?: FileChange[];
+  /** Skip file fetching and build PR metadata with an empty file list. */
+  skipPullRequestFiles?: boolean;
+}
+
 export async function buildEventContext(
   eventName: string,
   eventPayload: unknown,
   repoPath: string,
-  octokit: Octokit
+  octokit: Octokit,
+  options: BuildEventContextOptions = {}
 ): Promise<EventContext> {
   const payloadResult = GitHubEventPayloadSchema.safeParse(eventPayload);
   if (!payloadResult.success) {
@@ -80,12 +88,15 @@ export async function buildEventContext(
   if (eventName === 'pull_request' && payload.pull_request) {
     const pr = payload.pull_request;
 
-    // Fetch files changed in the PR
-    const files = await fetchPullRequestFiles(
-      octokit,
-      repository.owner,
-      repository.name,
-      pr.number
+    const files = options.pullRequestFiles ?? (
+      options.skipPullRequestFiles
+        ? []
+        : await fetchPullRequestFiles(
+          octokit,
+          repository.owner,
+          repository.name,
+          pr.number
+        )
     );
 
     pullRequest = {
@@ -122,7 +133,7 @@ export async function buildEventContext(
   return result.data;
 }
 
-async function fetchPullRequestFiles(
+export async function fetchPullRequestFiles(
   octokit: Octokit,
   owner: string,
   repo: string,

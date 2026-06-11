@@ -137,6 +137,7 @@ function createDefaultInputs(overrides: Partial<ActionInputs> = {}): ActionInput
     configPath: 'warden.toml',
     maxFindings: 50,
     parallel: 2,
+    incremental: false,
     ...overrides,
   };
 }

@@ -386,6 +386,7 @@ export type PullRequestAction = z.infer<typeof PullRequestActionSchema>;
 // File change info
 export const FileChangeSchema = z.object({
   filename: z.string(),
+  previousFilename: z.string().optional(),
   status: z.enum(['added', 'removed', 'modified', 'renamed', 'copied', 'changed', 'unchanged']),
   additions: z.number().int().nonnegative(),
   deletions: z.number().int().nonnegative(),

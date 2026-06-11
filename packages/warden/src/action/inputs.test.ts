@@ -82,6 +82,28 @@ describe('parseActionInputs', () => {
       const inputs = parseActionInputs();
       expect(inputs.failCheck).toBeUndefined();
     });
+
+    it('defaults incremental to false', () => {
+      const inputs = parseActionInputs();
+      expect(inputs.incremental).toBe(false);
+    });
+
+    it('parses incremental as true', () => {
+      process.env['INPUT_INCREMENTAL'] = 'true';
+      const inputs = parseActionInputs();
+      expect(inputs.incremental).toBe(true);
+    });
+
+    it('parses incremental as false', () => {
+      process.env['INPUT_INCREMENTAL'] = 'false';
+      const inputs = parseActionInputs();
+      expect(inputs.incremental).toBe(false);
+    });
+
+    it('rejects invalid incremental values', () => {
+      process.env['INPUT_INCREMENTAL'] = 'sometimes';
+      expect(() => parseActionInputs()).toThrow('Invalid incremental value "sometimes"');
+    });
   });
 
   describe('numeric input handling', () => {
@@ -173,6 +195,7 @@ describe('setupAuthEnv', () => {
       configPath: 'warden.toml',
       maxFindings: 50,
       parallel: 4,
+      incremental: false,
     });
     expect(process.env['ANTHROPIC_API_KEY']).toBe('sk-ant-api-key');
     expect(process.env['WARDEN_ANTHROPIC_API_KEY']).toBe('sk-ant-api-key');
@@ -188,6 +211,7 @@ describe('setupAuthEnv', () => {
       configPath: 'warden.toml',
       maxFindings: 50,
       parallel: 4,
+      incremental: false,
     });
     expect(process.env['CLAUDE_CODE_OAUTH_TOKEN']).toBe('sk-ant-oat-oauth-token');
     expect(process.env['ANTHROPIC_API_KEY']).toBeUndefined();
@@ -206,6 +230,7 @@ describe('setupAuthEnv', () => {
       configPath: 'warden.toml',
       maxFindings: 50,
       parallel: 4,
+      incremental: false,
     });
 
     expect(process.env['CLAUDE_CODE_OAUTH_TOKEN']).toBe('sk-ant-oat-oauth-token');
@@ -226,6 +251,7 @@ describe('setupAuthEnv', () => {
       configPath: 'warden.toml',
       maxFindings: 50,
       parallel: 4,
+      incremental: false,
     });
 
     expect(process.env['CLAUDE_CODE_OAUTH_TOKEN']).toBeUndefined();
@@ -245,6 +271,7 @@ describe('validateInputs', () => {
       configPath: 'warden.toml',
       maxFindings: 50,
       parallel: 4,
+      incremental: false,
     })).toThrow('base-skill-root requires base-config-path');
   });
 
@@ -257,6 +284,7 @@ describe('validateInputs', () => {
       configPath: 'warden.toml',
       maxFindings: 50,
       parallel: 4,
+      incremental: false,
     })).toThrow('findings-file is required when mode is report');
   });
 });

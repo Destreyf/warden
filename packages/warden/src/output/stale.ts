@@ -11,12 +11,24 @@ export interface AnalyzedScope {
   files: Set<string>;
 }
 
+export interface FindStaleCommentsOptions {
+  /** How to treat unresolved comments outside the analyzed scope. */
+  outOfScope?: 'stale' | 'ignore';
+}
+
 /**
  * Build the analyzed scope from file changes.
  */
 export function buildAnalyzedScope(fileChanges: FileChange[]): AnalyzedScope {
+  const files = new Set<string>();
+  for (const file of fileChanges) {
+    files.add(file.filename);
+    if (file.previousFilename) {
+      files.add(file.previousFilename);
+    }
+  }
   return {
-    files: new Set(fileChanges.map((f) => f.filename)),
+    files,
   };
 }
 
@@ -85,9 +97,11 @@ export function findingMatchesComment(finding: Finding, comment: ExistingComment
 export function findStaleComments(
   existingComments: ExistingComment[],
   allFindings: Finding[],
-  scope: AnalyzedScope
+  scope: AnalyzedScope,
+  options: FindStaleCommentsOptions = {}
 ): ExistingComment[] {
   const staleComments: ExistingComment[] = [];
+  const outOfScope = options.outOfScope ?? 'stale';
 
   for (const comment of existingComments) {
     // Skip comments that don't have thread IDs (can't resolve them)
@@ -102,7 +116,9 @@ export function findStaleComments(
 
     // Comments on files NOT in scope are orphaned (file renamed, reverted, etc.)
     if (!isInAnalyzedScope(comment, scope)) {
-      staleComments.push(comment);
+      if (outOfScope === 'stale') {
+        staleComments.push(comment);
+      }
       continue;
     }
 

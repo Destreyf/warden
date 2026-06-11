@@ -28,6 +28,7 @@ export interface CheckOptions {
   owner: string;
   repo: string;
   headSha: string;
+  externalId?: string;
 }
 
 /**
@@ -377,6 +378,7 @@ export async function createCoreCheck(
     head_sha: options.headSha,
     status: 'in_progress',
     started_at: new Date().toISOString(),
+    external_id: options.externalId,
   });
 
   return {
@@ -410,6 +412,7 @@ export async function createCompletedCoreCheck(
     status: 'completed',
     conclusion,
     completed_at: new Date().toISOString(),
+    external_id: options.externalId,
     output: {
       title,
       summary,
@@ -447,6 +450,7 @@ export async function updateCoreCheck(
     status: 'completed',
     conclusion,
     completed_at: new Date().toISOString(),
+    external_id: options.externalId,
     output: {
       title,
       summary,
