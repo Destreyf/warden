@@ -1387,6 +1387,27 @@ function sameStringSet(left: string[], right: string[]): boolean {
   return leftSorted.every((value, index) => value === rightSorted[index]);
 }
 
+function incrementalMismatchReasons(
+  output: IncrementalOutput,
+  expected: IncrementalOutput
+): string[] {
+  const reasons: string[] = [];
+  if (output.mode !== expected.mode) reasons.push(`mode ${output.mode} != ${expected.mode}`);
+  if (output.previousHeadSha !== expected.previousHeadSha) {
+    reasons.push(`previousHeadSha ${output.previousHeadSha ?? '<none>'} != ${expected.previousHeadSha ?? '<none>'}`);
+  }
+  if (output.headSha !== expected.headSha) reasons.push(`headSha ${output.headSha} != ${expected.headSha}`);
+  if (output.configFingerprint !== expected.configFingerprint) {
+    reasons.push(
+      `configFingerprint ${output.configFingerprint ?? '<none>'} != ${expected.configFingerprint ?? '<none>'}`
+    );
+  }
+  if (output.mode === 'delta' && !sameStringSet(output.files, expected.files)) {
+    reasons.push('delta files differ');
+  }
+  return reasons;
+}
+
 function validateFindingsMatchContext(
   output: FindingsOutput,
   context: EventContext,
@@ -1430,14 +1451,9 @@ function validateFindingsMatchContext(
     if (!output.incremental) {
       setFailed('Findings file is missing incremental metadata');
     }
-    if (
-      output.incremental.mode !== expectedIncremental.mode ||
-      output.incremental.previousHeadSha !== expectedIncremental.previousHeadSha ||
-      output.incremental.headSha !== expectedIncremental.headSha ||
-      output.incremental.configFingerprint !== expectedIncremental.configFingerprint ||
-      !sameStringSet(output.incremental.files, expectedIncremental.files)
-    ) {
-      setFailed('Findings file incremental scope does not match the current report step');
+    const mismatchReasons = incrementalMismatchReasons(output.incremental, expectedIncremental);
+    if (mismatchReasons.length > 0) {
+      setFailed(`Findings file incremental scope does not match the current report step: ${mismatchReasons.join(', ')}`);
     }
   }
 }

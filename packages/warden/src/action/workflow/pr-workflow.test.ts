@@ -184,6 +184,7 @@ function createMockOctokit(options: MockOctokitOptions = {}): Octokit {
       dismissReview: vi.fn(() => Promise.resolve({ data: {} })),
     },
     checks: {
+      listForRef: vi.fn(() => Promise.resolve({ data: { check_runs: [] } })),
       create: vi.fn(() =>
         Promise.resolve({
           data: {
@@ -455,6 +456,41 @@ describe('runPRWorkflow', () => {
           commit_id: PR_HEAD_SHA,
         })
       );
+    });
+
+    it('report mode accepts full incremental no-trigger artifacts with different file metadata', async () => {
+      await runPRWorkflow(
+        mockOctokit,
+        createDefaultInputs({ mode: 'analyze', incremental: true }),
+        'pull_request',
+        EVENT_PAYLOAD_PATH,
+        NO_MATCH_FIXTURES_DIR
+      );
+      const incremental = mockWriteFindingsOutput.mock.calls.at(-1)?.[3]?.incremental;
+      expect(incremental?.mode).toBe('full');
+      const findingsFile = writeFindingsArtifact([], [], (output) => {
+        output.incremental = {
+          ...incremental!,
+          files: ['src/changed-between-steps.ts'],
+        };
+      });
+
+      try {
+        await runPRWorkflow(
+          mockOctokit,
+          createDefaultInputs({ mode: 'report', findingsFile, incremental: true }),
+          'pull_request',
+          EVENT_PAYLOAD_PATH,
+          NO_MATCH_FIXTURES_DIR
+        );
+      } finally {
+        rmSync(dirname(findingsFile), { recursive: true, force: true });
+      }
+
+      expect(mockSetFailed).not.toHaveBeenCalledWith(
+        expect.stringContaining('Findings file incremental scope does not match')
+      );
+      expect(mockRunSkillTask).not.toHaveBeenCalled();
     });
 
     it('report mode renders checks and reviews from report-step inputs', async () => {
