@@ -3842,6 +3842,23 @@ function sameStringSet(left, right) {
     const rightSorted = [...right].sort();
     return leftSorted.every((value, index) => value === rightSorted[index]);
 }
+function incrementalMismatchReasons(output, expected) {
+    const reasons = [];
+    if (output.mode !== expected.mode)
+        reasons.push(`mode ${output.mode} != ${expected.mode}`);
+    if (output.previousHeadSha !== expected.previousHeadSha) {
+        reasons.push(`previousHeadSha ${output.previousHeadSha ?? '<none>'} != ${expected.previousHeadSha ?? '<none>'}`);
+    }
+    if (output.headSha !== expected.headSha)
+        reasons.push(`headSha ${output.headSha} != ${expected.headSha}`);
+    if (output.configFingerprint !== expected.configFingerprint) {
+        reasons.push(`configFingerprint ${output.configFingerprint ?? '<none>'} != ${expected.configFingerprint ?? '<none>'}`);
+    }
+    if (output.mode === 'delta' && !sameStringSet(output.files, expected.files)) {
+        reasons.push('delta files differ');
+    }
+    return reasons;
+}
 function validateFindingsMatchContext(output, context, incremental) {
     if (output.repository.fullName !== context.repository.fullName) {
         (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file is for ${output.repository.fullName}, but this workflow is for ${context.repository.fullName}`);
@@ -3869,12 +3886,9 @@ function validateFindingsMatchContext(output, context, incremental) {
         if (!output.incremental) {
             (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('Findings file is missing incremental metadata');
         }
-        if (output.incremental.mode !== expectedIncremental.mode ||
-            output.incremental.previousHeadSha !== expectedIncremental.previousHeadSha ||
-            output.incremental.headSha !== expectedIncremental.headSha ||
-            output.incremental.configFingerprint !== expectedIncremental.configFingerprint ||
-            !sameStringSet(output.incremental.files, expectedIncremental.files)) {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('Findings file incremental scope does not match the current report step');
+        const mismatchReasons = incrementalMismatchReasons(output.incremental, expectedIncremental);
+        if (mismatchReasons.length > 0) {
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file incremental scope does not match the current report step: ${mismatchReasons.join(', ')}`);
         }
     }
 }
