@@ -1199,11 +1199,6 @@ function buildIncrementalConfigFingerprint(inputs, triggers) {
         configPath: inputs.configPath,
         baseConfigPath: inputs.baseConfigPath,
         baseSkillRoot: inputs.baseSkillRoot,
-        failOn: inputs.failOn,
-        reportOn: inputs.reportOn,
-        requestChanges: inputs.requestChanges,
-        failCheck: inputs.failCheck,
-        maxFindings: inputs.maxFindings,
         triggers: triggers.map((trigger) => ({
             id: trigger.id,
             name: trigger.name,
