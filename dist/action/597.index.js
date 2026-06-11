@@ -1,5 +1,5 @@
-export const id = 37;
-export const ids = [37];
+export const id = 597;
+export const ids = [597];
 export const modules = {
 
 /***/ 29872:
@@ -15319,7 +15319,7 @@ exports.USER_AGENT = USER_AGENT;
 
 /***/ }),
 
-/***/ 96607:
+/***/ 11651:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -15332,8 +15332,8 @@ exports.USER_AGENT = USER_AGENT;
 /* harmony export */ });
 /* unused harmony exports requiresToolCallId, mapStopReasonString */
 /* harmony import */ var _google_genai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79948);
-/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(54142);
-/* harmony import */ var _transform_messages_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(81641);
+/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(49986);
+/* harmony import */ var _transform_messages_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1901);
 /**
  * Shared utilities for Google Generative AI and Google Vertex providers.
  */
@@ -15666,7 +15666,7 @@ function mapStopReasonString(reason) {
 
 /***/ }),
 
-/***/ 32007:
+/***/ 78379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -15687,6 +15687,7 @@ function buildBaseOptions(_model, options, apiKey) {
         onPayload: options?.onPayload,
         onResponse: options?.onResponse,
         timeoutMs: options?.timeoutMs,
+        websocketConnectTimeoutMs: options?.websocketConnectTimeoutMs,
         maxRetries: options?.maxRetries,
         maxRetryDelayMs: options?.maxRetryDelayMs,
         metadata: options?.metadata,
@@ -15718,7 +15719,7 @@ baseMaxTokens, modelMaxTokens, reasoningLevel, customBudgets) {
 
 /***/ }),
 
-/***/ 81641:
+/***/ 1901:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -15911,7 +15912,7 @@ function transformMessages(messages, model, normalizeToolCallId) {
 
 /***/ }),
 
-/***/ 54142:
+/***/ 49986:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {

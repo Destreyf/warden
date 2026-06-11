@@ -1,8 +1,8 @@
-export const id = 658;
-export const ids = [658];
+export const id = 190;
+export const ids = [190];
 export const modules = {
 
-/***/ 5201:
+/***/ 82765:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -39,7 +39,7 @@ function resolveCloudflareBaseUrl(model) {
 
 /***/ }),
 
-/***/ 72375:
+/***/ 70747:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -79,7 +79,7 @@ function buildCopilotDynamicHeaders(params) {
 
 /***/ }),
 
-/***/ 23658:
+/***/ 93190:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -89,18 +89,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   streamSimpleOpenAICompletions: () => (/* binding */ streamSimpleOpenAICompletions)
 /* harmony export */ });
 /* harmony import */ var openai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56722);
-/* harmony import */ var _env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46776);
-/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(94040);
-/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7304);
-/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(2305);
-/* harmony import */ var _utils_json_parse_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(54199);
-/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(54142);
-/* harmony import */ var _cloudflare_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(5201);
-/* harmony import */ var _github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(72375);
-/* harmony import */ var _openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(54056);
-/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(32007);
-/* harmony import */ var _transform_messages_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(81641);
-
+/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(63068);
+/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(98060);
+/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(67309);
+/* harmony import */ var _utils_json_parse_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11043);
+/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(49986);
+/* harmony import */ var _cloudflare_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(82765);
+/* harmony import */ var _github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(70747);
+/* harmony import */ var _openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(80524);
+/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78379);
+/* harmony import */ var _transform_messages_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(1901);
 
 
 
@@ -152,7 +150,7 @@ function resolveCacheRetention(cacheRetention) {
     return "short";
 }
 const streamOpenAICompletions = (model, context, options) => {
-    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__/* .AssistantMessageEventStream */ .Q2();
+    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__/* .AssistantMessageEventStream */ .Q2();
     (async () => {
         const output = {
             role: "assistant",
@@ -172,7 +170,10 @@ const streamOpenAICompletions = (model, context, options) => {
             timestamp: Date.now(),
         };
         try {
-            const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider) || "";
+            const apiKey = options?.apiKey;
+            if (!apiKey) {
+                throw new Error(`No API key for provider: ${model.provider}`);
+            }
             const compat = getCompat(model);
             const cacheRetention = resolveCacheRetention(options?.cacheRetention);
             const cacheSessionId = cacheRetention === "none" ? undefined : options?.sessionId;
@@ -185,12 +186,12 @@ const streamOpenAICompletions = (model, context, options) => {
             const requestOptions = {
                 ...(options?.signal ? { signal: options.signal } : {}),
                 ...(options?.timeoutMs !== undefined ? { timeout: options.timeoutMs } : {}),
-                ...(options?.maxRetries !== undefined ? { maxRetries: options.maxRetries } : {}),
+                maxRetries: options?.maxRetries ?? 0,
             };
             const { data: openaiStream, response } = await client.chat.completions
                 .create(params, requestOptions)
                 .withResponse();
-            await options?.onResponse?.({ status: response.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_5__/* .headersToRecord */ .j)(response.headers) }, model);
+            await options?.onResponse?.({ status: response.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_4__/* .headersToRecord */ .j)(response.headers) }, model);
             stream.push({ type: "start", partial: output });
             let textBlock = null;
             let thinkingBlock = null;
@@ -221,7 +222,7 @@ const streamOpenAICompletions = (model, context, options) => {
                     });
                 }
                 else if (block.type === "toolCall") {
-                    block.arguments = (0,_utils_json_parse_js__WEBPACK_IMPORTED_MODULE_4__/* .parseStreamingJson */ .o2)(block.partialArgs);
+                    block.arguments = (0,_utils_json_parse_js__WEBPACK_IMPORTED_MODULE_3__/* .parseStreamingJson */ .o2)(block.partialArgs);
                     // Finalize in-place and strip the scratch buffers so replay only
                     // carries parsed arguments.
                     delete block.partialArgs;
@@ -376,7 +377,7 @@ const streamOpenAICompletions = (model, context, options) => {
                             if (toolCall.function?.arguments) {
                                 delta = toolCall.function.arguments;
                                 block.partialArgs = (block.partialArgs ?? "") + toolCall.function.arguments;
-                                block.arguments = (0,_utils_json_parse_js__WEBPACK_IMPORTED_MODULE_4__/* .parseStreamingJson */ .o2)(block.partialArgs);
+                                block.arguments = (0,_utils_json_parse_js__WEBPACK_IMPORTED_MODULE_3__/* .parseStreamingJson */ .o2)(block.partialArgs);
                             }
                             stream.push({
                                 type: "toolcall_delta",
@@ -437,12 +438,12 @@ const streamOpenAICompletions = (model, context, options) => {
     return stream;
 };
 const streamSimpleOpenAICompletions = (model, context, options) => {
-    const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider);
+    const apiKey = options?.apiKey;
     if (!apiKey) {
         throw new Error(`No API key for provider: ${model.provider}`);
     }
-    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_6__/* .buildBaseOptions */ .QP)(model, options, apiKey);
-    const clampedReasoning = options?.reasoning ? (0,_models_js__WEBPACK_IMPORTED_MODULE_2__/* .clampThinkingLevel */ .Kt)(model, options.reasoning) : undefined;
+    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_5__/* .buildBaseOptions */ .QP)(model, options, apiKey);
+    const clampedReasoning = options?.reasoning ? (0,_models_js__WEBPACK_IMPORTED_MODULE_1__/* .clampThinkingLevel */ .Kt)(model, options.reasoning) : undefined;
     const reasoningEffort = clampedReasoning === "off" ? undefined : clampedReasoning;
     const toolChoice = options?.toolChoice;
     return streamOpenAICompletions(model, context, {
@@ -452,16 +453,10 @@ const streamSimpleOpenAICompletions = (model, context, options) => {
     });
 };
 function createClient(model, context, apiKey, optionsHeaders, sessionId, compat = getCompat(model)) {
-    if (!apiKey) {
-        if (!process.env.OPENAI_API_KEY) {
-            throw new Error("OpenAI API key is required. Set OPENAI_API_KEY environment variable or pass it as an argument.");
-        }
-        apiKey = process.env.OPENAI_API_KEY;
-    }
     const headers = { ...model.headers };
     if (model.provider === "github-copilot") {
-        const hasImages = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_7__/* .hasCopilotVisionInput */ .d1)(context.messages);
-        const copilotHeaders = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_7__/* .buildCopilotDynamicHeaders */ .G0)({
+        const hasImages = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_6__/* .hasCopilotVisionInput */ .d1)(context.messages);
+        const copilotHeaders = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_6__/* .buildCopilotDynamicHeaders */ .G0)({
             messages: context.messages,
             hasImages,
         });
@@ -485,7 +480,7 @@ function createClient(model, context, apiKey, optionsHeaders, sessionId, compat 
         : headers;
     return new openai__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Ay({
         apiKey,
-        baseURL: (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_8__/* .isCloudflareProvider */ .vk)(model.provider) ? (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_8__/* .resolveCloudflareBaseUrl */ .S7)(model) : model.baseUrl,
+        baseURL: (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_7__/* .isCloudflareProvider */ .vk)(model.provider) ? (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_7__/* .resolveCloudflareBaseUrl */ .S7)(model) : model.baseUrl,
         dangerouslyAllowBrowser: true,
         defaultHeaders,
     });
@@ -499,7 +494,7 @@ function buildParams(model, context, options, compat = getCompat(model), cacheRe
         stream: true,
         prompt_cache_key: (model.baseUrl.includes("api.openai.com") && cacheRetention !== "none") ||
             (cacheRetention === "long" && compat.supportsLongCacheRetention)
-            ? (0,_openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_9__/* .clampOpenAIPromptCacheKey */ .l)(options?.sessionId)
+            ? (0,_openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_8__/* .clampOpenAIPromptCacheKey */ .l)(options?.sessionId)
             : undefined,
         prompt_cache_retention: cacheRetention === "long" && compat.supportsLongCacheRetention ? "24h" : undefined,
     };
@@ -550,7 +545,7 @@ function buildParams(model, context, options, compat = getCompat(model), cacheRe
     }
     else if (compat.thinkingFormat === "deepseek" && model.reasoning) {
         params.thinking = { type: options?.reasoningEffort ? "enabled" : "disabled" };
-        if (options?.reasoningEffort) {
+        if (options?.reasoningEffort && compat.supportsReasoningEffort) {
             params.reasoning_effort =
                 model.thinkingLevelMap?.[options.reasoningEffort] ?? options.reasoningEffort;
         }
@@ -572,6 +567,15 @@ function buildParams(model, context, options, compat = getCompat(model), cacheRe
         togetherParams.reasoning = { enabled: !!options?.reasoningEffort };
         if (options?.reasoningEffort && compat.supportsReasoningEffort) {
             togetherParams.reasoning_effort = model.thinkingLevelMap?.[options.reasoningEffort] ?? options.reasoningEffort;
+        }
+    }
+    else if (compat.thinkingFormat === "string-thinking" && model.reasoning) {
+        const stringThinkingParams = params;
+        if (options?.reasoningEffort) {
+            stringThinkingParams.thinking = model.thinkingLevelMap?.[options.reasoningEffort] ?? options.reasoningEffort;
+        }
+        else if (model.thinkingLevelMap?.off !== null) {
+            stringThinkingParams.thinking = model.thinkingLevelMap?.off ?? "none";
         }
     }
     else if (options?.reasoningEffort && model.reasoning && compat.supportsReasoningEffort) {
@@ -692,11 +696,11 @@ function convertMessages(model, context, compat) {
             return id.length > 40 ? id.slice(0, 40) : id;
         return id;
     };
-    const transformedMessages = (0,_transform_messages_js__WEBPACK_IMPORTED_MODULE_10__/* .transformMessages */ .b)(context.messages, model, (id) => normalizeToolCallId(id));
+    const transformedMessages = (0,_transform_messages_js__WEBPACK_IMPORTED_MODULE_9__/* .transformMessages */ .b)(context.messages, model, (id) => normalizeToolCallId(id));
     if (context.systemPrompt) {
         const useDeveloperRole = model.reasoning && compat.supportsDeveloperRole;
         const role = useDeveloperRole ? "developer" : "system";
-        params.push({ role: role, content: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__/* .sanitizeSurrogates */ .J)(context.systemPrompt) });
+        params.push({ role: role, content: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__/* .sanitizeSurrogates */ .J)(context.systemPrompt) });
     }
     let lastRole = null;
     for (let i = 0; i < transformedMessages.length; i++) {
@@ -713,7 +717,7 @@ function convertMessages(model, context, compat) {
             if (typeof msg.content === "string") {
                 params.push({
                     role: "user",
-                    content: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__/* .sanitizeSurrogates */ .J)(msg.content),
+                    content: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__/* .sanitizeSurrogates */ .J)(msg.content),
                 });
             }
             else {
@@ -721,7 +725,7 @@ function convertMessages(model, context, compat) {
                     if (item.type === "text") {
                         return {
                             type: "text",
-                            text: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__/* .sanitizeSurrogates */ .J)(item.text),
+                            text: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__/* .sanitizeSurrogates */ .J)(item.text),
                         };
                     }
                     else {
@@ -752,7 +756,7 @@ function convertMessages(model, context, compat) {
                 .filter((block) => block.text.trim().length > 0)
                 .map((block) => ({
                 type: "text",
-                text: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__/* .sanitizeSurrogates */ .J)(block.text),
+                text: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__/* .sanitizeSurrogates */ .J)(block.text),
             }));
             const assistantText = assistantTextParts.map((part) => part.text).join("");
             const nonEmptyThinkingBlocks = msg.content
@@ -762,7 +766,7 @@ function convertMessages(model, context, compat) {
                 if (compat.requiresThinkingAsText) {
                     // Convert thinking blocks to plain text (no tags to avoid model mimicking them)
                     const thinkingText = nonEmptyThinkingBlocks
-                        .map((block) => (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__/* .sanitizeSurrogates */ .J)(block.thinking))
+                        .map((block) => (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__/* .sanitizeSurrogates */ .J)(block.thinking))
                         .join("\n\n");
                     assistantMsg.content = [{ type: "text", text: thinkingText }, ...assistantTextParts];
                 }
@@ -852,7 +856,7 @@ function convertMessages(model, context, compat) {
                 // Some providers require the 'name' field in tool results
                 const toolResultMsg = {
                     role: "tool",
-                    content: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_11__/* .sanitizeSurrogates */ .J)(hasText ? textResult : "(see attached image)"),
+                    content: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_10__/* .sanitizeSurrogates */ .J)(hasText ? textResult : "(see attached image)"),
                     tool_call_id: toolMsg.toolCallId,
                 };
                 if (compat.requiresToolResultName && toolMsg.toolName) {
@@ -936,7 +940,7 @@ function parseChunkUsage(rawUsage, model) {
         totalTokens: input + outputTokens + cacheReadTokens + cacheWriteTokens,
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
     };
-    (0,_models_js__WEBPACK_IMPORTED_MODULE_2__/* .calculateCost */ .yN)(model, usage);
+    (0,_models_js__WEBPACK_IMPORTED_MODULE_1__/* .calculateCost */ .yN)(model, usage);
     return usage;
 }
 function mapStopReason(reason) {
@@ -1053,7 +1057,7 @@ function getCompat(model) {
 
 /***/ }),
 
-/***/ 54056:
+/***/ 80524:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1073,7 +1077,7 @@ function clampOpenAIPromptCacheKey(key) {
 
 /***/ }),
 
-/***/ 32007:
+/***/ 78379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1094,6 +1098,7 @@ function buildBaseOptions(_model, options, apiKey) {
         onPayload: options?.onPayload,
         onResponse: options?.onResponse,
         timeoutMs: options?.timeoutMs,
+        websocketConnectTimeoutMs: options?.websocketConnectTimeoutMs,
         maxRetries: options?.maxRetries,
         maxRetryDelayMs: options?.maxRetryDelayMs,
         metadata: options?.metadata,
@@ -1125,7 +1130,7 @@ baseMaxTokens, modelMaxTokens, reasoningLevel, customBudgets) {
 
 /***/ }),
 
-/***/ 81641:
+/***/ 1901:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {

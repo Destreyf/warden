@@ -1,8 +1,8 @@
-export const id = 583;
-export const ids = [583];
+export const id = 539;
+export const ids = [539];
 export const modules = {
 
-/***/ 70583:
+/***/ 73539:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -44185,24 +44185,21 @@ class Mistral extends ClientSDK {
     }
 }
 //# sourceMappingURL=sdk.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/env-api-keys.js
-var env_api_keys = __webpack_require__(46776);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
-var models = __webpack_require__(94040);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js
-var event_stream = __webpack_require__(7304);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/hash.js
-var hash = __webpack_require__(10859);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/json-parse.js
-var json_parse = __webpack_require__(54199);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/sanitize-unicode.js
-var sanitize_unicode = __webpack_require__(54142);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/simple-options.js
-var simple_options = __webpack_require__(32007);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/transform-messages.js
-var transform_messages = __webpack_require__(81641);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/mistral.js
-
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
+var models = __webpack_require__(63068);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js
+var event_stream = __webpack_require__(98060);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/hash.js
+var hash = __webpack_require__(64919);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/json-parse.js
+var json_parse = __webpack_require__(11043);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/sanitize-unicode.js
+var sanitize_unicode = __webpack_require__(49986);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/simple-options.js
+var simple_options = __webpack_require__(78379);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/transform-messages.js
+var transform_messages = __webpack_require__(1901);
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/mistral.js
 
 
 
@@ -44221,7 +44218,7 @@ const streamMistral = (model, context, options) => {
     (async () => {
         const output = createOutput(model);
         try {
-            const apiKey = options?.apiKey || (0,env_api_keys/* getEnvApiKey */.P)(model.provider);
+            const apiKey = options?.apiKey;
             if (!apiKey) {
                 throw new Error(`No API key for provider: ${model.provider}`);
             }
@@ -44266,7 +44263,7 @@ const streamMistral = (model, context, options) => {
  * Maps provider-agnostic `SimpleStreamOptions` to Mistral options.
  */
 const streamSimpleMistral = (model, context, options) => {
-    const apiKey = options?.apiKey || (0,env_api_keys/* getEnvApiKey */.P)(model.provider);
+    const apiKey = options?.apiKey;
     if (!apiKey) {
         throw new Error(`No API key for provider: ${model.provider}`);
     }
@@ -44740,7 +44737,7 @@ function mapChatStopReason(reason) {
 
 /***/ }),
 
-/***/ 32007:
+/***/ 78379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -44761,6 +44758,7 @@ function buildBaseOptions(_model, options, apiKey) {
         onPayload: options?.onPayload,
         onResponse: options?.onResponse,
         timeoutMs: options?.timeoutMs,
+        websocketConnectTimeoutMs: options?.websocketConnectTimeoutMs,
         maxRetries: options?.maxRetries,
         maxRetryDelayMs: options?.maxRetryDelayMs,
         metadata: options?.metadata,
@@ -44792,7 +44790,7 @@ baseMaxTokens, modelMaxTokens, reasoningLevel, customBudgets) {
 
 /***/ }),
 
-/***/ 81641:
+/***/ 1901:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -44985,7 +44983,7 @@ function transformMessages(messages, model, normalizeToolCallId) {
 
 /***/ }),
 
-/***/ 10859:
+/***/ 64919:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -45008,7 +45006,7 @@ function shortHash(str) {
 
 /***/ }),
 
-/***/ 54142:
+/***/ 49986:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {

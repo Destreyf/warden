@@ -1,8 +1,8 @@
-export const id = 706;
-export const ids = [706];
+export const id = 478;
+export const ids = [478];
 export const modules = {
 
-/***/ 14706:
+/***/ 41478:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -10,10 +10,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   generateImagesOpenRouter: () => (/* binding */ generateImagesOpenRouter)
 /* harmony export */ });
 /* harmony import */ var openai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56722);
-/* harmony import */ var _env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46776);
-/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2305);
-/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(54142);
-
+/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(67309);
+/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(49986);
 
 
 
@@ -27,9 +25,9 @@ const generateImagesOpenRouter = async (model, context, options) => {
         timestamp: Date.now(),
     };
     try {
-        const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider);
+        const apiKey = options?.apiKey;
         if (!apiKey) {
-            throw new Error(`No API key available for provider: ${model.provider}`);
+            throw new Error(`No API key for provider: ${model.provider}`);
         }
         const client = createClient(model, apiKey, options?.headers);
         let params = buildParams(model, context);
@@ -40,12 +38,12 @@ const generateImagesOpenRouter = async (model, context, options) => {
         const requestOptions = {
             ...(options?.signal ? { signal: options.signal } : {}),
             ...(options?.timeoutMs !== undefined ? { timeout: options.timeoutMs } : {}),
-            ...(options?.maxRetries !== undefined ? { maxRetries: options.maxRetries } : {}),
+            maxRetries: options?.maxRetries ?? 0,
         };
         const { data: response, response: rawResponse } = await client.chat.completions
             .create(params, requestOptions)
             .withResponse();
-        await options?.onResponse?.({ status: rawResponse.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_2__/* .headersToRecord */ .j)(rawResponse.headers) }, model);
+        await options?.onResponse?.({ status: rawResponse.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_1__/* .headersToRecord */ .j)(rawResponse.headers) }, model);
         const imageResponse = response;
         output.responseId = imageResponse.id;
         if (imageResponse.usage) {
@@ -95,7 +93,7 @@ function buildParams(model, context) {
         if (item.type === "text") {
             return {
                 type: "text",
-                text: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_3__/* .sanitizeSurrogates */ .J)(item.text),
+                text: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_2__/* .sanitizeSurrogates */ .J)(item.text),
             };
         }
         return {

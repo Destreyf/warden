@@ -1,38 +1,45 @@
-export const id = 833;
-export const ids = [833];
+export const id = 420;
+export const ids = [420];
 export const modules = {
 
-/***/ 96833:
+/***/ 69420:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   streamGoogle: () => (/* binding */ streamGoogle),
-/* harmony export */   streamSimpleGoogle: () => (/* binding */ streamSimpleGoogle)
+/* harmony export */   streamGoogleVertex: () => (/* binding */ streamGoogleVertex),
+/* harmony export */   streamSimpleGoogleVertex: () => (/* binding */ streamSimpleGoogleVertex)
 /* harmony export */ });
 /* harmony import */ var _google_genai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(79948);
-/* harmony import */ var _env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46776);
-/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(94040);
-/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7304);
-/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(54142);
-/* harmony import */ var _google_shared_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(96607);
-/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(32007);
+/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(63068);
+/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(98060);
+/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(49986);
+/* harmony import */ var _google_shared_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(11651);
+/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(78379);
 
 
 
 
 
 
-
+const API_VERSION = "v1";
+const GCP_VERTEX_CREDENTIALS_MARKER = "gcp-vertex-credentials";
+const THINKING_LEVEL_MAP = {
+    THINKING_LEVEL_UNSPECIFIED: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.THINKING_LEVEL_UNSPECIFIED,
+    MINIMAL: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.MINIMAL,
+    LOW: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.LOW,
+    MEDIUM: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.MEDIUM,
+    HIGH: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.HIGH,
+};
 // Counter for generating unique tool call IDs
 let toolCallCounter = 0;
-const streamGoogle = (model, context, options) => {
-    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__/* .AssistantMessageEventStream */ .Q2();
+const streamGoogleVertex = (model, context, options) => {
+    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__/* .AssistantMessageEventStream */ .Q2();
     (async () => {
         const output = {
             role: "assistant",
             content: [],
-            api: "google-generative-ai",
+            api: "google-vertex",
             provider: model.provider,
             model: model.id,
             usage: {
@@ -47,8 +54,11 @@ const streamGoogle = (model, context, options) => {
             timestamp: Date.now(),
         };
         try {
-            const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider) || "";
-            const client = createClient(model, apiKey, options?.headers);
+            const apiKey = resolveApiKey(options);
+            // Create the client using either a Vertex API key, if provided, or ADC with project and location
+            const client = apiKey
+                ? createClientWithApiKey(model, apiKey, options?.headers)
+                : createClient(model, resolveProject(options), resolveLocation(options), options?.headers);
             let params = buildParams(model, context, options);
             const nextParams = await options?.onPayload?.(params, model);
             if (nextParams !== undefined) {
@@ -60,14 +70,14 @@ const streamGoogle = (model, context, options) => {
             const blocks = output.content;
             const blockIndex = () => blocks.length - 1;
             for await (const chunk of googleStream) {
-                // @google/genai documents GenerateContentResponse.responseId as an output-only field
-                // used to identify each response. Keep the first non-empty one from the stream.
+                // Vertex uses the same @google/genai GenerateContentResponse type as Gemini.
+                // responseId is documented there as an output-only identifier for each response.
                 output.responseId ||= chunk.responseId;
                 const candidate = chunk.candidates?.[0];
                 if (candidate?.content?.parts) {
                     for (const part of candidate.content.parts) {
                         if (part.text !== undefined) {
-                            const isThinking = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .isThinkingPart */ .oH)(part);
+                            const isThinking = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .isThinkingPart */ .oH)(part);
                             if (!currentBlock ||
                                 (isThinking && currentBlock.type !== "thinking") ||
                                 (!isThinking && currentBlock.type !== "text")) {
@@ -102,7 +112,7 @@ const streamGoogle = (model, context, options) => {
                             }
                             if (currentBlock.type === "thinking") {
                                 currentBlock.thinking += part.text;
-                                currentBlock.thinkingSignature = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .retainThoughtSignature */ .pc)(currentBlock.thinkingSignature, part.thoughtSignature);
+                                currentBlock.thinkingSignature = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .retainThoughtSignature */ .pc)(currentBlock.thinkingSignature, part.thoughtSignature);
                                 stream.push({
                                     type: "thinking_delta",
                                     contentIndex: blockIndex(),
@@ -112,7 +122,7 @@ const streamGoogle = (model, context, options) => {
                             }
                             else {
                                 currentBlock.text += part.text;
-                                currentBlock.textSignature = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .retainThoughtSignature */ .pc)(currentBlock.textSignature, part.thoughtSignature);
+                                currentBlock.textSignature = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .retainThoughtSignature */ .pc)(currentBlock.textSignature, part.thoughtSignature);
                                 stream.push({
                                     type: "text_delta",
                                     contentIndex: blockIndex(),
@@ -141,7 +151,6 @@ const streamGoogle = (model, context, options) => {
                                 }
                                 currentBlock = null;
                             }
-                            // Generate unique ID if not provided or if it's a duplicate
                             const providedId = part.functionCall.id;
                             const needsNewId = !providedId || output.content.some((b) => b.type === "toolCall" && b.id === providedId);
                             const toolCallId = needsNewId
@@ -167,7 +176,7 @@ const streamGoogle = (model, context, options) => {
                     }
                 }
                 if (candidate?.finishReason) {
-                    output.stopReason = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .mapStopReason */ .f7)(candidate.finishReason);
+                    output.stopReason = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .mapStopReason */ .f7)(candidate.finishReason);
                     if (output.content.some((b) => b.type === "toolCall")) {
                         output.stopReason = "toolUse";
                     }
@@ -187,7 +196,7 @@ const streamGoogle = (model, context, options) => {
                             total: 0,
                         },
                     };
-                    (0,_models_js__WEBPACK_IMPORTED_MODULE_2__/* .calculateCost */ .yN)(model, output.usage);
+                    (0,_models_js__WEBPACK_IMPORTED_MODULE_1__/* .calculateCost */ .yN)(model, output.usage);
                 }
             }
             if (currentBlock) {
@@ -232,51 +241,108 @@ const streamGoogle = (model, context, options) => {
     })();
     return stream;
 };
-const streamSimpleGoogle = (model, context, options) => {
-    const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider);
-    if (!apiKey) {
-        throw new Error(`No API key for provider: ${model.provider}`);
-    }
-    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_5__/* .buildBaseOptions */ .QP)(model, options, apiKey);
+const streamSimpleGoogleVertex = (model, context, options) => {
+    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_4__/* .buildBaseOptions */ .QP)(model, options, undefined);
     if (!options?.reasoning) {
-        return streamGoogle(model, context, { ...base, thinking: { enabled: false } });
+        return streamGoogleVertex(model, context, {
+            ...base,
+            thinking: { enabled: false },
+        });
     }
-    const clampedReasoning = (0,_models_js__WEBPACK_IMPORTED_MODULE_2__/* .clampThinkingLevel */ .Kt)(model, options.reasoning);
+    const clampedReasoning = (0,_models_js__WEBPACK_IMPORTED_MODULE_1__/* .clampThinkingLevel */ .Kt)(model, options.reasoning);
     const effort = (clampedReasoning === "off" ? "high" : clampedReasoning);
-    const googleModel = model;
-    if (isGemini3ProModel(googleModel) || isGemini3FlashModel(googleModel) || isGemma4Model(googleModel)) {
-        return streamGoogle(model, context, {
+    const geminiModel = model;
+    if (isGemini3ProModel(geminiModel) || isGemini3FlashModel(geminiModel)) {
+        return streamGoogleVertex(model, context, {
             ...base,
             thinking: {
                 enabled: true,
-                level: getThinkingLevel(effort, googleModel),
+                level: getGemini3ThinkingLevel(effort, geminiModel),
             },
         });
     }
-    return streamGoogle(model, context, {
+    return streamGoogleVertex(model, context, {
         ...base,
         thinking: {
             enabled: true,
-            budgetTokens: getGoogleBudget(googleModel, effort, options.thinkingBudgets),
+            budgetTokens: getGoogleBudget(geminiModel, effort, options.thinkingBudgets),
         },
     });
 };
-function createClient(model, apiKey, optionsHeaders) {
+function createClient(model, project, location, optionsHeaders) {
+    return new _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .GoogleGenAI */ .M4({
+        vertexai: true,
+        project,
+        location,
+        apiVersion: API_VERSION,
+        httpOptions: buildHttpOptions(model, optionsHeaders),
+    });
+}
+function createClientWithApiKey(model, apiKey, optionsHeaders) {
+    return new _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .GoogleGenAI */ .M4({
+        vertexai: true,
+        apiKey,
+        apiVersion: API_VERSION,
+        httpOptions: buildHttpOptions(model, optionsHeaders),
+    });
+}
+function buildHttpOptions(model, optionsHeaders) {
     const httpOptions = {};
-    if (model.baseUrl) {
-        httpOptions.baseUrl = model.baseUrl;
-        httpOptions.apiVersion = ""; // baseUrl already includes version path, don't append
+    const baseUrl = resolveCustomBaseUrl(model.baseUrl);
+    if (baseUrl) {
+        httpOptions.baseUrl = baseUrl;
+        httpOptions.baseUrlResourceScope = _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ResourceScope */ .r.COLLECTION;
+        if (baseUrlIncludesApiVersion(baseUrl)) {
+            httpOptions.apiVersion = "";
+        }
     }
     if (model.headers || optionsHeaders) {
         httpOptions.headers = { ...model.headers, ...optionsHeaders };
     }
-    return new _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .GoogleGenAI */ .M4({
-        apiKey,
-        httpOptions: Object.keys(httpOptions).length > 0 ? httpOptions : undefined,
-    });
+    return Object.keys(httpOptions).length > 0 ? httpOptions : undefined;
+}
+function resolveCustomBaseUrl(baseUrl) {
+    const trimmed = baseUrl.trim();
+    if (!trimmed || trimmed.includes("{location}")) {
+        return undefined;
+    }
+    return trimmed;
+}
+function baseUrlIncludesApiVersion(baseUrl) {
+    try {
+        const url = new URL(baseUrl);
+        return url.pathname.split("/").some((part) => /^v\d+(?:beta\d*)?$/.test(part));
+    }
+    catch {
+        return /(?:^|\/)v\d+(?:beta\d*)?(?:\/|$)/.test(baseUrl);
+    }
+}
+function resolveApiKey(options) {
+    const apiKey = options?.apiKey?.trim();
+    if (!apiKey || apiKey === GCP_VERTEX_CREDENTIALS_MARKER || isPlaceholderApiKey(apiKey)) {
+        return undefined;
+    }
+    return apiKey;
+}
+function isPlaceholderApiKey(apiKey) {
+    return /^<[^>]+>$/.test(apiKey);
+}
+function resolveProject(options) {
+    const project = options?.project || process.env.GOOGLE_CLOUD_PROJECT || process.env.GCLOUD_PROJECT;
+    if (!project) {
+        throw new Error("Vertex AI requires a project ID. Set GOOGLE_CLOUD_PROJECT/GCLOUD_PROJECT or pass project in options.");
+    }
+    return project;
+}
+function resolveLocation(options) {
+    const location = options?.location || process.env.GOOGLE_CLOUD_LOCATION;
+    if (!location) {
+        throw new Error("Vertex AI requires a location. Set GOOGLE_CLOUD_LOCATION or pass location in options.");
+    }
+    return location;
 }
 function buildParams(model, context, options = {}) {
-    const contents = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .convertMessages */ ._0)(model, context);
+    const contents = (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .convertMessages */ ._0)(model, context);
     const generationConfig = {};
     if (options.temperature !== undefined) {
         generationConfig.temperature = options.temperature;
@@ -286,13 +352,13 @@ function buildParams(model, context, options = {}) {
     }
     const config = {
         ...(Object.keys(generationConfig).length > 0 && generationConfig),
-        ...(context.systemPrompt && { systemInstruction: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_6__/* .sanitizeSurrogates */ .J)(context.systemPrompt) }),
-        ...(context.tools && context.tools.length > 0 && { tools: (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .convertTools */ .B1)(context.tools) }),
+        ...(context.systemPrompt && { systemInstruction: (0,_utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_5__/* .sanitizeSurrogates */ .J)(context.systemPrompt) }),
+        ...(context.tools && context.tools.length > 0 && { tools: (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .convertTools */ .B1)(context.tools) }),
     };
     if (context.tools && context.tools.length > 0 && options.toolChoice) {
         config.toolConfig = {
             functionCallingConfig: {
-                mode: (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .mapToolChoice */ ._Q)(options.toolChoice),
+                mode: (0,_google_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .mapToolChoice */ ._Q)(options.toolChoice),
             },
         };
     }
@@ -302,8 +368,7 @@ function buildParams(model, context, options = {}) {
     if (options.thinking?.enabled && model.reasoning) {
         const thinkingConfig = { includeThoughts: true };
         if (options.thinking.level !== undefined) {
-            // Cast to any since our GoogleThinkingLevel mirrors Google's ThinkingLevel enum values
-            thinkingConfig.thinkingLevel = options.thinking.level;
+            thinkingConfig.thinkingLevel = THINKING_LEVEL_MAP[options.thinking.level];
         }
         else if (options.thinking.budgetTokens !== undefined) {
             thinkingConfig.thinkingBudget = options.thinking.budgetTokens;
@@ -326,9 +391,6 @@ function buildParams(model, context, options = {}) {
     };
     return params;
 }
-function isGemma4Model(model) {
-    return /gemma-?4/.test(model.id.toLowerCase());
-}
 function isGemini3ProModel(model) {
     return /gemini-3(?:\.\d+)?-pro/.test(model.id.toLowerCase());
 }
@@ -339,34 +401,22 @@ function getDisabledThinkingConfig(model) {
     // Google docs: Gemini 3.1 Pro cannot disable thinking, and Gemini 3 Flash / Flash-Lite
     // do not support full thinking-off either. For Gemini 3 models, use the lowest supported
     // thinkingLevel without includeThoughts so hidden thinking remains invisible to pi.
-    if (isGemini3ProModel(model)) {
-        return { thinkingLevel: "LOW" };
+    const geminiModel = model;
+    if (isGemini3ProModel(geminiModel)) {
+        return { thinkingLevel: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.LOW };
     }
-    if (isGemini3FlashModel(model)) {
-        return { thinkingLevel: "MINIMAL" };
-    }
-    if (isGemma4Model(model)) {
-        return { thinkingLevel: "MINIMAL" };
+    if (isGemini3FlashModel(geminiModel)) {
+        return { thinkingLevel: _google_genai__WEBPACK_IMPORTED_MODULE_0__/* .ThinkingLevel */ .HL.MINIMAL };
     }
     // Gemini 2.x supports disabling via thinkingBudget = 0.
     return { thinkingBudget: 0 };
 }
-function getThinkingLevel(effort, model) {
+function getGemini3ThinkingLevel(effort, model) {
     if (isGemini3ProModel(model)) {
         switch (effort) {
             case "minimal":
             case "low":
                 return "LOW";
-            case "medium":
-            case "high":
-                return "HIGH";
-        }
-    }
-    if (isGemma4Model(model)) {
-        switch (effort) {
-            case "minimal":
-            case "low":
-                return "MINIMAL";
             case "medium":
             case "high":
                 return "HIGH";
@@ -396,15 +446,6 @@ function getGoogleBudget(model, effort, customBudgets) {
         };
         return budgets[effort];
     }
-    if (model.id.includes("2.5-flash-lite")) {
-        const budgets = {
-            minimal: 512,
-            low: 2048,
-            medium: 8192,
-            high: 24576,
-        };
-        return budgets[effort];
-    }
     if (model.id.includes("2.5-flash")) {
         const budgets = {
             minimal: 128,
@@ -416,7 +457,7 @@ function getGoogleBudget(model, effort, customBudgets) {
     }
     return -1;
 }
-//# sourceMappingURL=google.js.map
+//# sourceMappingURL=google-vertex.js.map
 
 /***/ })
 

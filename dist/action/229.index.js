@@ -1,8 +1,8 @@
-export const id = 322;
-export const ids = [322,630];
+export const id = 229;
+export const ids = [229,622];
 export const modules = {
 
-/***/ 97960:
+/***/ 75460:
 /***/ ((module) => {
 
 function webpackEmptyAsyncContext(req) {
@@ -16,12 +16,12 @@ function webpackEmptyAsyncContext(req) {
 }
 webpackEmptyAsyncContext.keys = () => ([]);
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 97960;
+webpackEmptyAsyncContext.id = 75460;
 module.exports = webpackEmptyAsyncContext;
 
 /***/ }),
 
-/***/ 78283:
+/***/ 72047:
 /***/ ((module) => {
 
 function webpackEmptyAsyncContext(req) {
@@ -35,7 +35,7 @@ function webpackEmptyAsyncContext(req) {
 }
 webpackEmptyAsyncContext.keys = () => ([]);
 webpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;
-webpackEmptyAsyncContext.id = 78283;
+webpackEmptyAsyncContext.id = 72047;
 module.exports = webpackEmptyAsyncContext;
 
 /***/ }),
@@ -1133,8 +1133,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   piRuntime: () => (/* binding */ piRuntime)
 /* harmony export */ });
-/* harmony import */ var _earendil_works_pi_coding_agent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(89414);
-/* harmony import */ var _earendil_works_pi_ai__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(14114);
+/* harmony import */ var _earendil_works_pi_coding_agent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(50924);
+/* harmony import */ var _earendil_works_pi_ai__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(78552);
 /* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(7096);
 /* harmony import */ var _sentry_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(30340);
 /* harmony import */ var _sentry_trace_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(68016);
@@ -3191,12 +3191,23 @@ var external_node_url_ = __webpack_require__(73136);
 
 
 let cachedVersion;
+function readPackageVersion(path) {
+    try {
+        const pkg = JSON.parse((0,external_node_fs_.readFileSync)(path, 'utf-8'));
+        return typeof pkg.version === 'string' ? pkg.version : undefined;
+    }
+    catch {
+        return undefined;
+    }
+}
 function getVersion() {
     if (cachedVersion)
         return cachedVersion;
     const __dirname = (0,external_node_path_.dirname)((0,external_node_url_.fileURLToPath)(import.meta.url));
-    const pkg = JSON.parse((0,external_node_fs_.readFileSync)((0,external_node_path_.join)(__dirname, '..', '..', 'package.json'), 'utf-8'));
-    cachedVersion = pkg.version;
+    cachedVersion =
+        readPackageVersion((0,external_node_path_.join)(__dirname, '..', '..', 'package.json')) ??
+            readPackageVersion((0,external_node_path_.join)(__dirname, 'package.json')) ??
+            '0.0.0';
     return cachedVersion;
 }
 function getMajorVersion() {

@@ -1,8 +1,8 @@
-export const id = 3;
-export const ids = [3];
+export const id = 15;
+export const ids = [15];
 export const modules = {
 
-/***/ 29003:
+/***/ 49015:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -11,14 +11,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   streamSimpleAzureOpenAIResponses: () => (/* binding */ streamSimpleAzureOpenAIResponses)
 /* harmony export */ });
 /* harmony import */ var openai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56722);
-/* harmony import */ var _env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46776);
-/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(94040);
-/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7304);
-/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(2305);
-/* harmony import */ var _openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(54056);
-/* harmony import */ var _openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22299);
-/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(32007);
-
+/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(63068);
+/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(98060);
+/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(67309);
+/* harmony import */ var _openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(80524);
+/* harmony import */ var _openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(13551);
+/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78379);
 
 
 
@@ -70,7 +68,7 @@ function formatAzureOpenAIError(error) {
  * Generate function for Azure OpenAI Responses API
  */
 const streamAzureOpenAIResponses = (model, context, options) => {
-    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__/* .AssistantMessageEventStream */ .Q2();
+    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__/* .AssistantMessageEventStream */ .Q2();
     // Start async processing
     (async () => {
         const deploymentName = resolveDeploymentName(model, options);
@@ -93,7 +91,10 @@ const streamAzureOpenAIResponses = (model, context, options) => {
         };
         try {
             // Create Azure OpenAI client
-            const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider) || "";
+            const apiKey = options?.apiKey;
+            if (!apiKey) {
+                throw new Error(`No API key for provider: ${model.provider}`);
+            }
             const client = createClient(model, apiKey, options);
             let params = buildParams(model, context, options, deploymentName);
             const nextParams = await options?.onPayload?.(params, model);
@@ -103,12 +104,12 @@ const streamAzureOpenAIResponses = (model, context, options) => {
             const requestOptions = {
                 ...(options?.signal ? { signal: options.signal } : {}),
                 ...(options?.timeoutMs !== undefined ? { timeout: options.timeoutMs } : {}),
-                ...(options?.maxRetries !== undefined ? { maxRetries: options.maxRetries } : {}),
+                maxRetries: options?.maxRetries ?? 0,
             };
             const { data: openaiStream, response } = await client.responses.create(params, requestOptions).withResponse();
-            await options?.onResponse?.({ status: response.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_5__/* .headersToRecord */ .j)(response.headers) }, model);
+            await options?.onResponse?.({ status: response.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_4__/* .headersToRecord */ .j)(response.headers) }, model);
             stream.push({ type: "start", partial: output });
-            await (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .processResponsesStream */ .KB)(openaiStream, output, stream, model);
+            await (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .processResponsesStream */ .KB)(openaiStream, output, stream, model);
             if (options?.signal?.aborted) {
                 throw new Error("Request was aborted");
             }
@@ -133,12 +134,12 @@ const streamAzureOpenAIResponses = (model, context, options) => {
     return stream;
 };
 const streamSimpleAzureOpenAIResponses = (model, context, options) => {
-    const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider);
+    const apiKey = options?.apiKey;
     if (!apiKey) {
         throw new Error(`No API key for provider: ${model.provider}`);
     }
-    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_6__/* .buildBaseOptions */ .QP)(model, options, apiKey);
-    const clampedReasoning = options?.reasoning ? (0,_models_js__WEBPACK_IMPORTED_MODULE_2__/* .clampThinkingLevel */ .Kt)(model, options.reasoning) : undefined;
+    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_5__/* .buildBaseOptions */ .QP)(model, options, apiKey);
+    const clampedReasoning = options?.reasoning ? (0,_models_js__WEBPACK_IMPORTED_MODULE_1__/* .clampThinkingLevel */ .Kt)(model, options.reasoning) : undefined;
     const reasoningEffort = clampedReasoning === "off" ? undefined : clampedReasoning;
     return streamAzureOpenAIResponses(model, context, {
         ...base,
@@ -187,12 +188,6 @@ function resolveAzureConfig(model, options) {
     };
 }
 function createClient(model, apiKey, options) {
-    if (!apiKey) {
-        if (!process.env.AZURE_OPENAI_API_KEY) {
-            throw new Error("Azure OpenAI API key is required. Set AZURE_OPENAI_API_KEY environment variable or pass it as an argument.");
-        }
-        apiKey = process.env.AZURE_OPENAI_API_KEY;
-    }
     const headers = { ...model.headers };
     if (options?.headers) {
         Object.assign(headers, options.headers);
@@ -207,12 +202,12 @@ function createClient(model, apiKey, options) {
     });
 }
 function buildParams(model, context, options, deploymentName) {
-    const messages = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .convertResponsesMessages */ .iq)(model, context, AZURE_TOOL_CALL_PROVIDERS);
+    const messages = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .convertResponsesMessages */ .iq)(model, context, AZURE_TOOL_CALL_PROVIDERS);
     const params = {
         model: deploymentName,
         input: messages,
         stream: true,
-        prompt_cache_key: (0,_openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_7__/* .clampOpenAIPromptCacheKey */ .l)(options?.sessionId),
+        prompt_cache_key: (0,_openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_6__/* .clampOpenAIPromptCacheKey */ .l)(options?.sessionId),
     };
     if (options?.maxTokens) {
         params.max_output_tokens = options?.maxTokens;
@@ -221,7 +216,7 @@ function buildParams(model, context, options, deploymentName) {
         params.temperature = options?.temperature;
     }
     if (context.tools && context.tools.length > 0) {
-        params.tools = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .convertResponsesTools */ .hX)(context.tools);
+        params.tools = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .convertResponsesTools */ .hX)(context.tools);
     }
     if (model.reasoning) {
         if (options?.reasoningEffort || options?.reasoningSummary) {

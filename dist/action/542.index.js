@@ -1,8 +1,8 @@
-export const id = 90;
-export const ids = [90];
+export const id = 542;
+export const ids = [542];
 export const modules = {
 
-/***/ 54056:
+/***/ 80524:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -22,7 +22,7 @@ function clampOpenAIPromptCacheKey(key) {
 
 /***/ }),
 
-/***/ 22299:
+/***/ 13551:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -30,11 +30,11 @@ function clampOpenAIPromptCacheKey(key) {
 /* harmony export */   hX: () => (/* binding */ convertResponsesTools),
 /* harmony export */   iq: () => (/* binding */ convertResponsesMessages)
 /* harmony export */ });
-/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(94040);
-/* harmony import */ var _utils_hash_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(10859);
-/* harmony import */ var _utils_json_parse_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(54199);
-/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(54142);
-/* harmony import */ var _transform_messages_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(81641);
+/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(63068);
+/* harmony import */ var _utils_hash_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(64919);
+/* harmony import */ var _utils_json_parse_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(11043);
+/* harmony import */ var _utils_sanitize_unicode_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(49986);
+/* harmony import */ var _transform_messages_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1901);
 
 
 
@@ -143,6 +143,7 @@ function convertResponsesMessages(model, context, allowedToolCallProviders, opti
             const isDifferentModel = assistantMsg.model !== model.id &&
                 assistantMsg.provider === model.provider &&
                 assistantMsg.api === model.api;
+            let textBlockIndex = 0;
             for (const block of msg.content) {
                 if (block.type === "thinking") {
                     if (block.thinkingSignature) {
@@ -153,10 +154,12 @@ function convertResponsesMessages(model, context, allowedToolCallProviders, opti
                 else if (block.type === "text") {
                     const textBlock = block;
                     const parsedSignature = parseTextSignature(textBlock.textSignature);
+                    const fallbackMessageId = textBlockIndex === 0 ? `msg_pi_${msgIndex}` : `msg_pi_${msgIndex}_${textBlockIndex}`;
+                    textBlockIndex++;
                     // OpenAI requires id to be max 64 characters
                     let msgId = parsedSignature?.id;
                     if (!msgId) {
-                        msgId = `msg_${msgIndex}`;
+                        msgId = fallbackMessageId;
                     }
                     else if (msgId.length > 64) {
                         msgId = `msg_${(0,_utils_hash_js__WEBPACK_IMPORTED_MODULE_2__/* .shortHash */ .B)(msgId)}`;
@@ -530,7 +533,7 @@ function mapStopReason(status) {
 
 /***/ }),
 
-/***/ 32007:
+/***/ 78379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -551,6 +554,7 @@ function buildBaseOptions(_model, options, apiKey) {
         onPayload: options?.onPayload,
         onResponse: options?.onResponse,
         timeoutMs: options?.timeoutMs,
+        websocketConnectTimeoutMs: options?.websocketConnectTimeoutMs,
         maxRetries: options?.maxRetries,
         maxRetryDelayMs: options?.maxRetryDelayMs,
         metadata: options?.metadata,
@@ -582,7 +586,7 @@ baseMaxTokens, modelMaxTokens, reasoningLevel, customBudgets) {
 
 /***/ }),
 
-/***/ 81641:
+/***/ 1901:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -775,7 +779,7 @@ function transformMessages(messages, model, normalizeToolCallId) {
 
 /***/ }),
 
-/***/ 10859:
+/***/ 64919:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {

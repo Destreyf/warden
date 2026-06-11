@@ -1,6 +1,6 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
-export const id = 92;
-export const ids = [92];
+export const id = 34;
+export const ids = [34];
 export const modules = {
 
 /***/ 77310:
@@ -141805,7 +141805,7 @@ class ToolError extends Error {
 
 /***/ }),
 
-/***/ 89414:
+/***/ 50924:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -141863,6 +141863,7 @@ __webpack_require__.d(__webpack_exports__, {
   collectEntriesForBranchSummary: () => (/* reexport */ branch_summarization_collectEntriesForBranchSummary),
   compact: () => (/* reexport */ compaction_compact),
   convertToLlm: () => (/* reexport */ convertToLlm),
+  convertToPng: () => (/* reexport */ image_convert_convertToPng),
   copyToClipboard: () => (/* reexport */ copyToClipboard),
   createAgentSession: () => (/* reexport */ createAgentSession),
   createAgentSessionFromServices: () => (/* reexport */ createAgentSessionFromServices),
@@ -141923,6 +141924,7 @@ __webpack_require__.d(__webpack_exports__, {
   loadSkillsFromDir: () => (/* reexport */ loadSkillsFromDir),
   main: () => (/* reexport */ main),
   migrateSessionEntries: () => (/* reexport */ migrateSessionEntries),
+  parseArgs: () => (/* reexport */ parseArgs),
   parseFrontmatter: () => (/* reexport */ parseFrontmatter),
   parseSessionEntries: () => (/* reexport */ parseSessionEntries),
   parseSkillBlock: () => (/* reexport */ parseSkillBlock),
@@ -141944,7 +141946,7 @@ __webpack_require__.d(__webpack_exports__, {
   wrapRegisteredTools: () => (/* reexport */ wrapRegisteredTools)
 });
 
-// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/index.js
+// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/index.js
 var dist_namespaceObject = {};
 __webpack_require__.r(dist_namespaceObject);
 __webpack_require__.d(dist_namespaceObject, {
@@ -142006,7 +142008,7 @@ __webpack_require__.d(dist_namespaceObject, {
   wrapTextWithAnsi: () => (wrapTextWithAnsi)
 });
 
-// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/index.js
+// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/index.js
 var pi_agent_core_dist_namespaceObject = {};
 __webpack_require__.r(pi_agent_core_dist_namespaceObject);
 __webpack_require__.d(pi_agent_core_dist_namespaceObject, {
@@ -142082,10 +142084,12 @@ __webpack_require__.d(pi_agent_core_dist_namespaceObject, {
   uuidv7: () => (uuidv7)
 });
 
-// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/oauth.js
+// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/oauth.js
 var dist_oauth_namespaceObject = {};
 __webpack_require__.r(dist_oauth_namespaceObject);
 __webpack_require__.d(dist_oauth_namespaceObject, {
+  OPENAI_CODEX_BROWSER_LOGIN_METHOD: () => (OPENAI_CODEX_BROWSER_LOGIN_METHOD),
+  OPENAI_CODEX_DEVICE_CODE_LOGIN_METHOD: () => (OPENAI_CODEX_DEVICE_CODE_LOGIN_METHOD),
   anthropicOAuthProvider: () => (anthropicOAuthProvider),
   getGitHubCopilotBaseUrl: () => (getGitHubCopilotBaseUrl),
   getOAuthApiKey: () => (getOAuthApiKey),
@@ -142096,6 +142100,7 @@ __webpack_require__.d(dist_oauth_namespaceObject, {
   loginAnthropic: () => (loginAnthropic),
   loginGitHubCopilot: () => (loginGitHubCopilot),
   loginOpenAICodex: () => (loginOpenAICodex),
+  loginOpenAICodexDeviceCode: () => (loginOpenAICodexDeviceCode),
   normalizeDomain: () => (normalizeDomain),
   openaiCodexOAuthProvider: () => (openaiCodexOAuthProvider),
   pollOAuthDeviceCodeFlow: () => (pollOAuthDeviceCodeFlow),
@@ -142108,7 +142113,7 @@ __webpack_require__.d(dist_oauth_namespaceObject, {
   unregisterOAuthProvider: () => (unregisterOAuthProvider)
 });
 
-// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/index.js
+// NAMESPACE OBJECT: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/index.js
 var pi_coding_agent_dist_namespaceObject = {};
 __webpack_require__.r(pi_coding_agent_dist_namespaceObject);
 __webpack_require__.d(pi_coding_agent_dist_namespaceObject, {
@@ -142162,6 +142167,7 @@ __webpack_require__.d(pi_coding_agent_dist_namespaceObject, {
   collectEntriesForBranchSummary: () => (branch_summarization_collectEntriesForBranchSummary),
   compact: () => (compaction_compact),
   convertToLlm: () => (convertToLlm),
+  convertToPng: () => (image_convert_convertToPng),
   copyToClipboard: () => (copyToClipboard),
   createAgentSession: () => (createAgentSession),
   createAgentSessionFromServices: () => (createAgentSessionFromServices),
@@ -142222,6 +142228,7 @@ __webpack_require__.d(pi_coding_agent_dist_namespaceObject, {
   loadSkillsFromDir: () => (loadSkillsFromDir),
   main: () => (main),
   migrateSessionEntries: () => (migrateSessionEntries),
+  parseArgs: () => (parseArgs),
   parseFrontmatter: () => (parseFrontmatter),
   parseSessionEntries: () => (parseSessionEntries),
   parseSkillBlock: () => (parseSkillBlock),
@@ -142243,6 +142250,8 @@ __webpack_require__.d(pi_coding_agent_dist_namespaceObject, {
   wrapRegisteredTools: () => (wrapRegisteredTools)
 });
 
+// EXTERNAL MODULE: ../../node_modules/.pnpm/chalk@5.6.2/node_modules/chalk/source/index.js + 3 modules
+var chalk_source = __webpack_require__(39559);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __webpack_require__(79896);
 // EXTERNAL MODULE: external "os"
@@ -142255,7 +142264,7 @@ var external_url_ = __webpack_require__(87016);
 var external_node_child_process_ = __webpack_require__(31421);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn/index.js
 var cross_spawn = __webpack_require__(70670);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/child-process.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/child-process.js
 
 
 const EXIT_STDIO_GRACE_MS = 100;
@@ -142353,7 +142362,7 @@ var external_node_os_ = __webpack_require__(48161);
 var external_node_path_ = __webpack_require__(76760);
 // EXTERNAL MODULE: external "node:url"
 var external_node_url_ = __webpack_require__(73136);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/paths.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/paths.js
 
 
 
@@ -142446,7 +142455,7 @@ function markPathIgnoredByCloudSync(path) {
     }
 }
 //# sourceMappingURL=paths.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/config.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/config.js
 
 
 
@@ -142526,7 +142535,13 @@ function getSelfUpdateCommandForMethod(method, installedPackageName, updatePacka
         case "bun-binary":
             return undefined;
         case "pnpm":
-            return makeSelfUpdateCommand(makeSelfUpdateCommandStep("pnpm", ["install", "-g", "--ignore-scripts", updatePackageName]), updatePackageName === installedPackageName
+            return makeSelfUpdateCommand(makeSelfUpdateCommandStep("pnpm", [
+                "install",
+                "-g",
+                "--ignore-scripts",
+                "--config.minimumReleaseAge=0",
+                updatePackageName,
+            ]), updatePackageName === installedPackageName
                 ? undefined
                 : makeSelfUpdateCommandStep("pnpm", ["remove", "-g", installedPackageName]));
         case "yarn":
@@ -142534,7 +142549,13 @@ function getSelfUpdateCommandForMethod(method, installedPackageName, updatePacka
                 ? undefined
                 : makeSelfUpdateCommandStep("yarn", ["global", "remove", installedPackageName]));
         case "bun":
-            return makeSelfUpdateCommand(makeSelfUpdateCommandStep("bun", ["install", "-g", "--ignore-scripts", updatePackageName]), updatePackageName === installedPackageName
+            return makeSelfUpdateCommand(makeSelfUpdateCommandStep("bun", [
+                "install",
+                "-g",
+                "--ignore-scripts",
+                "--minimum-release-age=0",
+                updatePackageName,
+            ]), updatePackageName === installedPackageName
                 ? undefined
                 : makeSelfUpdateCommandStep("bun", ["uninstall", "-g", installedPackageName]));
         case "npm": {
@@ -142546,6 +142567,7 @@ function getSelfUpdateCommandForMethod(method, installedPackageName, updatePacka
                 "install",
                 "-g",
                 "--ignore-scripts",
+                "--min-release-age=0",
                 updatePackageName,
             ]);
             const uninstallStep = updatePackageName === installedPackageName
@@ -142862,11 +142884,380 @@ function getDebugLogPath() {
     return (0,external_path_.join)(getAgentDir(), `${APP_NAME}-debug.log`);
 }
 //# sourceMappingURL=config.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/index.js + 12 modules
-var dist = __webpack_require__(14114);
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/args.js
+/**
+ * CLI argument parsing and help display
+ */
+
+
+const VALID_THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh"];
+function isValidThinkingLevel(level) {
+    return VALID_THINKING_LEVELS.includes(level);
+}
+function parseArgs(args) {
+    const result = {
+        messages: [],
+        fileArgs: [],
+        unknownFlags: new Map(),
+        diagnostics: [],
+    };
+    for (let i = 0; i < args.length; i++) {
+        const arg = args[i];
+        if (arg === "--help" || arg === "-h") {
+            result.help = true;
+        }
+        else if (arg === "--version" || arg === "-v") {
+            result.version = true;
+        }
+        else if (arg === "--mode" && i + 1 < args.length) {
+            const mode = args[++i];
+            if (mode === "text" || mode === "json" || mode === "rpc") {
+                result.mode = mode;
+            }
+        }
+        else if (arg === "--continue" || arg === "-c") {
+            result.continue = true;
+        }
+        else if (arg === "--resume" || arg === "-r") {
+            result.resume = true;
+        }
+        else if (arg === "--provider" && i + 1 < args.length) {
+            result.provider = args[++i];
+        }
+        else if (arg === "--model" && i + 1 < args.length) {
+            result.model = args[++i];
+        }
+        else if (arg === "--api-key" && i + 1 < args.length) {
+            result.apiKey = args[++i];
+        }
+        else if (arg === "--system-prompt" && i + 1 < args.length) {
+            result.systemPrompt = args[++i];
+        }
+        else if (arg === "--append-system-prompt" && i + 1 < args.length) {
+            result.appendSystemPrompt = result.appendSystemPrompt ?? [];
+            result.appendSystemPrompt.push(args[++i]);
+        }
+        else if (arg === "--name" || arg === "-n") {
+            if (i + 1 < args.length) {
+                result.name = args[++i];
+            }
+            else {
+                result.diagnostics.push({ type: "error", message: "--name requires a value" });
+            }
+        }
+        else if (arg === "--no-session") {
+            result.noSession = true;
+        }
+        else if (arg === "--session" && i + 1 < args.length) {
+            result.session = args[++i];
+        }
+        else if (arg === "--session-id" && i + 1 < args.length) {
+            result.sessionId = args[++i];
+        }
+        else if (arg === "--fork" && i + 1 < args.length) {
+            result.fork = args[++i];
+        }
+        else if (arg === "--session-dir" && i + 1 < args.length) {
+            result.sessionDir = args[++i];
+        }
+        else if (arg === "--models" && i + 1 < args.length) {
+            result.models = args[++i].split(",").map((s) => s.trim());
+        }
+        else if (arg === "--no-tools" || arg === "-nt") {
+            result.noTools = true;
+        }
+        else if (arg === "--no-builtin-tools" || arg === "-nbt") {
+            result.noBuiltinTools = true;
+        }
+        else if ((arg === "--tools" || arg === "-t") && i + 1 < args.length) {
+            result.tools = args[++i]
+                .split(",")
+                .map((s) => s.trim())
+                .filter((name) => name.length > 0);
+        }
+        else if ((arg === "--exclude-tools" || arg === "-xt") && i + 1 < args.length) {
+            result.excludeTools = args[++i]
+                .split(",")
+                .map((s) => s.trim())
+                .filter((name) => name.length > 0);
+        }
+        else if (arg === "--thinking" && i + 1 < args.length) {
+            const level = args[++i];
+            if (isValidThinkingLevel(level)) {
+                result.thinking = level;
+            }
+            else {
+                result.diagnostics.push({
+                    type: "warning",
+                    message: `Invalid thinking level "${level}". Valid values: ${VALID_THINKING_LEVELS.join(", ")}`,
+                });
+            }
+        }
+        else if (arg === "--print" || arg === "-p") {
+            result.print = true;
+            const next = args[i + 1];
+            if (next !== undefined && !next.startsWith("@") && (!next.startsWith("-") || next.startsWith("---"))) {
+                result.messages.push(next);
+                i++;
+            }
+        }
+        else if (arg === "--export" && i + 1 < args.length) {
+            result.export = args[++i];
+        }
+        else if ((arg === "--extension" || arg === "-e") && i + 1 < args.length) {
+            result.extensions = result.extensions ?? [];
+            result.extensions.push(args[++i]);
+        }
+        else if (arg === "--no-extensions" || arg === "-ne") {
+            result.noExtensions = true;
+        }
+        else if (arg === "--skill" && i + 1 < args.length) {
+            result.skills = result.skills ?? [];
+            result.skills.push(args[++i]);
+        }
+        else if (arg === "--prompt-template" && i + 1 < args.length) {
+            result.promptTemplates = result.promptTemplates ?? [];
+            result.promptTemplates.push(args[++i]);
+        }
+        else if (arg === "--theme" && i + 1 < args.length) {
+            result.themes = result.themes ?? [];
+            result.themes.push(args[++i]);
+        }
+        else if (arg === "--no-skills" || arg === "-ns") {
+            result.noSkills = true;
+        }
+        else if (arg === "--no-prompt-templates" || arg === "-np") {
+            result.noPromptTemplates = true;
+        }
+        else if (arg === "--no-themes") {
+            result.noThemes = true;
+        }
+        else if (arg === "--no-context-files" || arg === "-nc") {
+            result.noContextFiles = true;
+        }
+        else if (arg === "--list-models") {
+            // Check if next arg is a search pattern (not a flag or file arg)
+            if (i + 1 < args.length && !args[i + 1].startsWith("-") && !args[i + 1].startsWith("@")) {
+                result.listModels = args[++i];
+            }
+            else {
+                result.listModels = true;
+            }
+        }
+        else if (arg === "--verbose") {
+            result.verbose = true;
+        }
+        else if (arg === "--offline") {
+            result.offline = true;
+        }
+        else if (arg.startsWith("@")) {
+            result.fileArgs.push(arg.slice(1)); // Remove @ prefix
+        }
+        else if (arg.startsWith("--")) {
+            const eqIndex = arg.indexOf("=");
+            if (eqIndex !== -1) {
+                result.unknownFlags.set(arg.slice(2, eqIndex), arg.slice(eqIndex + 1));
+            }
+            else {
+                const flagName = arg.slice(2);
+                const next = args[i + 1];
+                if (next !== undefined && !next.startsWith("-") && !next.startsWith("@")) {
+                    result.unknownFlags.set(flagName, next);
+                    i++;
+                }
+                else {
+                    result.unknownFlags.set(flagName, true);
+                }
+            }
+        }
+        else if (arg.startsWith("-") && !arg.startsWith("--")) {
+            result.diagnostics.push({ type: "error", message: `Unknown option: ${arg}` });
+        }
+        else if (!arg.startsWith("-")) {
+            result.messages.push(arg);
+        }
+    }
+    return result;
+}
+function printHelp(extensionFlags) {
+    const extensionFlagsText = extensionFlags && extensionFlags.length > 0
+        ? `\n${chalk_source/* default */.Ay.bold("Extension CLI Flags:")}\n${extensionFlags
+            .map((flag) => {
+            const value = flag.type === "string" ? " <value>" : "";
+            const description = flag.description ?? `Registered by ${flag.extensionPath}`;
+            return `  --${flag.name}${value}`.padEnd(30) + description;
+        })
+            .join("\n")}\n`
+        : "";
+    console.log(`${chalk_source/* default */.Ay.bold(APP_NAME)} - AI coding assistant with read, bash, edit, write tools
+
+${chalk_source/* default */.Ay.bold("Usage:")}
+  ${APP_NAME} [options] [@files...] [messages...]
+
+${chalk_source/* default */.Ay.bold("Commands:")}
+  ${APP_NAME} install <source> [-l]     Install extension source and add to settings
+  ${APP_NAME} remove <source> [-l]      Remove extension source from settings
+  ${APP_NAME} uninstall <source> [-l]   Alias for remove
+  ${APP_NAME} update [source|self|pi]   Update pi and installed extensions
+  ${APP_NAME} list                      List installed extensions from settings
+  ${APP_NAME} config                    Open TUI to enable/disable package resources
+  ${APP_NAME} <command> --help          Show help for install/remove/uninstall/update/list
+
+${chalk_source/* default */.Ay.bold("Options:")}
+  --provider <name>              Provider name (default: google)
+  --model <pattern>              Model pattern or ID (supports "provider/id" and optional ":<thinking>")
+  --api-key <key>                API key (defaults to env vars)
+  --system-prompt <text>         System prompt (default: coding assistant prompt)
+  --append-system-prompt <text>  Append text or file contents to the system prompt (can be used multiple times)
+  --mode <mode>                  Output mode: text (default), json, or rpc
+  --print, -p                    Non-interactive mode: process prompt and exit
+  --continue, -c                 Continue previous session
+  --resume, -r                   Select a session to resume
+  --session <path|id>            Use specific session file or partial UUID
+  --session-id <id>              Use exact project session ID, creating it if missing
+  --fork <path|id>               Fork specific session file or partial UUID into a new session
+  --session-dir <dir>            Directory for session storage and lookup
+  --no-session                   Don't save session (ephemeral)
+  --name, -n <name>              Set session display name
+  --models <patterns>            Comma-separated model patterns for Ctrl+P cycling
+                                 Supports globs (anthropic/*, *sonnet*) and fuzzy matching
+  --no-tools, -nt                Disable all tools by default (built-in and extension)
+  --no-builtin-tools, -nbt       Disable built-in tools by default but keep extension/custom tools enabled
+  --tools, -t <tools>            Comma-separated allowlist of tool names to enable
+                                 Applies to built-in, extension, and custom tools
+  --exclude-tools, -xt <tools>   Comma-separated denylist of tool names to disable
+                                 Applies to built-in, extension, and custom tools
+  --thinking <level>             Set thinking level: off, minimal, low, medium, high, xhigh
+  --extension, -e <path>         Load an extension file (can be used multiple times)
+  --no-extensions, -ne           Disable extension discovery (explicit -e paths still work)
+  --skill <path>                 Load a skill file or directory (can be used multiple times)
+  --no-skills, -ns               Disable skills discovery and loading
+  --prompt-template <path>       Load a prompt template file or directory (can be used multiple times)
+  --no-prompt-templates, -np     Disable prompt template discovery and loading
+  --theme <path>                 Load a theme file or directory (can be used multiple times)
+  --no-themes                    Disable theme discovery and loading
+  --no-context-files, -nc        Disable AGENTS.md and CLAUDE.md discovery and loading
+  --export <file>                Export session file to HTML and exit
+  --list-models [search]         List available models (with optional fuzzy search)
+  --verbose                      Force verbose startup (overrides quietStartup setting)
+  --offline                      Disable startup network operations (same as PI_OFFLINE=1)
+  --help, -h                     Show this help
+  --version, -v                  Show version number
+
+Extensions can register additional flags (e.g., --plan from plan-mode extension).${extensionFlagsText}
+
+${chalk_source/* default */.Ay.bold("Examples:")}
+  # Interactive mode
+  ${APP_NAME}
+
+  # Interactive mode with initial prompt
+  ${APP_NAME} "List all .ts files in src/"
+
+  # Include files in initial message
+  ${APP_NAME} @prompt.md @image.png "What color is the sky?"
+
+  # Non-interactive mode (process and exit)
+  ${APP_NAME} -p "List all .ts files in src/"
+
+  # Multiple messages (interactive)
+  ${APP_NAME} "Read package.json" "What dependencies do we have?"
+
+  # Continue previous session
+  ${APP_NAME} --continue "What did we discuss?"
+
+  # Start a named session
+  ${APP_NAME} --name "Refactor auth module"
+
+  # Use different model
+  ${APP_NAME} --provider openai --model gpt-4o-mini "Help me refactor this code"
+
+  # Use model with provider prefix (no --provider needed)
+  ${APP_NAME} --model openai/gpt-4o "Help me refactor this code"
+
+  # Use model with thinking level shorthand
+  ${APP_NAME} --model sonnet:high "Solve this complex problem"
+
+  # Limit model cycling to specific models
+  ${APP_NAME} --models claude-sonnet,claude-haiku,gpt-4o
+
+  # Limit to a specific provider with glob pattern
+  ${APP_NAME} --models "github-copilot/*"
+
+  # Cycle models with fixed thinking levels
+  ${APP_NAME} --models sonnet:high,haiku:low
+
+  # Start with a specific thinking level
+  ${APP_NAME} --thinking high "Solve this complex problem"
+
+  # Read-only mode (no file modifications possible)
+  ${APP_NAME} --tools read,grep,find,ls -p "Review the code in src/"
+
+  # Disable one tool while keeping the rest available
+  ${APP_NAME} --exclude-tools ask_question
+
+  # Export a session file to HTML
+  ${APP_NAME} --export ~/${CONFIG_DIR_NAME}/agent/sessions/--path--/session.jsonl
+  ${APP_NAME} --export session.jsonl output.html
+
+${chalk_source/* default */.Ay.bold("Environment Variables:")}
+  ANTHROPIC_API_KEY                - Anthropic Claude API key
+  ANTHROPIC_OAUTH_TOKEN            - Anthropic OAuth token (alternative to API key)
+  OPENAI_API_KEY                   - OpenAI GPT API key
+  AZURE_OPENAI_API_KEY             - Azure OpenAI API key
+  AZURE_OPENAI_BASE_URL            - Azure OpenAI/Cognitive Services base URL (e.g. https://{resource}.openai.azure.com)
+  AZURE_OPENAI_RESOURCE_NAME       - Azure OpenAI resource name (alternative to base URL)
+  AZURE_OPENAI_API_VERSION         - Azure OpenAI API version (default: v1)
+  AZURE_OPENAI_DEPLOYMENT_NAME_MAP - Azure OpenAI model=deployment map (comma-separated)
+  DEEPSEEK_API_KEY                 - DeepSeek API key
+  GEMINI_API_KEY                   - Google Gemini API key
+  GROQ_API_KEY                     - Groq API key
+  CEREBRAS_API_KEY                 - Cerebras API key
+  XAI_API_KEY                      - xAI Grok API key
+  FIREWORKS_API_KEY                - Fireworks API key
+  TOGETHER_API_KEY                 - Together AI API key
+  OPENROUTER_API_KEY               - OpenRouter API key
+  AI_GATEWAY_API_KEY               - Vercel AI Gateway API key
+  ZAI_API_KEY                      - ZAI API key
+  MISTRAL_API_KEY                  - Mistral API key
+  MINIMAX_API_KEY                  - MiniMax API key
+  MOONSHOT_API_KEY                 - Moonshot AI API key
+  OPENCODE_API_KEY                 - OpenCode Zen/OpenCode Go API key
+  KIMI_API_KEY                     - Kimi For Coding API key
+  CLOUDFLARE_API_KEY               - Cloudflare API token (Workers AI and AI Gateway)
+  CLOUDFLARE_ACCOUNT_ID            - Cloudflare account id (required for both)
+  CLOUDFLARE_GATEWAY_ID            - Cloudflare AI Gateway slug (required for AI Gateway)
+  XIAOMI_API_KEY                   - Xiaomi MiMo API key (api.xiaomimimo.com billing)
+  XIAOMI_TOKEN_PLAN_CN_API_KEY     - Xiaomi MiMo Token Plan API key (China region)
+  XIAOMI_TOKEN_PLAN_AMS_API_KEY    - Xiaomi MiMo Token Plan API key (Amsterdam region)
+  XIAOMI_TOKEN_PLAN_SGP_API_KEY    - Xiaomi MiMo Token Plan API key (Singapore region)
+  AWS_PROFILE                      - AWS profile for Amazon Bedrock
+  AWS_ACCESS_KEY_ID                - AWS access key for Amazon Bedrock
+  AWS_SECRET_ACCESS_KEY            - AWS secret key for Amazon Bedrock
+  AWS_BEARER_TOKEN_BEDROCK         - Bedrock API key (bearer token)
+  AWS_REGION                       - AWS region for Amazon Bedrock (e.g., us-east-1)
+  ${ENV_AGENT_DIR.padEnd(32)} - Config directory (default: ~/${CONFIG_DIR_NAME}/agent)
+  ${ENV_SESSION_DIR.padEnd(32)} - Session storage directory (overridden by --session-dir)
+  PI_PACKAGE_DIR                   - Override package directory (for Nix/Guix store paths)
+  PI_OFFLINE                       - Disable startup network operations when set to 1/true/yes
+  PI_TELEMETRY                     - Override install telemetry when set to 1/true/yes or 0/false/no
+  PI_SHARE_VIEWER_URL              - Base URL for /share command (default: https://pi.dev/session/)
+
+${chalk_source/* default */.Ay.bold("Built-in Tool Names:")}
+  read   - Read file contents
+  bash   - Execute bash commands
+  edit   - Edit files with find/replace
+  write  - Write files (creates/overwrites)
+  grep   - Search file contents (read-only, off by default)
+  find   - Find files by glob pattern (read-only, off by default)
+  ls     - List directory contents (read-only, off by default)
+`);
+}
+//# sourceMappingURL=args.js.map
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/index.js + 13 modules
+var dist = __webpack_require__(78552);
 // EXTERNAL MODULE: external "child_process"
 var external_child_process_ = __webpack_require__(35317);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/fuzzy.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/fuzzy.js
 /**
  * Fuzzy matching utilities.
  * Matches if all query characters appear in order (not necessarily consecutive).
@@ -142977,7 +143368,7 @@ function fuzzyFilter(items, query, getText) {
     return results.map((r) => r.item);
 }
 //# sourceMappingURL=fuzzy.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/autocomplete.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/autocomplete.js
 
 
 
@@ -143612,15 +144003,22 @@ class CombinedAutocompleteProvider {
 //# sourceMappingURL=autocomplete.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/get-east-asian-width@1.6.0/node_modules/get-east-asian-width/index.js
 var get_east_asian_width = __webpack_require__(80209);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/utils.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/utils.js
 
-// Grapheme segmenter (shared instance)
-const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+// segmenters (shared instance)
+const graphemeSegmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+const wordSegmenter = new Intl.Segmenter(undefined, { granularity: "word" });
 /**
  * Get the shared grapheme segmenter instance.
  */
-function getSegmenter() {
-    return segmenter;
+function getGraphemeSegmenter() {
+    return graphemeSegmenter;
+}
+/**
+ * Get the shared word segmenter instance.
+ */
+function getWordSegmenter() {
+    return wordSegmenter;
 }
 /**
  * Check if a grapheme cluster (after segmentation) could possibly be an RGI emoji.
@@ -143667,7 +144065,7 @@ function truncateFragmentToWidth(text, maxWidth) {
     if (!hasAnsi && !hasTabs) {
         let result = "";
         let width = 0;
-        for (const { segment } of segmenter.segment(text)) {
+        for (const { segment } of graphemeSegmenter.segment(text)) {
             const w = graphemeWidth(segment);
             if (width + w > maxWidth) {
                 break;
@@ -143709,7 +144107,7 @@ function truncateFragmentToWidth(text, maxWidth) {
             }
             end++;
         }
-        for (const { segment } of segmenter.segment(text.slice(i, end))) {
+        for (const { segment } of graphemeSegmenter.segment(text.slice(i, end))) {
             const w = graphemeWidth(segment);
             if (width + w > maxWidth) {
                 return { text: result, width };
@@ -143818,7 +144216,7 @@ function visibleWidth(str) {
     }
     // Calculate width
     let width = 0;
-    for (const { segment } of segmenter.segment(clean)) {
+    for (const { segment } of graphemeSegmenter.segment(clean)) {
         width += graphemeWidth(segment);
     }
     // Cache result
@@ -144212,7 +144610,10 @@ function wrapTextWithAnsi(text, width) {
     for (const inputLine of inputLines) {
         // Prepend active ANSI codes from previous lines (except for first line)
         const prefix = result.length > 0 ? tracker.getActiveCodes() : "";
-        result.push(...wrapSingleLine(prefix + inputLine, width));
+        const wrappedLines = wrapSingleLine(prefix + inputLine, width);
+        for (const wrappedLine of wrappedLines) {
+            result.push(wrappedLine);
+        }
         // Update tracker with codes from this line for next iteration
         updateTrackerFromText(inputLine, tracker);
     }
@@ -144248,7 +144649,9 @@ function wrapSingleLine(line, width) {
             }
             // Break long token - breakLongWord handles its own resets
             const broken = breakLongWord(token, width, tracker);
-            wrapped.push(...broken.slice(0, -1));
+            for (let i = 0; i < broken.length - 1; i++) {
+                wrapped.push(broken[i]);
+            }
             currentLine = broken[broken.length - 1];
             currentVisibleLength = visibleWidth(currentLine);
             continue;
@@ -144325,7 +144728,7 @@ function breakLongWord(word, width, tracker) {
             }
             // Segment this non-ANSI portion into graphemes
             const textPortion = word.slice(i, end);
-            for (const seg of segmenter.segment(textPortion)) {
+            for (const seg of graphemeSegmenter.segment(textPortion)) {
                 segments.push({ type: "grapheme", value: seg.segment });
             }
             i = end;
@@ -144427,7 +144830,7 @@ function truncateToWidth(text, maxWidth, ellipsis = "...", pad = false) {
     const hasAnsi = text.includes("\x1b");
     const hasTabs = text.includes("\t");
     if (!hasAnsi && !hasTabs) {
-        for (const { segment } of segmenter.segment(text)) {
+        for (const { segment } of graphemeSegmenter.segment(text)) {
             const width = graphemeWidth(segment);
             if (keepContiguousPrefix && keptWidth + width <= targetWidth) {
                 result += segment;
@@ -144482,7 +144885,7 @@ function truncateToWidth(text, maxWidth, ellipsis = "...", pad = false) {
                 }
                 end++;
             }
-            for (const { segment } of segmenter.segment(text.slice(i, end))) {
+            for (const { segment } of graphemeSegmenter.segment(text.slice(i, end))) {
                 const width = graphemeWidth(segment);
                 if (keepContiguousPrefix && keptWidth + width <= targetWidth) {
                     if (pendingAnsi) {
@@ -144540,7 +144943,7 @@ function sliceWithWidth(line, startCol, length, strict = false) {
         let textEnd = i;
         while (textEnd < line.length && !extractAnsiCode(line, textEnd))
             textEnd++;
-        for (const { segment } of segmenter.segment(line.slice(i, textEnd))) {
+        for (const { segment } of graphemeSegmenter.segment(line.slice(i, textEnd))) {
             const w = graphemeWidth(segment);
             const inRange = currentCol >= startCol && currentCol < endCol;
             const fits = !strict || currentCol + w <= endCol;
@@ -144596,7 +144999,7 @@ function extractSegments(line, beforeEnd, afterStart, afterLen, strictAfter = fa
         let textEnd = i;
         while (textEnd < line.length && !extractAnsiCode(line, textEnd))
             textEnd++;
-        for (const { segment } of segmenter.segment(line.slice(i, textEnd))) {
+        for (const { segment } of graphemeSegmenter.segment(line.slice(i, textEnd))) {
             const w = graphemeWidth(segment);
             if (currentCol < beforeEnd) {
                 if (pendingAnsiBefore) {
@@ -144630,7 +145033,7 @@ function extractSegments(line, beforeEnd, afterStart, afterLen, strictAfter = fa
     return { before, beforeWidth, after, afterWidth };
 }
 //# sourceMappingURL=utils.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/box.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/box.js
 
 /**
  * Box component - a container that applies padding and background to all children
@@ -144735,7 +145138,7 @@ class Box {
     }
 }
 //# sourceMappingURL=box.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/keys.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/keys.js
 /**
  * Keyboard input handling for terminal applications.
  *
@@ -145909,7 +146312,7 @@ function decodePrintableKey(data) {
     return decodeKittyPrintable(data) ?? decodeModifyOtherKeysPrintable(data);
 }
 //# sourceMappingURL=keys.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/keybindings.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/keybindings.js
 
 const TUI_KEYBINDINGS = {
     "tui.editor.cursorUp": { defaultKeys: "up", description: "Move cursor up" },
@@ -146084,7 +146487,7 @@ function getKeybindings() {
     return globalKeybindings;
 }
 //# sourceMappingURL=keybindings.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/text.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/text.js
 
 /**
  * Text component - displays multi-line text with word wrapping
@@ -146174,7 +146577,7 @@ class Text {
     }
 }
 //# sourceMappingURL=text.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/loader.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/loader.js
 
 const DEFAULT_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 const DEFAULT_INTERVAL_MS = 80;
@@ -146244,7 +146647,7 @@ class Loader extends Text {
     }
 }
 //# sourceMappingURL=loader.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/cancellable-loader.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/cancellable-loader.js
 
 
 /**
@@ -146280,7 +146683,7 @@ class CancellableLoader extends Loader {
     }
 }
 //# sourceMappingURL=cancellable-loader.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/kill-ring.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/kill-ring.js
 /**
  * Ring buffer for Emacs-style kill/yank operations.
  *
@@ -146327,7 +146730,8 @@ class KillRing {
 //# sourceMappingURL=kill-ring.js.map
 // EXTERNAL MODULE: external "node:perf_hooks"
 var external_node_perf_hooks_ = __webpack_require__(643);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/terminal-image.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/terminal-image.js
+
 let cachedCapabilities = null;
 // Default cell dimensions - updated by TUI when terminal responds to query
 let cellDimensions = { widthPx: 9, heightPx: 18 };
@@ -146337,17 +146741,40 @@ function getCellDimensions() {
 function setCellDimensions(dims) {
     cellDimensions = dims;
 }
-function detectCapabilities() {
+/**
+ * Checks whether the attached tmux client forwards OSC 8 hyperlinks to the
+ * outer terminal. tmux only re-emits them when its `client_termfeatures` lists
+ * `hyperlinks`, and strips them otherwise. On any error fallbacks `false`.
+ */
+function probeTmuxHyperlinks() {
+    try {
+        const termfeatures = (0,external_node_child_process_.execSync)("tmux display-message -p '#{client_termfeatures}'", {
+            encoding: "utf8",
+            timeout: 250,
+            stdio: ["ignore", "pipe", "ignore"],
+        });
+        return termfeatures
+            .split(",")
+            .map((feature) => feature.trim())
+            .includes("hyperlinks");
+    }
+    catch {
+        return false;
+    }
+}
+function detectCapabilities(tmuxForwardsHyperlink = probeTmuxHyperlinks) {
     const termProgram = process.env.TERM_PROGRAM?.toLowerCase() || "";
+    const terminalEmulator = process.env.TERMINAL_EMULATOR?.toLowerCase() || "";
     const term = process.env.TERM?.toLowerCase() || "";
     const colorTerm = process.env.COLORTERM?.toLowerCase() || "";
     const hasTrueColorHint = colorTerm === "truecolor" || colorTerm === "24bit";
-    // tmux and screen swallow OSC 8 by default (passthrough is opt-in and wraps
-    // sequences differently). Force hyperlinks off whenever we detect them, even
-    // when the outer terminal would otherwise support OSC 8. Image protocols are
-    // also unreliable under tmux/screen, so leave `images: null` for safety.
-    const inTmuxOrScreen = !!process.env.TMUX || term.startsWith("tmux") || term.startsWith("screen");
-    if (inTmuxOrScreen) {
+    // Emit OSC 8 hyperlinks only when tmux confirms it forwards.
+    // Image protocols are unreliable under tmux, so leave `images: null`.
+    if (process.env.TMUX || term.startsWith("tmux")) {
+        return { images: null, trueColor: hasTrueColorHint, hyperlinks: tmuxForwardsHyperlink() };
+    }
+    // screen does not forward OSC 8 hyperlinks, so keep them off there.
+    if (term.startsWith("screen")) {
         return { images: null, trueColor: hasTrueColorHint, hyperlinks: false };
     }
     if (process.env.KITTY_WINDOW_ID || termProgram === "kitty") {
@@ -146362,17 +146789,23 @@ function detectCapabilities() {
     if (process.env.ITERM_SESSION_ID || termProgram === "iterm.app") {
         return { images: "iterm2", trueColor: true, hyperlinks: true };
     }
+    if (process.env.WT_SESSION) {
+        return { images: null, trueColor: true, hyperlinks: true };
+    }
     if (termProgram === "vscode") {
         return { images: null, trueColor: true, hyperlinks: true };
     }
     if (termProgram === "alacritty") {
         return { images: null, trueColor: true, hyperlinks: true };
     }
+    if (terminalEmulator === "jetbrains-jediterm") {
+        return { images: null, trueColor: true, hyperlinks: false };
+    }
     // Unknown terminal: be conservative. OSC 8 is rendered invisibly as "just
     // text" on terminals that swallow it, which means the URL disappears from
     // the rendered output. Default to the legacy `text (url)` behavior unless we
     // have positively identified a hyperlink-capable terminal above.
-    return { images: null, trueColor: hasTrueColorHint || !!process.env.WT_SESSION, hyperlinks: false };
+    return { images: null, trueColor: hasTrueColorHint, hyperlinks: false };
 }
 function getCapabilities() {
     if (!cachedCapabilities) {
@@ -146664,7 +147097,7 @@ function imageFallback(mimeType, dimensions, filename) {
     return `[Image: ${parts.join(" ")}]`;
 }
 //# sourceMappingURL=terminal-image.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/tui.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/tui.js
 /**
  * Minimal TUI implementation with differential rendering
  */
@@ -147742,7 +148175,7 @@ class TUI extends Container {
     }
 }
 //# sourceMappingURL=tui.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/undo-stack.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/undo-stack.js
 /**
  * Generic undo stack with clone-on-push semantics.
  *
@@ -147768,7 +148201,104 @@ class UndoStack {
     }
 }
 //# sourceMappingURL=undo-stack.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/select-list.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/word-navigation.js
+
+const word_navigation_wordSegmenter = getWordSegmenter();
+/**
+ * Find the cursor position after moving one word backward from `cursor` in `text`.
+ * Skips trailing whitespace, then stops at the next word/punctuation boundary.
+ *
+ * Pure function - does not mutate any state.
+ */
+function findWordBackward(text, cursor, options) {
+    if (cursor <= 0)
+        return 0;
+    const textBeforeCursor = text.slice(0, cursor);
+    const segmentFn = options?.segment;
+    const isAtomic = options?.isAtomicSegment;
+    const segments = segmentFn ? [...segmentFn(textBeforeCursor)] : [...word_navigation_wordSegmenter.segment(textBeforeCursor)];
+    let newCursor = cursor;
+    // Skip trailing whitespace
+    while (segments.length > 0 &&
+        !isAtomic?.(segments[segments.length - 1]?.segment || "") &&
+        isWhitespaceChar(segments[segments.length - 1]?.segment || "")) {
+        newCursor -= segments.pop()?.segment.length || 0;
+    }
+    if (segments.length === 0)
+        return newCursor;
+    const last = segments[segments.length - 1];
+    if (isAtomic?.(last.segment)) {
+        // Skip one atomic segment.
+        newCursor -= last.segment.length;
+    }
+    else if (last.isWordLike) {
+        // Skip inside one word-like segment, preserving ASCII punctuation boundaries.
+        const segment = last.segment;
+        const matches = [...segment.matchAll(new RegExp(PUNCTUATION_REGEX, "g"))];
+        if (matches.length <= 0) {
+            newCursor -= segment.length;
+        }
+        else {
+            const lastMatch = matches[matches.length - 1];
+            newCursor -= segment.length - (lastMatch.index + lastMatch[0].length);
+        }
+    }
+    else {
+        // Skip non-word non-whitespace run (punctuation)
+        while (segments.length > 0 &&
+            !isAtomic?.(segments[segments.length - 1]?.segment || "") &&
+            !segments[segments.length - 1]?.isWordLike &&
+            !isWhitespaceChar(segments[segments.length - 1]?.segment || "")) {
+            newCursor -= segments.pop()?.segment.length || 0;
+        }
+    }
+    return newCursor;
+}
+/**
+ * Find the cursor position after moving one word forward from `cursor` in `text`.
+ * Skips leading whitespace, then stops at the next word/punctuation boundary.
+ *
+ * Pure function - does not mutate any state.
+ */
+function findWordForward(text, cursor, options) {
+    if (cursor >= text.length)
+        return text.length;
+    const textAfterCursor = text.slice(cursor);
+    const segmentFn = options?.segment;
+    const isAtomic = options?.isAtomicSegment;
+    const segments = segmentFn ? segmentFn(textAfterCursor) : word_navigation_wordSegmenter.segment(textAfterCursor);
+    const iterator = segments[Symbol.iterator]();
+    let next = iterator.next();
+    let newCursor = cursor;
+    // Skip leading whitespace
+    while (!next.done && !isAtomic?.(next.value.segment) && isWhitespaceChar(next.value.segment)) {
+        newCursor += next.value.segment.length;
+        next = iterator.next();
+    }
+    if (next.done)
+        return newCursor;
+    if (isAtomic?.(next.value.segment)) {
+        // Skip one atomic segment.
+        newCursor += next.value.segment.length;
+    }
+    else if (next.value.isWordLike) {
+        // Skip inside one word-like segment, preserving ASCII punctuation boundaries.
+        newCursor += PUNCTUATION_REGEX.exec(next.value.segment)?.index ?? next.value.segment.length;
+    }
+    else {
+        // Skip non-word non-whitespace run (punctuation)
+        while (!next.done &&
+            !isAtomic?.(next.value.segment) &&
+            !next.value.isWordLike &&
+            !isWhitespaceChar(next.value.segment)) {
+            newCursor += next.value.segment.length;
+            next = iterator.next();
+        }
+    }
+    return newCursor;
+}
+//# sourceMappingURL=word-navigation.js.map
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/select-list.js
 
 
 const DEFAULT_PRIMARY_COLUMN_WIDTH = 32;
@@ -147928,7 +148458,7 @@ class SelectList {
     }
 }
 //# sourceMappingURL=select-list.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/editor.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/editor.js
 
 
 
@@ -147936,7 +148466,9 @@ class SelectList {
 
 
 
-const baseSegmenter = getSegmenter();
+
+const editor_graphemeSegmenter = getGraphemeSegmenter();
+const editor_wordSegmenter = getWordSegmenter();
 /** Regex matching paste markers like `[paste #1 +123 lines]` or `[paste #2 1234 chars]`. */
 const PASTE_MARKER_REGEX = /\[paste #(\d+)( (\+\d+ lines|\d+ chars))?\]/g;
 /** Non-global version for single-segment testing. */
@@ -147952,7 +148484,7 @@ function isPasteMarker(segment) {
  *
  * Only markers whose numeric ID exists in `validIds` are merged.
  */
-function segmentWithMarkers(text, validIds) {
+function segmentWithMarkers(text, baseSegmenter, validIds) {
     // Fast path: no paste markers in the text or no valid IDs.
     if (validIds.size === 0 || !text.includes("[paste #")) {
         return baseSegmenter.segment(text);
@@ -148017,7 +148549,7 @@ function wordWrapLine(line, maxWidth, preSegmented) {
         return [{ text: line, startIndex: 0, endIndex: line.length }];
     }
     const chunks = [];
-    const segments = preSegmented ?? [...baseSegmenter.segment(line)];
+    const segments = preSegmented ?? [...editor_graphemeSegmenter.segment(line)];
     let currentWidth = 0;
     let chunkStart = 0;
     // Wrap opportunity: the position after the last whitespace before a non-whitespace
@@ -148156,8 +148688,8 @@ class Editor {
         return new Set(this.pastes.keys());
     }
     /** Segment text with paste-marker awareness, only merging markers with valid IDs. */
-    segment(text) {
-        return segmentWithMarkers(text, this.validPasteIds());
+    segment(text, mode) {
+        return segmentWithMarkers(text, mode === "word" ? editor_wordSegmenter : editor_graphemeSegmenter, this.validPasteIds());
     }
     getPaddingX() {
         return this.paddingX;
@@ -148312,7 +148844,7 @@ class Editor {
                 if (after.length > 0) {
                     // Cursor is on a character (grapheme) - replace it with highlighted version
                     // Get the first grapheme from 'after'
-                    const afterGraphemes = [...this.segment(after)];
+                    const afterGraphemes = [...this.segment(after, "grapheme")];
                     const firstGrapheme = afterGraphemes[0]?.segment || "";
                     const restAfter = after.slice(firstGrapheme.length);
                     const cursor = `\x1b[7m${firstGrapheme}\x1b[0m`;
@@ -148648,7 +149180,7 @@ class Editor {
             }
             else {
                 // Line needs wrapping - use word-aware wrapping
-                const chunks = wordWrapLine(line, contentWidth, [...this.segment(line)]);
+                const chunks = wordWrapLine(line, contentWidth, [...this.segment(line, "grapheme")]);
                 for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
                     const chunk = chunks[chunkIndex];
                     if (!chunk)
@@ -148961,7 +149493,7 @@ class Editor {
             const line = this.state.lines[this.state.cursorLine] || "";
             const beforeCursor = line.slice(0, this.state.cursorCol);
             // Find the last grapheme in the text before cursor
-            const graphemes = [...this.segment(beforeCursor)];
+            const graphemes = [...this.segment(beforeCursor, "grapheme")];
             const lastGrapheme = graphemes[graphemes.length - 1];
             const graphemeLength = lastGrapheme ? lastGrapheme.segment.length : 1;
             const before = line.slice(0, this.state.cursorCol - graphemeLength);
@@ -149045,7 +149577,7 @@ class Editor {
         // Snap cursor to atomic segment boundary (e.g. paste markers)
         // so the cursor never lands in the middle of a multi-grapheme unit.
         // Single-grapheme segments don't need snapping.
-        const segments = [...this.segment(logicalLine)];
+        const segments = [...this.segment(logicalLine, "grapheme")];
         for (const seg of segments) {
             if (seg.index > this.state.cursorCol)
                 break;
@@ -149265,7 +149797,7 @@ class Editor {
             // Delete grapheme at cursor position (handles emojis, combining characters, etc.)
             const afterCursor = currentLine.slice(this.state.cursorCol);
             // Find the first grapheme at cursor
-            const graphemes = [...this.segment(afterCursor)];
+            const graphemes = [...this.segment(afterCursor, "grapheme")];
             const firstGrapheme = graphemes[0];
             const graphemeLength = firstGrapheme ? firstGrapheme.segment.length : 1;
             const before = currentLine.slice(0, this.state.cursorCol);
@@ -149320,7 +149852,7 @@ class Editor {
             }
             else {
                 // Line needs wrapping - use word-aware wrapping
-                const chunks = wordWrapLine(line, width, [...this.segment(line)]);
+                const chunks = wordWrapLine(line, width, [...this.segment(line, "grapheme")]);
                 for (const chunk of chunks) {
                     visualLines.push({
                         logicalLine: i,
@@ -149372,7 +149904,7 @@ class Editor {
                 // Moving right - move by one grapheme (handles emojis, combining characters, etc.)
                 if (this.state.cursorCol < currentLine.length) {
                     const afterCursor = currentLine.slice(this.state.cursorCol);
-                    const graphemes = [...this.segment(afterCursor)];
+                    const graphemes = [...this.segment(afterCursor, "grapheme")];
                     const firstGrapheme = graphemes[0];
                     this.setCursorCol(this.state.cursorCol + (firstGrapheme ? firstGrapheme.segment.length : 1));
                 }
@@ -149393,7 +149925,7 @@ class Editor {
                 // Moving left - move by one grapheme (handles emojis, combining characters, etc.)
                 if (this.state.cursorCol > 0) {
                     const beforeCursor = currentLine.slice(0, this.state.cursorCol);
-                    const graphemes = [...this.segment(beforeCursor)];
+                    const graphemes = [...this.segment(beforeCursor, "grapheme")];
                     const lastGrapheme = graphemes[graphemes.length - 1];
                     this.setCursorCol(this.state.cursorCol - (lastGrapheme ? lastGrapheme.segment.length : 1));
                 }
@@ -149431,40 +149963,10 @@ class Editor {
             }
             return;
         }
-        const textBeforeCursor = currentLine.slice(0, this.state.cursorCol);
-        const graphemes = [...this.segment(textBeforeCursor)];
-        let newCol = this.state.cursorCol;
-        // Skip trailing whitespace
-        while (graphemes.length > 0 &&
-            !isPasteMarker(graphemes[graphemes.length - 1]?.segment || "") &&
-            isWhitespaceChar(graphemes[graphemes.length - 1]?.segment || "")) {
-            newCol -= graphemes.pop()?.segment.length || 0;
-        }
-        if (graphemes.length > 0) {
-            const lastGrapheme = graphemes[graphemes.length - 1]?.segment || "";
-            if (isPasteMarker(lastGrapheme)) {
-                // Paste marker is a single atomic word
-                newCol -= graphemes.pop()?.segment.length || 0;
-            }
-            else if (isPunctuationChar(lastGrapheme)) {
-                // Skip punctuation run
-                while (graphemes.length > 0 &&
-                    isPunctuationChar(graphemes[graphemes.length - 1]?.segment || "") &&
-                    !isPasteMarker(graphemes[graphemes.length - 1]?.segment || "")) {
-                    newCol -= graphemes.pop()?.segment.length || 0;
-                }
-            }
-            else {
-                // Skip word run
-                while (graphemes.length > 0 &&
-                    !isWhitespaceChar(graphemes[graphemes.length - 1]?.segment || "") &&
-                    !isPunctuationChar(graphemes[graphemes.length - 1]?.segment || "") &&
-                    !isPasteMarker(graphemes[graphemes.length - 1]?.segment || "")) {
-                    newCol -= graphemes.pop()?.segment.length || 0;
-                }
-            }
-        }
-        this.setCursorCol(newCol);
+        this.setCursorCol(findWordBackward(currentLine, this.state.cursorCol, {
+            segment: (text) => this.segment(text, "word"),
+            isAtomicSegment: isPasteMarker,
+        }));
     }
     /**
      * Yank (paste) the most recent kill ring entry at cursor position.
@@ -149621,41 +150123,10 @@ class Editor {
             }
             return;
         }
-        const textAfterCursor = currentLine.slice(this.state.cursorCol);
-        const segments = this.segment(textAfterCursor);
-        const iterator = segments[Symbol.iterator]();
-        let next = iterator.next();
-        let newCol = this.state.cursorCol;
-        // Skip leading whitespace
-        while (!next.done && !isPasteMarker(next.value.segment) && isWhitespaceChar(next.value.segment)) {
-            newCol += next.value.segment.length;
-            next = iterator.next();
-        }
-        if (!next.done) {
-            const firstGrapheme = next.value.segment;
-            if (isPasteMarker(firstGrapheme)) {
-                // Paste marker is a single atomic word
-                newCol += firstGrapheme.length;
-            }
-            else if (isPunctuationChar(firstGrapheme)) {
-                // Skip punctuation run
-                while (!next.done && isPunctuationChar(next.value.segment) && !isPasteMarker(next.value.segment)) {
-                    newCol += next.value.segment.length;
-                    next = iterator.next();
-                }
-            }
-            else {
-                // Skip word run
-                while (!next.done &&
-                    !isWhitespaceChar(next.value.segment) &&
-                    !isPunctuationChar(next.value.segment) &&
-                    !isPasteMarker(next.value.segment)) {
-                    newCol += next.value.segment.length;
-                    next = iterator.next();
-                }
-            }
-        }
-        this.setCursorCol(newCol);
+        this.setCursorCol(findWordForward(currentLine, this.state.cursorCol, {
+            segment: (text) => this.segment(text, "word"),
+            isAtomicSegment: isPasteMarker,
+        }));
     }
     // Slash menu only allowed on the first line of the editor
     isSlashMenuAllowed() {
@@ -149845,7 +150316,7 @@ class Editor {
     }
 }
 //# sourceMappingURL=editor.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/image.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/image.js
 
 class Image {
     base64Data;
@@ -149935,14 +150406,15 @@ class Image {
     }
 }
 //# sourceMappingURL=image.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/input.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/input.js
 
 
 
 
 
 
-const input_segmenter = getSegmenter();
+
+const segmenter = getGraphemeSegmenter();
 /**
  * Input component - single-line text input with horizontal scrolling
  */
@@ -150056,7 +150528,7 @@ class Input {
             this.lastAction = null;
             if (this.cursor > 0) {
                 const beforeCursor = this.value.slice(0, this.cursor);
-                const graphemes = [...input_segmenter.segment(beforeCursor)];
+                const graphemes = [...segmenter.segment(beforeCursor)];
                 const lastGrapheme = graphemes[graphemes.length - 1];
                 this.cursor -= lastGrapheme ? lastGrapheme.segment.length : 1;
             }
@@ -150066,7 +150538,7 @@ class Input {
             this.lastAction = null;
             if (this.cursor < this.value.length) {
                 const afterCursor = this.value.slice(this.cursor);
-                const graphemes = [...input_segmenter.segment(afterCursor)];
+                const graphemes = [...segmenter.segment(afterCursor)];
                 const firstGrapheme = graphemes[0];
                 this.cursor += firstGrapheme ? firstGrapheme.segment.length : 1;
             }
@@ -150123,7 +150595,7 @@ class Input {
         if (this.cursor > 0) {
             this.pushUndo();
             const beforeCursor = this.value.slice(0, this.cursor);
-            const graphemes = [...input_segmenter.segment(beforeCursor)];
+            const graphemes = [...segmenter.segment(beforeCursor)];
             const lastGrapheme = graphemes[graphemes.length - 1];
             const graphemeLength = lastGrapheme ? lastGrapheme.segment.length : 1;
             this.value = this.value.slice(0, this.cursor - graphemeLength) + this.value.slice(this.cursor);
@@ -150135,7 +150607,7 @@ class Input {
         if (this.cursor < this.value.length) {
             this.pushUndo();
             const afterCursor = this.value.slice(this.cursor);
-            const graphemes = [...input_segmenter.segment(afterCursor)];
+            const graphemes = [...segmenter.segment(afterCursor)];
             const firstGrapheme = graphemes[0];
             const graphemeLength = firstGrapheme ? firstGrapheme.segment.length : 1;
             this.value = this.value.slice(0, this.cursor) + this.value.slice(this.cursor + graphemeLength);
@@ -150227,65 +150699,16 @@ class Input {
         this.lastAction = null;
     }
     moveWordBackwards() {
-        if (this.cursor === 0) {
+        if (this.cursor === 0)
             return;
-        }
         this.lastAction = null;
-        const textBeforeCursor = this.value.slice(0, this.cursor);
-        const graphemes = [...input_segmenter.segment(textBeforeCursor)];
-        // Skip trailing whitespace
-        while (graphemes.length > 0 && isWhitespaceChar(graphemes[graphemes.length - 1]?.segment || "")) {
-            this.cursor -= graphemes.pop()?.segment.length || 0;
-        }
-        if (graphemes.length > 0) {
-            const lastGrapheme = graphemes[graphemes.length - 1]?.segment || "";
-            if (isPunctuationChar(lastGrapheme)) {
-                // Skip punctuation run
-                while (graphemes.length > 0 && isPunctuationChar(graphemes[graphemes.length - 1]?.segment || "")) {
-                    this.cursor -= graphemes.pop()?.segment.length || 0;
-                }
-            }
-            else {
-                // Skip word run
-                while (graphemes.length > 0 &&
-                    !isWhitespaceChar(graphemes[graphemes.length - 1]?.segment || "") &&
-                    !isPunctuationChar(graphemes[graphemes.length - 1]?.segment || "")) {
-                    this.cursor -= graphemes.pop()?.segment.length || 0;
-                }
-            }
-        }
+        this.cursor = findWordBackward(this.value, this.cursor);
     }
     moveWordForwards() {
-        if (this.cursor >= this.value.length) {
+        if (this.cursor >= this.value.length)
             return;
-        }
         this.lastAction = null;
-        const textAfterCursor = this.value.slice(this.cursor);
-        const segments = input_segmenter.segment(textAfterCursor);
-        const iterator = segments[Symbol.iterator]();
-        let next = iterator.next();
-        // Skip leading whitespace
-        while (!next.done && isWhitespaceChar(next.value.segment)) {
-            this.cursor += next.value.segment.length;
-            next = iterator.next();
-        }
-        if (!next.done) {
-            const firstGrapheme = next.value.segment;
-            if (isPunctuationChar(firstGrapheme)) {
-                // Skip punctuation run
-                while (!next.done && isPunctuationChar(next.value.segment)) {
-                    this.cursor += next.value.segment.length;
-                    next = iterator.next();
-                }
-            }
-            else {
-                // Skip word run
-                while (!next.done && !isWhitespaceChar(next.value.segment) && !isPunctuationChar(next.value.segment)) {
-                    this.cursor += next.value.segment.length;
-                    next = iterator.next();
-                }
-            }
-        }
+        this.cursor = findWordForward(this.value, this.cursor);
     }
     handlePaste(pastedText) {
         this.lastAction = null;
@@ -150344,7 +150767,7 @@ class Input {
         }
         // Build line with fake cursor
         // Insert cursor character at cursor position
-        const graphemes = [...input_segmenter.segment(visibleText.slice(cursorDisplay))];
+        const graphemes = [...segmenter.segment(visibleText.slice(cursorDisplay))];
         const cursorGrapheme = graphemes[0];
         const beforeCursor = visibleText.slice(0, cursorDisplay);
         const atCursor = cursorGrapheme?.segment ?? " "; // Character at cursor, or space if at end
@@ -152534,7 +152957,7 @@ var lexer = _Lexer.lex;
 
 //# sourceMappingURL=marked.esm.js.map
 
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/markdown.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/markdown.js
 
 
 
@@ -152564,17 +152987,19 @@ class Markdown {
     paddingY; // Top/bottom padding
     defaultTextStyle;
     theme;
+    options;
     defaultStylePrefix;
     // Cache for rendered output
     cachedText;
     cachedWidth;
     cachedLines;
-    constructor(text, paddingX, paddingY, theme, defaultTextStyle) {
+    constructor(text, paddingX, paddingY, theme, defaultTextStyle, options) {
         this.text = text;
         this.paddingX = paddingX;
         this.paddingY = paddingY;
         this.theme = theme;
         this.defaultTextStyle = defaultTextStyle;
+        this.options = options ? { ...options } : {};
     }
     setText(text) {
         this.text = text;
@@ -152958,6 +153383,10 @@ class Markdown {
         }
         return result;
     }
+    getOrderedListMarker(item) {
+        const match = /^(?: {0,3})(\d{1,9}[.)])[ \t]+/.exec(item.raw);
+        return match ? `${match[1]} ` : undefined;
+    }
     /**
      * Render a list with proper nesting support
      */
@@ -152968,7 +153397,11 @@ class Markdown {
         const startNumber = typeof token.start === "number" ? token.start : 1;
         for (let i = 0; i < token.items.length; i++) {
             const item = token.items[i];
-            const bullet = token.ordered ? `${startNumber + i}. ` : "- ";
+            const bullet = token.ordered
+                ? this.options.preserveOrderedListMarkers
+                    ? (this.getOrderedListMarker(item) ?? `${startNumber + i}. `)
+                    : `${startNumber + i}. `
+                : "- ";
             const taskMarker = item.task ? `[${item.checked ? "x" : " "}] ` : "";
             const marker = bullet + taskMarker;
             const firstPrefix = indent + this.theme.listBullet(marker);
@@ -153169,7 +153602,7 @@ class Markdown {
     }
 }
 //# sourceMappingURL=markdown.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/settings-list.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/settings-list.js
 
 
 
@@ -153355,7 +153788,7 @@ class SettingsList {
     }
 }
 //# sourceMappingURL=settings-list.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/spacer.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/spacer.js
 /**
  * Spacer component that renders empty lines
  */
@@ -153379,7 +153812,7 @@ class Spacer {
     }
 }
 //# sourceMappingURL=spacer.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/components/truncated-text.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/components/truncated-text.js
 
 /**
  * Text component that truncates to fit viewport width
@@ -153433,7 +153866,7 @@ class TruncatedText {
 //# sourceMappingURL=truncated-text.js.map
 // EXTERNAL MODULE: external "events"
 var external_events_ = __webpack_require__(24434);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/stdin-buffer.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/stdin-buffer.js
 /**
  * StdinBuffer buffers input and emits complete sequences.
  *
@@ -153797,17 +154230,98 @@ class StdinBuffer extends external_events_.EventEmitter {
 //# sourceMappingURL=stdin-buffer.js.map
 // EXTERNAL MODULE: external "node:module"
 var external_node_module_ = __webpack_require__(98995);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/terminal.js
-
-
-
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/native-modifiers.js
 
 
 
 const cjsRequire = (0,external_node_module_.createRequire)(import.meta.url);
+let nativeModifiersHelper;
+function isNativeModifiersHelper(value) {
+    if (typeof value !== "object" || value === null)
+        return false;
+    const candidate = value.isModifierPressed;
+    return typeof candidate === "function";
+}
+function loadNativeModifiersHelper() {
+    if (nativeModifiersHelper !== undefined)
+        return nativeModifiersHelper ?? undefined;
+    nativeModifiersHelper = null;
+    if (process.platform !== "darwin")
+        return undefined;
+    const arch = process.arch;
+    if (arch !== "x64" && arch !== "arm64")
+        return undefined;
+    const moduleDir = external_node_path_.dirname((0,external_node_url_.fileURLToPath)(import.meta.url));
+    const nativePath = external_node_path_.join("native", "darwin", "prebuilds", `darwin-${arch}`, "darwin-modifiers.node");
+    const candidates = [
+        external_node_path_.join(moduleDir, "..", nativePath),
+        external_node_path_.join(moduleDir, nativePath),
+        external_node_path_.join(external_node_path_.dirname(process.execPath), nativePath),
+    ];
+    for (const modulePath of candidates) {
+        try {
+            const helper = cjsRequire(modulePath);
+            if (isNativeModifiersHelper(helper)) {
+                nativeModifiersHelper = helper;
+                return helper;
+            }
+        }
+        catch {
+            // Try the next possible packaging location.
+        }
+    }
+    return undefined;
+}
+function isNativeModifierPressed(key) {
+    const helper = loadNativeModifiersHelper();
+    if (!helper)
+        return false;
+    try {
+        return helper.isModifierPressed(key) === true;
+    }
+    catch {
+        return false;
+    }
+}
+//# sourceMappingURL=native-modifiers.js.map
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/terminal.js
+
+
+
+
+
+
+
+const terminal_cjsRequire = (0,external_node_module_.createRequire)(import.meta.url);
 const TERMINAL_PROGRESS_KEEPALIVE_MS = 1000;
 const TERMINAL_PROGRESS_ACTIVE_SEQUENCE = "\x1b]9;4;3\x07";
 const TERMINAL_PROGRESS_CLEAR_SEQUENCE = "\x1b]9;4;0;\x07";
+const APPLE_TERMINAL_SHIFT_ENTER_SEQUENCE = "\x1b[13;2u";
+const DESIRED_KITTY_KEYBOARD_PROTOCOL_FLAGS = 7;
+const KITTY_KEYBOARD_PROTOCOL_FALLBACK_TIMEOUT_MS = 150;
+const KEYBOARD_PROTOCOL_RESPONSE_FRAGMENT_TIMEOUT_MS = 150;
+const KITTY_KEYBOARD_PROTOCOL_QUERY = `\x1b[>${DESIRED_KITTY_KEYBOARD_PROTOCOL_FLAGS}u\x1b[?u\x1b[c`;
+function parseKeyboardProtocolNegotiationSequence(sequence) {
+    const kittyFlags = sequence.match(/^\x1b\[\?(\d+)u$/);
+    if (kittyFlags) {
+        return { type: "kitty-flags", flags: Number.parseInt(kittyFlags[1], 10) };
+    }
+    if (/^\x1b\[\?[\d;]*c$/.test(sequence)) {
+        return { type: "device-attributes" };
+    }
+    return undefined;
+}
+function isKeyboardProtocolNegotiationSequencePrefix(sequence, allowBareEscapePrefix) {
+    return (allowBareEscapePrefix && sequence === "\x1b") || sequence === "\x1b[" || /^\x1b\[\?[\d;]*$/.test(sequence);
+}
+function isAppleTerminalSession() {
+    return process.platform === "darwin" && process.env.TERM_PROGRAM === "Apple_Terminal";
+}
+function normalizeAppleTerminalInput(data, isAppleTerminal, isShiftPressed) {
+    if (isAppleTerminal && data === "\r" && isShiftPressed)
+        return APPLE_TERMINAL_SHIFT_ENTER_SEQUENCE;
+    return data;
+}
 /**
  * Real terminal using process.stdin/stdout
  */
@@ -153817,6 +154331,12 @@ class ProcessTerminal {
     resizeHandler;
     _kittyProtocolActive = false;
     _modifyOtherKeysActive = false;
+    keyboardProtocolPushed = false;
+    keyboardProtocolNegotiationPending = false;
+    keyboardProtocolLateResponsePending = false;
+    keyboardProtocolNegotiationBuffer = "";
+    keyboardProtocolFallbackTimer;
+    keyboardProtocolBufferFlushTimer;
     stdinBuffer;
     stdinDataHandler;
     progressInterval;
@@ -153878,28 +154398,28 @@ class ProcessTerminal {
      */
     setupStdinBuffer() {
         this.stdinBuffer = new StdinBuffer({ timeout: 10 });
-        // Kitty protocol response pattern: \x1b[?<flags>u
-        const kittyResponsePattern = /^\x1b\[\?(\d+)u$/;
         // Forward individual sequences to the input handler
         this.stdinBuffer.on("data", (sequence) => {
-            // Check for Kitty protocol response (only if not already enabled)
-            if (!this._kittyProtocolActive) {
-                const match = sequence.match(kittyResponsePattern);
-                if (match) {
-                    this._kittyProtocolActive = true;
-                    setKittyProtocolActive(true);
-                    // Enable Kitty keyboard protocol (push flags)
-                    // Flag 1 = disambiguate escape codes
-                    // Flag 2 = report event types (press/repeat/release)
-                    // Flag 4 = report alternate keys (shifted key, base layout key)
-                    // Base layout key enables shortcuts to work with non-Latin keyboard layouts
-                    process.stdout.write("\x1b[>7u");
-                    return; // Don't forward protocol response to TUI
+            if (this.keyboardProtocolNegotiationPending) {
+                const negotiationSequence = this.readKeyboardProtocolNegotiationSequence(sequence, true);
+                if (negotiationSequence === "pending") {
+                    return; // Wait for the rest of a split negotiation response.
+                }
+                if (this.handleKeyboardProtocolNegotiationSequence(negotiationSequence)) {
+                    return;
                 }
             }
-            if (this.inputHandler) {
-                this.inputHandler(sequence);
+            if (this.keyboardProtocolLateResponsePending) {
+                const negotiationSequence = this.readKeyboardProtocolNegotiationSequence(sequence, false);
+                if (negotiationSequence === "pending") {
+                    this.scheduleKeyboardProtocolNegotiationBufferFlush();
+                    return; // Wait for the rest of a split late negotiation response.
+                }
+                if (this.handleKeyboardProtocolNegotiationSequence(negotiationSequence)) {
+                    return;
+                }
             }
+            this.forwardInputSequence(sequence);
         });
         // Re-wrap paste content with bracketed paste markers for existing editor handling
         this.stdinBuffer.on("paste", (content) => {
@@ -153913,29 +154433,131 @@ class ProcessTerminal {
         };
     }
     /**
-     * Query terminal for Kitty keyboard protocol support and enable if available.
+     * Query terminal for Kitty keyboard protocol support and enable it if available.
      *
-     * Sends CSI ? u to query current flags. If terminal responds with CSI ? <flags> u,
-     * it supports the protocol and we enable it with CSI > 1 u.
+     * Kitty's progressive enhancement detection requires requesting the desired
+     * flags before querying them. The trailing DA query is a sentinel supported by
+     * terminals that do not know Kitty keyboard protocol. A short timeout remains
+     * as a backup for terminals, PTYs, and SSH sessions that delay, split, or drop
+     * the DA response.
      *
-     * If no Kitty response arrives shortly after startup, fall back to enabling
-     * xterm modifyOtherKeys mode 2. This is needed for tmux, which can forward
-     * modified enter keys as CSI-u when extended-keys is enabled, but may not
-     * answer the Kitty protocol query.
-     *
-     * The response is detected in setupStdinBuffer's data handler, which properly
-     * handles the case where the response arrives split across multiple stdin events.
+     * The requested flags are:
+     * - 1 = disambiguate escape codes
+     * - 2 = report event types (press/repeat/release)
+     * - 4 = report alternate keys (shifted key, base layout key)
      */
     queryAndEnableKittyProtocol() {
         this.setupStdinBuffer();
         process.stdin.on("data", this.stdinDataHandler);
-        process.stdout.write("\x1b[?u");
-        setTimeout(() => {
-            if (!this._kittyProtocolActive && !this._modifyOtherKeysActive) {
-                process.stdout.write("\x1b[>4;2m");
-                this._modifyOtherKeysActive = true;
+        this.keyboardProtocolPushed = true;
+        this.keyboardProtocolNegotiationPending = true;
+        this.keyboardProtocolLateResponsePending = false;
+        this.clearKeyboardProtocolNegotiationBuffer();
+        process.stdout.write(KITTY_KEYBOARD_PROTOCOL_QUERY);
+        this.keyboardProtocolFallbackTimer = setTimeout(() => {
+            this.keyboardProtocolFallbackTimer = undefined;
+            this.keyboardProtocolNegotiationPending = false;
+            this.keyboardProtocolLateResponsePending = true;
+            if (this.keyboardProtocolNegotiationBuffer === "\x1b") {
+                this.flushKeyboardProtocolNegotiationBufferAsInput();
             }
-        }, 150);
+            else {
+                this.scheduleKeyboardProtocolNegotiationBufferFlush();
+            }
+            this.enableModifyOtherKeys();
+        }, KITTY_KEYBOARD_PROTOCOL_FALLBACK_TIMEOUT_MS);
+    }
+    handleKeyboardProtocolNegotiationSequence(negotiationSequence) {
+        if (!negotiationSequence)
+            return false;
+        if (negotiationSequence.type === "kitty-flags") {
+            if (negotiationSequence.flags !== 0 && !this._kittyProtocolActive) {
+                this._kittyProtocolActive = true;
+                setKittyProtocolActive(true);
+                this.keyboardProtocolNegotiationPending = false;
+                this.keyboardProtocolLateResponsePending = true;
+                this.clearKeyboardProtocolNegotiationBuffer();
+                this.clearKeyboardProtocolFallbackTimer();
+            }
+            return true;
+        }
+        this.keyboardProtocolNegotiationPending = false;
+        this.keyboardProtocolLateResponsePending = true;
+        this.clearKeyboardProtocolNegotiationBuffer();
+        this.clearKeyboardProtocolFallbackTimer();
+        this.enableModifyOtherKeys();
+        return true;
+    }
+    readKeyboardProtocolNegotiationSequence(sequence, allowBareEscapePrefix) {
+        if (this.keyboardProtocolNegotiationBuffer) {
+            const bufferedSequence = this.keyboardProtocolNegotiationBuffer + sequence;
+            const negotiationSequence = parseKeyboardProtocolNegotiationSequence(bufferedSequence);
+            if (negotiationSequence) {
+                this.clearKeyboardProtocolNegotiationBuffer();
+                return negotiationSequence;
+            }
+            if (isKeyboardProtocolNegotiationSequencePrefix(bufferedSequence, allowBareEscapePrefix)) {
+                this.setKeyboardProtocolNegotiationBuffer(bufferedSequence);
+                return "pending";
+            }
+            this.flushKeyboardProtocolNegotiationBufferAsInput();
+        }
+        const negotiationSequence = parseKeyboardProtocolNegotiationSequence(sequence);
+        if (negotiationSequence)
+            return negotiationSequence;
+        if (isKeyboardProtocolNegotiationSequencePrefix(sequence, allowBareEscapePrefix)) {
+            this.setKeyboardProtocolNegotiationBuffer(sequence);
+            return "pending";
+        }
+        return undefined;
+    }
+    setKeyboardProtocolNegotiationBuffer(sequence) {
+        this.clearKeyboardProtocolNegotiationBufferFlushTimer();
+        this.keyboardProtocolNegotiationBuffer = sequence;
+    }
+    clearKeyboardProtocolNegotiationBuffer() {
+        this.clearKeyboardProtocolNegotiationBufferFlushTimer();
+        this.keyboardProtocolNegotiationBuffer = "";
+    }
+    flushKeyboardProtocolNegotiationBufferAsInput() {
+        if (!this.keyboardProtocolNegotiationBuffer)
+            return;
+        const sequence = this.keyboardProtocolNegotiationBuffer;
+        this.clearKeyboardProtocolNegotiationBuffer();
+        this.forwardInputSequence(sequence);
+    }
+    scheduleKeyboardProtocolNegotiationBufferFlush() {
+        if (!this.keyboardProtocolNegotiationBuffer || this.keyboardProtocolBufferFlushTimer)
+            return;
+        this.keyboardProtocolBufferFlushTimer = setTimeout(() => {
+            this.keyboardProtocolBufferFlushTimer = undefined;
+            this.flushKeyboardProtocolNegotiationBufferAsInput();
+        }, KEYBOARD_PROTOCOL_RESPONSE_FRAGMENT_TIMEOUT_MS);
+    }
+    clearKeyboardProtocolNegotiationBufferFlushTimer() {
+        if (!this.keyboardProtocolBufferFlushTimer)
+            return;
+        clearTimeout(this.keyboardProtocolBufferFlushTimer);
+        this.keyboardProtocolBufferFlushTimer = undefined;
+    }
+    forwardInputSequence(sequence) {
+        if (!this.inputHandler)
+            return;
+        const isAppleTerminal = sequence === "\r" && isAppleTerminalSession();
+        const input = normalizeAppleTerminalInput(sequence, isAppleTerminal, isAppleTerminal && isNativeModifierPressed("shift"));
+        this.inputHandler(input);
+    }
+    enableModifyOtherKeys() {
+        if (this._kittyProtocolActive || this._modifyOtherKeysActive)
+            return;
+        process.stdout.write("\x1b[>4;2m");
+        this._modifyOtherKeysActive = true;
+    }
+    clearKeyboardProtocolFallbackTimer() {
+        if (!this.keyboardProtocolFallbackTimer)
+            return;
+        clearTimeout(this.keyboardProtocolFallbackTimer);
+        this.keyboardProtocolFallbackTimer = undefined;
     }
     /**
      * On Windows, add ENABLE_VIRTUAL_TERMINAL_INPUT (0x0200) to the stdin
@@ -153962,7 +154584,7 @@ class ProcessTerminal {
             ];
             for (const modulePath of candidates) {
                 try {
-                    const helper = cjsRequire(modulePath);
+                    const helper = terminal_cjsRequire(modulePath);
                     helper.enableVirtualTerminalInput?.();
                     return;
                 }
@@ -153976,13 +154598,19 @@ class ProcessTerminal {
         }
     }
     async drainInput(maxMs = 1000, idleMs = 50) {
-        if (this._kittyProtocolActive) {
+        const shouldDisableKittyProtocol = this.keyboardProtocolPushed || this._kittyProtocolActive || this.keyboardProtocolNegotiationPending;
+        this.keyboardProtocolLateResponsePending = false;
+        this.clearKeyboardProtocolNegotiationBuffer();
+        this.clearKeyboardProtocolFallbackTimer();
+        if (shouldDisableKittyProtocol) {
             // Disable Kitty keyboard protocol first so any late key releases
             // do not generate new Kitty escape sequences.
             process.stdout.write("\x1b[<u");
+            this.keyboardProtocolPushed = false;
             this._kittyProtocolActive = false;
             setKittyProtocolActive(false);
         }
+        this.keyboardProtocolNegotiationPending = false;
         if (this._modifyOtherKeysActive) {
             process.stdout.write("\x1b[>4;0m");
             this._modifyOtherKeysActive = false;
@@ -154017,12 +154645,18 @@ class ProcessTerminal {
         }
         // Disable bracketed paste mode
         process.stdout.write("\x1b[?2004l");
+        const shouldDisableKittyProtocol = this.keyboardProtocolPushed || this._kittyProtocolActive || this.keyboardProtocolNegotiationPending;
+        this.keyboardProtocolLateResponsePending = false;
+        this.clearKeyboardProtocolNegotiationBuffer();
+        this.clearKeyboardProtocolFallbackTimer();
         // Disable Kitty keyboard protocol if not already done by drainInput()
-        if (this._kittyProtocolActive) {
+        if (shouldDisableKittyProtocol) {
             process.stdout.write("\x1b[<u");
+            this.keyboardProtocolPushed = false;
             this._kittyProtocolActive = false;
             setKittyProtocolActive(false);
         }
+        this.keyboardProtocolNegotiationPending = false;
         if (this._modifyOtherKeysActive) {
             process.stdout.write("\x1b[>4;0m");
             this._modifyOtherKeysActive = false;
@@ -154123,7 +154757,7 @@ class ProcessTerminal {
     }
 }
 //# sourceMappingURL=terminal.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.75.5/node_modules/@earendil-works/pi-tui/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-tui@0.78.0/node_modules/@earendil-works/pi-tui/dist/index.js
 // Core TUI interfaces and classes
 // Autocomplete support
 
@@ -154156,13 +154790,11 @@ class ProcessTerminal {
 // Utilities
 
 //# sourceMappingURL=index.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/chalk@5.6.2/node_modules/chalk/source/index.js + 3 modules
-var chalk_source = __webpack_require__(39559);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/typebox@1.1.38/node_modules/typebox/build/index.mjs + 1 modules
 var build = __webpack_require__(45736);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/typebox@1.1.38/node_modules/typebox/build/compile/index.mjs + 3 modules
 var compile = __webpack_require__(50075);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/fs-watch.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/fs-watch.js
 
 const FS_WATCH_RETRY_DELAY_MS = 5000;
 function closeWatcher(watcher) {
@@ -154190,7 +154822,7 @@ function watchWithErrorHandler(path, listener, onError) {
 //# sourceMappingURL=fs-watch.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/highlight.js@10.7.3/node_modules/highlight.js/lib/index.js
 var lib = __webpack_require__(36214);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/html.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/html.js
 function decodeCodePoint(codePoint) {
     if (!Number.isInteger(codePoint) || codePoint < 0 || codePoint > 0x10ffff) {
         return undefined;
@@ -154231,7 +154863,7 @@ function decodeHtmlEntityAt(html, index) {
     return { text: decoded, length: semicolonIndex - index + 1 };
 }
 //# sourceMappingURL=html.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/syntax-highlight.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/syntax-highlight.js
 
 
 const SPAN_CLOSE = "</span>";
@@ -154350,7 +154982,7 @@ function supportsLanguage(name) {
     return lib.getLanguage(name) !== undefined;
 }
 //# sourceMappingURL=syntax-highlight.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/theme/theme.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/theme/theme.js
 
 
 
@@ -155197,17 +155829,27 @@ function buildCliHighlightTheme(t) {
         built_in: (s) => t.fg("syntaxType", s),
         literal: (s) => t.fg("syntaxNumber", s),
         number: (s) => t.fg("syntaxNumber", s),
+        regexp: (s) => t.fg("syntaxString", s),
         string: (s) => t.fg("syntaxString", s),
         comment: (s) => t.fg("syntaxComment", s),
+        doctag: (s) => t.fg("syntaxComment", s),
+        meta: (s) => t.fg("muted", s),
         function: (s) => t.fg("syntaxFunction", s),
         title: (s) => t.fg("syntaxFunction", s),
         class: (s) => t.fg("syntaxType", s),
         type: (s) => t.fg("syntaxType", s),
+        tag: (s) => t.fg("syntaxPunctuation", s),
+        name: (s) => t.fg("syntaxKeyword", s),
         attr: (s) => t.fg("syntaxVariable", s),
         variable: (s) => t.fg("syntaxVariable", s),
         params: (s) => t.fg("syntaxVariable", s),
         operator: (s) => t.fg("syntaxOperator", s),
         punctuation: (s) => t.fg("syntaxPunctuation", s),
+        emphasis: (s) => t.italic(s),
+        strong: (s) => t.bold(s),
+        link: (s) => t.underline(s),
+        addition: (s) => t.fg("toolDiffAdded", s),
+        deletion: (s) => t.fg("toolDiffRemoved", s),
     };
 }
 function getCliHighlightTheme(t) {
@@ -155377,7 +156019,7 @@ function getSettingsListTheme() {
 //# sourceMappingURL=theme.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/dist/index.js
 var yaml_dist = __webpack_require__(23328);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/frontmatter.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/frontmatter.js
 
 const normalizeNewlines = (value) => value.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 const extractFrontmatter = (content) => {
@@ -155404,7 +156046,7 @@ const parseFrontmatter = (content) => {
 };
 const stripFrontmatter = (content) => parseFrontmatter(content).body;
 //# sourceMappingURL=frontmatter.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/sleep.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/sleep.js
 /**
  * Sleep helper that respects abort signal.
  */
@@ -155422,7 +156064,7 @@ function sleep(ms, signal) {
     });
 }
 //# sourceMappingURL=sleep.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/auth-guidance.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/auth-guidance.js
 
 
 const UNKNOWN_PROVIDER = "unknown";
@@ -155446,7 +156088,7 @@ function formatNoApiKeyFoundMessage(provider) {
 //# sourceMappingURL=auth-guidance.js.map
 // EXTERNAL MODULE: external "node:crypto"
 var external_node_crypto_ = __webpack_require__(77598);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/ansi.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/ansi.js
 /*
  * Portions of this file are derived from:
  * - ansi-regex (https://github.com/chalk/ansi-regex)
@@ -155499,7 +156141,7 @@ function stripAnsi(value) {
     return value.replace(regex, "");
 }
 //# sourceMappingURL=ansi.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/shell.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/shell.js
 
 
 
@@ -155695,7 +156337,7 @@ function killProcessTree(pid) {
     }
 }
 //# sourceMappingURL=shell.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/truncate.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/truncate.js
 /**
  * Shared truncation utilities for tool outputs.
  *
@@ -155911,7 +156553,7 @@ function truncateLine(line, maxChars = GREP_MAX_LINE_LENGTH) {
     return { text: `${line.slice(0, maxChars)}... [truncated]`, wasTruncated: true };
 }
 //# sourceMappingURL=truncate.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/bash-executor.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/bash-executor.js
 /**
  * Bash command execution with streaming support and cancellation.
  *
@@ -156023,7 +156665,7 @@ async function executeBashWithOperations(command, cwd, operations, options) {
     }
 }
 //# sourceMappingURL=bash-executor.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/messages.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/messages.js
 /**
  * Custom message types and transformers for the coding agent.
  *
@@ -156147,7 +156789,7 @@ function convertToLlm(messages) {
         .filter((m) => m !== undefined);
 }
 //# sourceMappingURL=messages.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/agent-loop.js
 /**
  * Agent loop that works with AgentMessage throughout.
  * Transforms to Message[] only at the LLM call boundary.
@@ -156650,7 +157292,7 @@ async function emitToolResultMessage(toolResultMessage, emit) {
     await emit({ type: "message_end", message: toolResultMessage });
 }
 //# sourceMappingURL=agent-loop.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/agent.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/agent.js
 
 
 function defaultConvertToLlm(messages) {
@@ -157053,7 +157695,7 @@ class Agent {
     }
 }
 //# sourceMappingURL=agent.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/messages.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/messages.js
 const messages_COMPACTION_SUMMARY_PREFIX = `The conversation history before this point was compacted into the following summary:
 
 <summary>
@@ -157156,7 +157798,7 @@ function messages_convertToLlm(messages) {
         .filter((m) => m !== undefined);
 }
 //# sourceMappingURL=messages.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/types.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/types.js
 /** Create a successful {@link Result}. */
 function ok(value) {
     return { ok: true, value };
@@ -157251,12 +157893,13 @@ class AgentHarnessError extends Error {
     }
 }
 //# sourceMappingURL=types.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/session.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/session.js
 
 
 function buildSessionContext(pathEntries) {
     let thinkingLevel = "off";
     let model = null;
+    let activeToolNames = null;
     let compaction = null;
     for (const entry of pathEntries) {
         if (entry.type === "thinking_level_change") {
@@ -157267,6 +157910,9 @@ function buildSessionContext(pathEntries) {
         }
         else if (entry.type === "message" && entry.message.role === "assistant") {
             model = { provider: entry.message.provider, modelId: entry.message.model };
+        }
+        else if (entry.type === "active_tools_change") {
+            activeToolNames = [...entry.activeToolNames];
         }
         else if (entry.type === "compaction") {
             compaction = entry;
@@ -157304,7 +157950,7 @@ function buildSessionContext(pathEntries) {
             appendMessage(entry);
         }
     }
-    return { messages, thinkingLevel, model };
+    return { messages, thinkingLevel, model, activeToolNames };
 }
 class Session {
     storage;
@@ -157370,6 +158016,15 @@ class Session {
             timestamp: new Date().toISOString(),
             provider,
             modelId,
+        });
+    }
+    async appendActiveToolsChange(activeToolNames) {
+        return this.appendTypedEntry({
+            type: "active_tools_change",
+            id: await this.storage.createEntryId(),
+            parentId: await this.storage.getLeafId(),
+            timestamp: new Date().toISOString(),
+            activeToolNames: [...activeToolNames],
         });
     }
     async appendCompaction(summary, firstKeptEntryId, tokensBefore, details, fromHook) {
@@ -157449,7 +158104,7 @@ class Session {
     }
 }
 //# sourceMappingURL=session.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/compaction/utils.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/compaction/utils.js
 /** Create an empty file-operation accumulator. */
 function createFileOps() {
     return {
@@ -157581,7 +158236,7 @@ function serializeConversation(messages) {
     return parts.join("\n\n");
 }
 //# sourceMappingURL=utils.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/compaction/compaction.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/compaction/compaction.js
 
 
 
@@ -157709,22 +158364,28 @@ function shouldCompact(contextTokens, contextWindow, settings) {
         return false;
     return contextTokens > contextWindow - settings.reserveTokens;
 }
+const ESTIMATED_IMAGE_CHARS = 4800;
+function estimateTextAndImageContentChars(content) {
+    if (typeof content === "string") {
+        return content.length;
+    }
+    let chars = 0;
+    for (const block of content) {
+        if (block.type === "text" && block.text) {
+            chars += block.text.length;
+        }
+        else if (block.type === "image") {
+            chars += ESTIMATED_IMAGE_CHARS;
+        }
+    }
+    return chars;
+}
 /** Estimate token count for one message using a conservative character heuristic. */
 function estimateTokens(message) {
     let chars = 0;
     switch (message.role) {
         case "user": {
-            const content = message.content;
-            if (typeof content === "string") {
-                chars = content.length;
-            }
-            else if (Array.isArray(content)) {
-                for (const block of content) {
-                    if (block.type === "text" && block.text) {
-                        chars += block.text.length;
-                    }
-                }
-            }
+            chars = estimateTextAndImageContentChars(message.content);
             return Math.ceil(chars / 4);
         }
         case "assistant": {
@@ -157744,19 +158405,7 @@ function estimateTokens(message) {
         }
         case "custom":
         case "toolResult": {
-            if (typeof message.content === "string") {
-                chars = message.content.length;
-            }
-            else {
-                for (const block of message.content) {
-                    if (block.type === "text" && block.text) {
-                        chars += block.text.length;
-                    }
-                    if (block.type === "image") {
-                        chars += 4800;
-                    }
-                }
-            }
+            chars = estimateTextAndImageContentChars(message.content);
             return Math.ceil(chars / 4);
         }
         case "bashExecution": {
@@ -157794,6 +158443,7 @@ function findValidCutPoints(entries, startIndex, endIndex) {
             }
             case "thinking_level_change":
             case "model_change":
+            case "active_tools_change":
             case "compaction":
             case "branch_summary":
             case "custom":
@@ -158115,7 +158765,7 @@ async function generateTurnPrefixSummary(messages, model, reserveTokens, apiKey,
         .join("\n"));
 }
 //# sourceMappingURL=compaction.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/compaction/branch-summarization.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/compaction/branch-summarization.js
 
 
 
@@ -158161,6 +158811,7 @@ function branch_summarization_getMessageFromEntry(entry) {
             return messages_createCompactionSummaryMessage(entry.summary, entry.tokensBefore, entry.timestamp);
         case "thinking_level_change":
         case "model_change":
+        case "active_tools_change":
         case "custom":
         case "label":
         case "session_info":
@@ -158290,7 +158941,7 @@ async function generateBranchSummary(entries, options) {
     });
 }
 //# sourceMappingURL=branch-summarization.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/prompt-templates.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/prompt-templates.js
 
 
 /**
@@ -158523,7 +159174,7 @@ function formatPromptTemplateInvocation(template, args = []) {
 //# sourceMappingURL=prompt-templates.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/ignore@7.0.5/node_modules/ignore/index.js
 var ignore = __webpack_require__(22881);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/skills.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/skills.js
 
 
 
@@ -158835,7 +159486,7 @@ function relativeEnvPath(root, path) {
         : normalizedPath.replace(/^\/+/, "");
 }
 //# sourceMappingURL=skills.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/agent-harness.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/agent-harness.js
 
 
 
@@ -158887,6 +159538,16 @@ function mergeHeaders(...headers) {
         hasHeaders = true;
     }
     return hasHeaders ? merged : undefined;
+}
+function findDuplicateNames(names) {
+    const seen = new Set();
+    const duplicates = new Set();
+    for (const name of names) {
+        if (seen.has(name))
+            duplicates.add(name);
+        seen.add(name);
+    }
+    return [...duplicates];
 }
 function applyStreamOptionsPatch(base, patch) {
     const result = cloneStreamOptions(base);
@@ -158978,12 +159639,17 @@ class AgentHarness {
         this.streamOptions = cloneStreamOptions(options.streamOptions);
         this.systemPrompt = options.systemPrompt;
         this.getApiKeyAndHeaders = options.getApiKeyAndHeaders;
+        this.validateUniqueNames((options.tools ?? []).map((tool) => tool.name), "Duplicate tool name(s)");
         for (const tool of options.tools ?? []) {
             this.tools.set(tool.name, tool);
         }
         this.model = options.model;
         this.thinkingLevel = options.thinkingLevel ?? "off";
-        this.activeToolNames = options.activeToolNames ?? (options.tools ?? []).map((tool) => tool.name);
+        this.activeToolNames = options.activeToolNames
+            ? [...options.activeToolNames]
+            : (options.tools ?? []).map((tool) => tool.name);
+        this.validateUniqueNames(this.activeToolNames, "Duplicate active tool name(s)");
+        this.validateToolNames(this.activeToolNames);
         this.steeringQueueMode = options.steeringMode ?? "one-at-a-time";
         this.followUpQueueMode = options.followUpMode ?? "one-at-a-time";
     }
@@ -159217,7 +159883,13 @@ class AgentHarness {
             getFollowUpMessages: async () => this.drainQueuedMessages(this.followUpQueue, this.followUpQueueMode),
         };
     }
+    validateUniqueNames(names, message) {
+        const duplicates = findDuplicateNames(names);
+        if (duplicates.length > 0)
+            throw new AgentHarnessError("invalid_argument", `${message}: ${duplicates.join(", ")}`);
+    }
     validateToolNames(toolNames, tools = this.tools) {
+        this.validateUniqueNames(toolNames, "Duplicate active tool name(s)");
         const missing = toolNames.filter((name) => !tools.has(name));
         if (missing.length > 0)
             throw new AgentHarnessError("invalid_argument", `Unknown tool(s): ${missing.join(", ")}`);
@@ -159233,6 +159905,9 @@ class AgentHarness {
             }
             else if (write.type === "thinking_level_change") {
                 await this.session.appendThinkingLevelChange(write.thinkingLevel);
+            }
+            else if (write.type === "active_tools_change") {
+                await this.session.appendActiveToolsChange(write.activeToolNames);
             }
             else if (write.type === "custom") {
                 await this.session.appendCustomEntry(write.customType, write.data);
@@ -159594,9 +160269,6 @@ class AgentHarness {
     getModel() {
         return this.model;
     }
-    getThinkingLevel() {
-        return this.thinkingLevel;
-    }
     async setModel(model) {
         try {
             const previousModel = this.model;
@@ -159607,11 +160279,14 @@ class AgentHarness {
                 this.pendingSessionWrites.push({ type: "model_change", provider: model.provider, modelId: model.id });
             }
             this.model = model;
-            await this.emitOwn({ type: "model_select", model, previousModel, source: "set" });
+            await this.emitOwn({ type: "model_update", model, previousModel, source: "set" });
         }
         catch (error) {
             throw normalizeHarnessError(error, "session");
         }
+    }
+    getThinkingLevel() {
+        return this.thinkingLevel;
     }
     async setThinkingLevel(level) {
         try {
@@ -159623,16 +160298,67 @@ class AgentHarness {
                 this.pendingSessionWrites.push({ type: "thinking_level_change", thinkingLevel: level });
             }
             this.thinkingLevel = level;
-            await this.emitOwn({ type: "thinking_level_select", level, previousLevel });
+            await this.emitOwn({ type: "thinking_level_update", level, previousLevel });
         }
         catch (error) {
             throw normalizeHarnessError(error, "session");
         }
     }
+    getTools() {
+        return [...this.tools.values()];
+    }
+    async setTools(tools, activeToolNames) {
+        try {
+            this.validateUniqueNames(tools.map((tool) => tool.name), "Duplicate tool name(s)");
+            const nextTools = new Map(tools.map((tool) => [tool.name, tool]));
+            const nextActiveToolNames = activeToolNames ? [...activeToolNames] : this.activeToolNames;
+            this.validateToolNames(nextActiveToolNames, nextTools);
+            const previousToolNames = [...this.tools.keys()];
+            const previousActiveToolNames = [...this.activeToolNames];
+            if (this.phase === "idle") {
+                await this.session.appendActiveToolsChange(nextActiveToolNames);
+            }
+            else {
+                this.pendingSessionWrites.push({ type: "active_tools_change", activeToolNames: [...nextActiveToolNames] });
+            }
+            this.tools = nextTools;
+            this.activeToolNames = [...nextActiveToolNames];
+            await this.emitOwn({
+                type: "tools_update",
+                toolNames: [...this.tools.keys()],
+                previousToolNames,
+                activeToolNames: [...this.activeToolNames],
+                previousActiveToolNames,
+                source: "set",
+            });
+        }
+        catch (error) {
+            throw normalizeHarnessError(error, "invalid_argument");
+        }
+    }
+    getActiveTools() {
+        return this.activeToolNames.map((name) => this.tools.get(name));
+    }
     async setActiveTools(toolNames) {
         try {
             this.validateToolNames(toolNames);
+            const previousToolNames = [...this.tools.keys()];
+            const previousActiveToolNames = [...this.activeToolNames];
+            if (this.phase === "idle") {
+                await this.session.appendActiveToolsChange(toolNames);
+            }
+            else {
+                this.pendingSessionWrites.push({ type: "active_tools_change", activeToolNames: [...toolNames] });
+            }
             this.activeToolNames = [...toolNames];
+            await this.emitOwn({
+                type: "tools_update",
+                toolNames: [...this.tools.keys()],
+                previousToolNames,
+                activeToolNames: [...this.activeToolNames],
+                previousActiveToolNames,
+                source: "set",
+            });
         }
         catch (error) {
             throw normalizeHarnessError(error, "invalid_argument");
@@ -159669,18 +160395,6 @@ class AgentHarness {
     }
     async setStreamOptions(streamOptions) {
         this.streamOptions = cloneStreamOptions(streamOptions);
-    }
-    async setTools(tools, activeToolNames) {
-        try {
-            const nextTools = new Map(tools.map((tool) => [tool.name, tool]));
-            const nextActiveToolNames = activeToolNames ? [...activeToolNames] : this.activeToolNames;
-            this.validateToolNames(nextActiveToolNames, nextTools);
-            this.tools = nextTools;
-            this.activeToolNames = [...nextActiveToolNames];
-        }
-        catch (error) {
-            throw normalizeHarnessError(error, "invalid_argument");
-        }
     }
     async abort() {
         const clearedSteer = [...this.steerQueue];
@@ -159736,7 +160450,7 @@ class AgentHarness {
     }
 }
 //# sourceMappingURL=agent-harness.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/uuid.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/uuid.js
 let lastTimestamp = -Infinity;
 let sequence = 0;
 function fillRandomBytes(bytes) {
@@ -159787,7 +160501,7 @@ function formatUuid(bytes) {
     return `${hex.slice(0, 4).join("")}-${hex.slice(4, 6).join("")}-${hex.slice(6, 8).join("")}-${hex.slice(8, 10).join("")}-${hex.slice(10, 16).join("")}`;
 }
 //# sourceMappingURL=uuid.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/repo-utils.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/repo-utils.js
 
 
 
@@ -159827,7 +160541,7 @@ async function getEntriesToFork(storage, options) {
     return storage.getPathToRoot(effectiveLeafId);
 }
 //# sourceMappingURL=repo-utils.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/jsonl-storage.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/jsonl-storage.js
 
 
 
@@ -160059,7 +160773,7 @@ class JsonlSessionStorage {
     }
 }
 //# sourceMappingURL=jsonl-storage.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/jsonl-repo.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/jsonl-repo.js
 
 
 
@@ -160161,7 +160875,7 @@ class JsonlSessionRepo {
     }
 }
 //# sourceMappingURL=jsonl-repo.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/memory-storage.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/memory-storage.js
 
 
 function memory_storage_updateLabelCache(labelsById, entry) {
@@ -160276,7 +160990,7 @@ class InMemorySessionStorage {
     }
 }
 //# sourceMappingURL=memory-storage.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/memory-repo.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/session/memory-repo.js
 
 
 
@@ -160319,7 +161033,7 @@ class InMemorySessionRepo {
     }
 }
 //# sourceMappingURL=memory-repo.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/system-prompt.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/system-prompt.js
 function formatSkillsForSystemPrompt(skills) {
     const visibleSkills = skills.filter((skill) => !skill.disableModelInvocation);
     if (visibleSkills.length === 0)
@@ -160350,7 +161064,7 @@ function escapeXml(value) {
         .replace(/'/g, "&apos;");
 }
 //# sourceMappingURL=system-prompt.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/utils/truncate.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/utils/truncate.js
 /**
  * Shared truncation utilities for tool outputs.
  *
@@ -160641,7 +161355,7 @@ function truncate_truncateLine(line, maxChars = truncate_GREP_MAX_LINE_LENGTH) {
     return { text: `${line.slice(0, maxChars)}... [truncated]`, wasTruncated: true };
 }
 //# sourceMappingURL=truncate.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/utils/shell-output.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/harness/utils/shell-output.js
 
 
 function toExecutionError(error) {
@@ -160768,7 +161482,7 @@ async function executeShellWithCapture(env, command, options) {
     }
 }
 //# sourceMappingURL=shell-output.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/proxy.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/proxy.js
 /**
  * Proxy stream function for apps that route LLM calls through a server.
  * The server manages auth and proxies requests to LLM providers.
@@ -161047,7 +161761,7 @@ function processProxyEvent(proxyEvent, partial) {
     }
 }
 //# sourceMappingURL=proxy.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-agent-core@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-agent-core/dist/index.js
 // Core Agent
 
 // Loop functions
@@ -161077,7 +161791,7 @@ function processProxyEvent(proxyEvent, partial) {
 var external_crypto_ = __webpack_require__(76982);
 // EXTERNAL MODULE: external "fs/promises"
 var promises_ = __webpack_require__(91943);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js
 
 
 
@@ -161089,6 +161803,11 @@ var promises_ = __webpack_require__(91943);
 const CURRENT_SESSION_VERSION = 3;
 function session_manager_createSessionId() {
     return uuidv7();
+}
+function assertValidSessionId(id) {
+    if (!/^[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?$/.test(id)) {
+        throw new Error("Session id must be non-empty, contain only alphanumeric characters, '-', '_', and '.', and start and end with an alphanumeric character");
+    }
 }
 /** Generate a unique short ID (8 hex chars, collision-checked) */
 function generateId(byId) {
@@ -161290,11 +162009,14 @@ function session_manager_buildSessionContext(entries, leafId, byId) {
  * Compute the default session directory for a cwd.
  * Encodes cwd into a safe directory name under ~/.pi/agent/sessions/.
  */
-function getDefaultSessionDir(cwd, agentDir = getAgentDir()) {
+function getDefaultSessionDirPath(cwd, agentDir = getAgentDir()) {
     const resolvedCwd = resolvePath(cwd);
     const resolvedAgentDir = resolvePath(agentDir);
     const safePath = `--${resolvedCwd.replace(/^[/\\]/, "").replace(/[/\\:]/g, "-")}--`;
-    const sessionDir = (0,external_path_.join)(resolvedAgentDir, "sessions", safePath);
+    return (0,external_path_.join)(resolvedAgentDir, "sessions", safePath);
+}
+function getDefaultSessionDir(cwd, agentDir = getAgentDir()) {
+    const sessionDir = getDefaultSessionDirPath(cwd, agentDir);
     if (!(0,external_fs_.existsSync)(sessionDir)) {
         (0,external_fs_.mkdirSync)(sessionDir, { recursive: true });
     }
@@ -161328,7 +162050,7 @@ function loadEntriesFromFile(filePath) {
     }
     return entries;
 }
-function isValidSessionFile(filePath) {
+function readSessionHeader(filePath) {
     try {
         const fd = (0,external_fs_.openSync)(filePath, "r");
         const buffer = Buffer.alloc(512);
@@ -161336,23 +162058,36 @@ function isValidSessionFile(filePath) {
         (0,external_fs_.closeSync)(fd);
         const firstLine = buffer.toString("utf8", 0, bytesRead).split("\n")[0];
         if (!firstLine)
-            return false;
+            return null;
         const header = JSON.parse(firstLine);
-        return header.type === "session" && typeof header.id === "string";
+        if (header.type !== "session" || typeof header.id !== "string") {
+            return null;
+        }
+        return header;
     }
     catch {
-        return false;
+        return null;
     }
 }
+function getSessionHeaderCwd(header) {
+    const cwd = header.cwd;
+    return typeof cwd === "string" ? cwd : undefined;
+}
+function sessionCwdMatches(cwd, resolvedCwd) {
+    return cwd !== undefined && cwd !== "" && resolvePath(cwd) === resolvedCwd;
+}
 /** Exported for testing */
-function findMostRecentSession(sessionDir) {
+function findMostRecentSession(sessionDir, cwd) {
     const resolvedSessionDir = paths_normalizePath(sessionDir);
+    const resolvedCwd = cwd ? resolvePath(cwd) : undefined;
     try {
         const files = (0,external_fs_.readdirSync)(resolvedSessionDir)
             .filter((f) => f.endsWith(".jsonl"))
             .map((f) => (0,external_path_.join)(resolvedSessionDir, f))
-            .filter(isValidSessionFile)
-            .map((path) => ({ path, mtime: (0,external_fs_.statSync)(path).mtime }))
+            .map((path) => ({ path, header: readSessionHeader(path) }))
+            .filter((file) => file.header !== null &&
+            (!resolvedCwd || sessionCwdMatches(getSessionHeaderCwd(file.header), resolvedCwd)))
+            .map(({ path }) => ({ path, mtime: (0,external_fs_.statSync)(path).mtime }))
             .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
         return files[0]?.path || null;
     }
@@ -161555,7 +162290,7 @@ class SessionManager {
     labelsById = new Map();
     labelTimestampsById = new Map();
     leafId = null;
-    constructor(cwd, sessionDir, sessionFile, persist) {
+    constructor(cwd, sessionDir, sessionFile, persist, newSessionOptions) {
         this.cwd = resolvePath(cwd);
         this.sessionDir = paths_normalizePath(sessionDir);
         this.persist = persist;
@@ -161566,7 +162301,7 @@ class SessionManager {
             this.setSessionFile(sessionFile);
         }
         else {
-            this.newSession();
+            this.newSession(newSessionOptions);
         }
     }
     /** Switch to a different session file (used for resume and branching) */
@@ -161599,6 +162334,9 @@ class SessionManager {
         }
     }
     newSession(options) {
+        if (options?.id !== undefined) {
+            assertValidSessionId(options.id);
+        }
         this.sessionId = options?.id ?? session_manager_createSessionId();
         const timestamp = new Date().toISOString();
         const header = {
@@ -161657,6 +162395,9 @@ class SessionManager {
     getSessionDir() {
         return this.sessionDir;
     }
+    usesDefaultSessionDir() {
+        return this.sessionDir === getDefaultSessionDirPath(this.cwd);
+    }
     getSessionId() {
         return this.sessionId;
     }
@@ -161668,13 +162409,24 @@ class SessionManager {
             return;
         const hasAssistant = this.fileEntries.some((e) => e.type === "message" && e.message.role === "assistant");
         if (!hasAssistant) {
-            // Mark as not flushed so when assistant arrives, all entries get written
-            this.flushed = false;
+            if (this.flushed) {
+                (0,external_fs_.appendFileSync)(this.sessionFile, `${JSON.stringify(entry)}\n`);
+            }
+            else {
+                // Mark as not flushed so when assistant arrives, all entries get written
+                this.flushed = false;
+            }
             return;
         }
         if (!this.flushed) {
-            for (const e of this.fileEntries) {
-                (0,external_fs_.appendFileSync)(this.sessionFile, `${JSON.stringify(e)}\n`);
+            const fd = (0,external_fs_.openSync)(this.sessionFile, "wx");
+            try {
+                for (const e of this.fileEntries) {
+                    (0,external_fs_.writeFileSync)(fd, `${JSON.stringify(e)}\n`);
+                }
+            }
+            finally {
+                (0,external_fs_.closeSync)(fd);
             }
             this.flushed = true;
         }
@@ -162084,9 +162836,9 @@ class SessionManager {
      * @param cwd Working directory (stored in session header)
      * @param sessionDir Optional session directory. If omitted, uses default (~/.pi/agent/sessions/<encoded-cwd>/).
      */
-    static create(cwd, sessionDir) {
+    static create(cwd, sessionDir, options) {
         const dir = sessionDir ? paths_normalizePath(sessionDir) : getDefaultSessionDir(cwd);
-        return new SessionManager(cwd, dir, undefined, true);
+        return new SessionManager(cwd, dir, undefined, true, options);
     }
     /**
      * Open a specific session file.
@@ -162111,7 +162863,8 @@ class SessionManager {
      */
     static continueRecent(cwd, sessionDir) {
         const dir = sessionDir ? paths_normalizePath(sessionDir) : getDefaultSessionDir(cwd);
-        const mostRecent = findMostRecentSession(dir);
+        const filterCwd = sessionDir !== undefined && dir !== getDefaultSessionDirPath(cwd);
+        const mostRecent = findMostRecentSession(dir, filterCwd ? cwd : undefined);
         if (mostRecent) {
             return new SessionManager(cwd, dir, mostRecent, true);
         }
@@ -162128,7 +162881,7 @@ class SessionManager {
      * @param targetCwd Target working directory (where the new session will be stored)
      * @param sessionDir Optional session directory. If omitted, uses default for targetCwd.
      */
-    static forkFrom(sourcePath, targetCwd, sessionDir) {
+    static forkFrom(sourcePath, targetCwd, sessionDir, options) {
         const resolvedSourcePath = resolvePath(sourcePath);
         const resolvedTargetCwd = resolvePath(targetCwd);
         const sourceEntries = loadEntriesFromFile(resolvedSourcePath);
@@ -162144,7 +162897,10 @@ class SessionManager {
             (0,external_fs_.mkdirSync)(dir, { recursive: true });
         }
         // Create new session file with new ID but forked content
-        const newSessionId = session_manager_createSessionId();
+        if (options?.id !== undefined) {
+            assertValidSessionId(options.id);
+        }
+        const newSessionId = options?.id ?? session_manager_createSessionId();
         const timestamp = new Date().toISOString();
         const fileTimestamp = timestamp.replace(/[:.]/g, "-");
         const newSessionFile = (0,external_path_.join)(dir, `${fileTimestamp}_${newSessionId}.jsonl`);
@@ -162157,7 +162913,7 @@ class SessionManager {
             cwd: resolvedTargetCwd,
             parentSession: resolvedSourcePath,
         };
-        (0,external_fs_.appendFileSync)(newSessionFile, `${JSON.stringify(newHeader)}\n`);
+        (0,external_fs_.writeFileSync)(newSessionFile, `${JSON.stringify(newHeader)}\n`, { flag: "wx" });
         // Copy all non-header entries from source
         for (const entry of sourceEntries) {
             if (entry.type !== "session") {
@@ -162174,15 +162930,20 @@ class SessionManager {
      */
     static async list(cwd, sessionDir, onProgress) {
         const dir = sessionDir ? paths_normalizePath(sessionDir) : getDefaultSessionDir(cwd);
-        const sessions = await listSessionsFromDir(dir, onProgress);
+        const filterCwd = sessionDir !== undefined && dir !== getDefaultSessionDirPath(cwd);
+        const resolvedCwd = resolvePath(cwd);
+        const sessions = (await listSessionsFromDir(dir, onProgress)).filter((session) => !filterCwd || sessionCwdMatches(session.cwd, resolvedCwd));
         sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());
         return sessions;
     }
-    /**
-     * List all sessions across all project directories.
-     * @param onProgress Optional callback for progress updates (loaded, total)
-     */
-    static async listAll(onProgress) {
+    static async listAll(sessionDirOrOnProgress, onProgress) {
+        const customSessionDir = typeof sessionDirOrOnProgress === "string" ? paths_normalizePath(sessionDirOrOnProgress) : undefined;
+        const progress = typeof sessionDirOrOnProgress === "function" ? sessionDirOrOnProgress : onProgress;
+        if (customSessionDir) {
+            const sessions = await listSessionsFromDir(customSessionDir, progress);
+            sessions.sort((a, b) => b.modified.getTime() - a.modified.getTime());
+            return sessions;
+        }
         const sessionsDir = getSessionsDir();
         try {
             if (!(0,external_fs_.existsSync)(sessionsDir)) {
@@ -162209,7 +162970,7 @@ class SessionManager {
             const allFiles = dirFiles.flat();
             const results = await buildSessionInfosWithConcurrency(allFiles, () => {
                 loaded++;
-                onProgress?.(loaded, totalFiles);
+                progress?.(loaded, totalFiles);
             });
             for (const info of results) {
                 if (info) {
@@ -162225,7 +162986,7 @@ class SessionManager {
     }
 }
 //# sourceMappingURL=session-manager.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/utils.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/utils.js
 /**
  * Shared utilities for compaction and branch summarization.
  */
@@ -162379,7 +163140,7 @@ const utils_SUMMARIZATION_SYSTEM_PROMPT = `You are a context summarization assis
 
 Do NOT continue the conversation. Do NOT respond to any questions in the conversation. ONLY output the structured summary.`;
 //# sourceMappingURL=utils.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/compaction.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/compaction.js
 /**
  * Context compaction for long sessions.
  *
@@ -162536,6 +163297,22 @@ function compaction_shouldCompact(contextTokens, contextWindow, settings) {
 // ============================================================================
 // Cut point detection
 // ============================================================================
+const compaction_ESTIMATED_IMAGE_CHARS = 4800;
+function compaction_estimateTextAndImageContentChars(content) {
+    if (typeof content === "string") {
+        return content.length;
+    }
+    let chars = 0;
+    for (const block of content) {
+        if (block.type === "text" && block.text) {
+            chars += block.text.length;
+        }
+        else if (block.type === "image") {
+            chars += compaction_ESTIMATED_IMAGE_CHARS;
+        }
+    }
+    return chars;
+}
 /**
  * Estimate token count for a message using chars/4 heuristic.
  * This is conservative (overestimates tokens).
@@ -162544,17 +163321,7 @@ function compaction_estimateTokens(message) {
     let chars = 0;
     switch (message.role) {
         case "user": {
-            const content = message.content;
-            if (typeof content === "string") {
-                chars = content.length;
-            }
-            else if (Array.isArray(content)) {
-                for (const block of content) {
-                    if (block.type === "text" && block.text) {
-                        chars += block.text.length;
-                    }
-                }
-            }
+            chars = compaction_estimateTextAndImageContentChars(message.content);
             return Math.ceil(chars / 4);
         }
         case "assistant": {
@@ -162574,19 +163341,7 @@ function compaction_estimateTokens(message) {
         }
         case "custom":
         case "toolResult": {
-            if (typeof message.content === "string") {
-                chars = message.content.length;
-            }
-            else {
-                for (const block of message.content) {
-                    if (block.type === "text" && block.text) {
-                        chars += block.text.length;
-                    }
-                    if (block.type === "image") {
-                        chars += 4800; // Estimate images as 4000 chars, or 1200 tokens
-                    }
-                }
-            }
+            chars = compaction_estimateTextAndImageContentChars(message.content);
             return Math.ceil(chars / 4);
         }
         case "bashExecution": {
@@ -163005,7 +163760,7 @@ async function compaction_generateTurnPrefixSummary(messages, model, reserveToke
         .join("\n");
 }
 //# sourceMappingURL=compaction.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/branch-summarization.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/branch-summarization.js
 /**
  * Branch summarization for tree navigation.
  *
@@ -163249,7 +164004,7 @@ async function branch_summarization_generateBranchSummary(entries, options) {
     };
 }
 //# sourceMappingURL=branch-summarization.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/compaction/index.js
 /**
  * Compaction and summarization utilities.
  */
@@ -163257,10 +164012,10 @@ async function branch_summarization_generateBranchSummary(entries, options) {
 
 
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/defaults.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/defaults.js
 const DEFAULT_THINKING_LEVEL = "medium";
 //# sourceMappingURL=defaults.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/export-html/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/export-html/index.js
 
 
 
@@ -163487,7 +164242,7 @@ async function exportFromFile(inputPath, options) {
     return outputPath;
 }
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/export-html/ansi-to-html.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/export-html/ansi-to-html.js
 /**
  * ANSI escape code to HTML converter.
  *
@@ -163737,7 +164492,7 @@ function ansiLinesToHtml(lines) {
     return lines.map((line) => `<div class="ansi-line">${ansiToHtml(line) || "&nbsp;"}</div>`).join("");
 }
 //# sourceMappingURL=ansi-to-html.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/export-html/tool-renderer.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/export-html/tool-renderer.js
 /**
  * Tool HTML renderer for custom tools in HTML export.
  *
@@ -163846,7 +164601,7 @@ function createToolHtmlRenderer(deps) {
     };
 }
 //# sourceMappingURL=tool-renderer.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/oauth-page.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/oauth-page.js
 const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M165.29 165.29 H517.36 V400 H400 V517.36 H282.65 V634.72 H165.29 Z M282.65 282.65 V400 H400 V282.65 Z"/><path fill="#fff" d="M517.36 400 H634.72 V634.72 H517.36 Z"/></svg>`;
 function oauth_page_escapeHtml(value) {
     return value
@@ -163952,7 +164707,7 @@ function oauthErrorHtml(message, details) {
     });
 }
 //# sourceMappingURL=oauth-page.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/pkce.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/pkce.js
 /**
  * PKCE utilities using Web Crypto API.
  * Works in both Node.js 20+ and browsers.
@@ -163984,7 +164739,7 @@ async function generatePKCE() {
     return { verifier, challenge };
 }
 //# sourceMappingURL=pkce.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/anthropic.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/anthropic.js
 /**
  * Anthropic OAuth flow (Claude Pro/Max)
  *
@@ -164320,7 +165075,7 @@ const anthropicOAuthProvider = {
     },
 };
 //# sourceMappingURL=anthropic.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/device-code.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/device-code.js
 const CANCEL_MESSAGE = "Login cancelled";
 const TIMEOUT_MESSAGE = "Device flow timed out";
 const SLOW_DOWN_TIMEOUT_MESSAGE = "Device flow timed out after one or more slow_down responses. This is often caused by clock drift in WSL or VM environments. Please sync or restart the VM clock and try again.";
@@ -164356,29 +165111,30 @@ async function pollOAuthDeviceCodeFlow(options) {
         if (options.signal?.aborted) {
             throw new Error(CANCEL_MESSAGE);
         }
-        const remainingMs = deadline - Date.now();
-        await abortableSleep(Math.min(intervalMs, remainingMs), options.signal, CANCEL_MESSAGE);
         const result = await options.poll();
         if (result.status === "complete") {
-            return result.accessToken;
+            return result.value;
         }
-        if (result.status === "pending") {
-            continue;
+        if (result.status === "failed") {
+            throw new Error(result.message);
         }
         if (result.status === "slow_down") {
             slowDownResponses += 1;
             // RFC 8628 section 3.5: apply this increase to this and all subsequent requests.
             intervalMs = Math.max(MINIMUM_INTERVAL_MS, intervalMs + SLOW_DOWN_INTERVAL_INCREMENT_MS);
-            continue;
         }
-        throw new Error(result.message);
+        const remainingMs = deadline - Date.now();
+        if (remainingMs <= 0) {
+            break;
+        }
+        await abortableSleep(Math.min(intervalMs, remainingMs), options.signal, CANCEL_MESSAGE);
     }
     throw new Error(slowDownResponses > 0 ? SLOW_DOWN_TIMEOUT_MESSAGE : TIMEOUT_MESSAGE);
 }
 //# sourceMappingURL=device-code.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
-var dist_models = __webpack_require__(94040);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/github-copilot.js
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
+var dist_models = __webpack_require__(63068);
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/github-copilot.js
 /**
  * GitHub Copilot OAuth flow
  */
@@ -164503,7 +165259,7 @@ async function pollForGitHubAccessToken(domain, device, signal) {
                 }),
             });
             if (raw && typeof raw === "object" && typeof raw.access_token === "string") {
-                return { status: "complete", accessToken: raw.access_token };
+                return { status: "complete", value: raw.access_token };
             }
             if (raw && typeof raw === "object" && typeof raw.error === "string") {
                 const { error, error_description: description } = raw;
@@ -164647,7 +165403,7 @@ const githubCopilotOAuthProvider = {
     },
 };
 //# sourceMappingURL=github-copilot.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/openai-codex.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/openai-codex.js
 /**
  * OpenAI Codex (ChatGPT OAuth) flow
  *
@@ -164667,11 +165423,20 @@ if (typeof process !== "undefined" && (process.versions?.node || process.version
 }
 
 
+
 const openai_codex_CALLBACK_HOST = process.env.PI_OAUTH_CALLBACK_HOST || "127.0.0.1";
 const openai_codex_CLIENT_ID = "app_EMoamEEZ73f0CkXaXp7hrann";
-const openai_codex_AUTHORIZE_URL = "https://auth.openai.com/oauth/authorize";
-const openai_codex_TOKEN_URL = "https://auth.openai.com/oauth/token";
+const AUTH_BASE_URL = "https://auth.openai.com";
+const openai_codex_AUTHORIZE_URL = `${AUTH_BASE_URL}/oauth/authorize`;
+const openai_codex_TOKEN_URL = `${AUTH_BASE_URL}/oauth/token`;
 const openai_codex_REDIRECT_URI = "http://localhost:1455/auth/callback";
+const DEVICE_USER_CODE_URL = `${AUTH_BASE_URL}/api/accounts/deviceauth/usercode`;
+const DEVICE_TOKEN_URL = `${AUTH_BASE_URL}/api/accounts/deviceauth/token`;
+const DEVICE_VERIFICATION_URI = `${AUTH_BASE_URL}/codex/device`;
+const DEVICE_REDIRECT_URI = `${AUTH_BASE_URL}/deviceauth/callback`;
+const DEVICE_CODE_TIMEOUT_SECONDS = 15 * 60;
+const OPENAI_CODEX_BROWSER_LOGIN_METHOD = "browser";
+const OPENAI_CODEX_DEVICE_CODE_LOGIN_METHOD = "device_code";
 const SCOPE = "openid profile email offline_access";
 const JWT_CLAIM_PATH = "https://api.openai.com/auth";
 function createState() {
@@ -164720,8 +165485,35 @@ function decodeJwt(token) {
         return null;
     }
 }
-async function openai_codex_exchangeAuthorizationCode(code, verifier, redirectUri = openai_codex_REDIRECT_URI) {
-    const response = await fetch(openai_codex_TOKEN_URL, {
+async function fetchWithLoginCancellation(input, init) {
+    try {
+        return await fetch(input, init);
+    }
+    catch (error) {
+        if (init.signal?.aborted) {
+            throw new Error("Login cancelled");
+        }
+        throw error;
+    }
+}
+async function readTokenResponse(response, operation) {
+    if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        throw new Error(`OpenAI Codex token ${operation} failed (${response.status}): ${text || response.statusText}`);
+    }
+    const rawJson = await response.json();
+    const json = rawJson;
+    if (!json?.access_token || !json.refresh_token || typeof json.expires_in !== "number") {
+        throw new Error(`OpenAI Codex token ${operation} response missing fields: ${JSON.stringify(json)}`);
+    }
+    return {
+        access: json.access_token,
+        refresh: json.refresh_token,
+        expires: Date.now() + json.expires_in * 1000,
+    };
+}
+async function openai_codex_exchangeAuthorizationCode(code, verifier, redirectUri = openai_codex_REDIRECT_URI, signal) {
+    const response = await fetchWithLoginCancellation(openai_codex_TOKEN_URL, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
@@ -164731,32 +165523,14 @@ async function openai_codex_exchangeAuthorizationCode(code, verifier, redirectUr
             code_verifier: verifier,
             redirect_uri: redirectUri,
         }),
+        signal,
     });
-    if (!response.ok) {
-        const text = await response.text().catch(() => "");
-        return {
-            type: "failed",
-            status: response.status,
-            message: `OpenAI Codex token exchange failed (${response.status}): ${text || response.statusText}`,
-        };
-    }
-    const json = (await response.json());
-    if (!json.access_token || !json.refresh_token || typeof json.expires_in !== "number") {
-        return {
-            type: "failed",
-            message: `OpenAI Codex token exchange response missing fields: ${JSON.stringify(json)}`,
-        };
-    }
-    return {
-        type: "success",
-        access: json.access_token,
-        refresh: json.refresh_token,
-        expires: Date.now() + json.expires_in * 1000,
-    };
+    return readTokenResponse(response, "exchange");
 }
 async function refreshAccessToken(refreshToken) {
+    let response;
     try {
-        const response = await fetch(openai_codex_TOKEN_URL, {
+        response = await fetch(openai_codex_TOKEN_URL, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
@@ -164765,34 +165539,94 @@ async function refreshAccessToken(refreshToken) {
                 client_id: openai_codex_CLIENT_ID,
             }),
         });
-        if (!response.ok) {
-            const text = await response.text().catch(() => "");
-            return {
-                type: "failed",
-                status: response.status,
-                message: `OpenAI Codex token refresh failed (${response.status}): ${text || response.statusText}`,
-            };
-        }
-        const json = (await response.json());
-        if (!json.access_token || !json.refresh_token || typeof json.expires_in !== "number") {
-            return {
-                type: "failed",
-                message: `OpenAI Codex token refresh response missing fields: ${JSON.stringify(json)}`,
-            };
-        }
-        return {
-            type: "success",
-            access: json.access_token,
-            refresh: json.refresh_token,
-            expires: Date.now() + json.expires_in * 1000,
-        };
     }
     catch (error) {
-        return {
-            type: "failed",
-            message: `OpenAI Codex token refresh error: ${error instanceof Error ? error.message : String(error)}`,
-        };
+        throw new Error(`OpenAI Codex token refresh error: ${error instanceof Error ? error.message : String(error)}`);
     }
+    return readTokenResponse(response, "refresh");
+}
+async function startOpenAICodexDeviceAuth(signal) {
+    const response = await fetchWithLoginCancellation(DEVICE_USER_CODE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: openai_codex_CLIENT_ID }),
+        signal,
+    });
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error("OpenAI Codex device code login is not enabled for this server. Use browser login or verify the server URL.");
+        }
+        const responseBody = await response.text().catch(() => "");
+        throw new Error(`OpenAI Codex device code request failed with status ${response.status}${responseBody ? `: ${responseBody}` : ""}`);
+    }
+    const rawJson = await response.json();
+    const json = rawJson;
+    const intervalSeconds = typeof json?.interval === "string" ? Number(json.interval.trim()) : json?.interval;
+    if (!json?.device_auth_id ||
+        !json.user_code ||
+        typeof intervalSeconds !== "number" ||
+        !Number.isFinite(intervalSeconds) ||
+        intervalSeconds < 0) {
+        throw new Error(`Invalid OpenAI Codex device code response: ${JSON.stringify(json)}`);
+    }
+    return {
+        deviceAuthId: json.device_auth_id,
+        userCode: json.user_code,
+        intervalSeconds,
+    };
+}
+async function pollOpenAICodexDeviceAuth(device, signal) {
+    return pollOAuthDeviceCodeFlow({
+        intervalSeconds: device.intervalSeconds,
+        expiresInSeconds: DEVICE_CODE_TIMEOUT_SECONDS,
+        signal,
+        poll: async () => {
+            const response = await fetchWithLoginCancellation(DEVICE_TOKEN_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    device_auth_id: device.deviceAuthId,
+                    user_code: device.userCode,
+                }),
+                signal,
+            });
+            if (response.ok) {
+                const rawJson = await response.json();
+                const json = rawJson;
+                if (!json?.authorization_code || !json.code_verifier) {
+                    return {
+                        status: "failed",
+                        message: `Invalid OpenAI Codex device auth token response: ${JSON.stringify(json)}`,
+                    };
+                }
+                return {
+                    status: "complete",
+                    value: { authorizationCode: json.authorization_code, codeVerifier: json.code_verifier },
+                };
+            }
+            if (response.status === 403 || response.status === 404) {
+                return { status: "pending" };
+            }
+            const responseBody = await response.text().catch(() => "");
+            let errorCode;
+            try {
+                const json = JSON.parse(responseBody);
+                const error = json?.error;
+                errorCode = typeof error === "object" ? error?.code : error;
+            }
+            catch { }
+            if (errorCode === "deviceauth_authorization_pending") {
+                return { status: "pending" };
+            }
+            if (errorCode === "slow_down") {
+                return { status: "slow_down" };
+            }
+            return {
+                status: "failed",
+                message: `OpenAI Codex device auth failed with status ${response.status}${responseBody ? `: ${responseBody}` : ""}`,
+            };
+        },
+    });
 }
 async function createAuthorizationFlow(originator = "pi") {
     const { verifier, challenge } = await generatePKCE();
@@ -164891,6 +165725,35 @@ function getAccountId(accessToken) {
     const accountId = auth?.chatgpt_account_id;
     return typeof accountId === "string" && accountId.length > 0 ? accountId : null;
 }
+function credentialsFromToken(token) {
+    const accountId = getAccountId(token.access);
+    if (!accountId) {
+        throw new Error("Failed to extract accountId from token");
+    }
+    return {
+        access: token.access,
+        refresh: token.refresh,
+        expires: token.expires,
+        accountId,
+    };
+}
+async function exchangeAuthorizationCodeForCredentials(code, verifier, redirectUri, signal) {
+    return credentialsFromToken(await openai_codex_exchangeAuthorizationCode(code, verifier, redirectUri, signal));
+}
+/**
+ * Login with OpenAI Codex OAuth using the Codex device-code flow.
+ */
+async function loginOpenAICodexDeviceCode(options) {
+    const device = await startOpenAICodexDeviceAuth(options.signal);
+    options.onDeviceCode({
+        userCode: device.userCode,
+        verificationUri: DEVICE_VERIFICATION_URI,
+        intervalSeconds: device.intervalSeconds,
+        expiresInSeconds: DEVICE_CODE_TIMEOUT_SECONDS,
+    });
+    const code = await pollOpenAICodexDeviceAuth(device, options.signal);
+    return exchangeAuthorizationCodeForCredentials(code.authorizationCode, code.codeVerifier, DEVICE_REDIRECT_URI, options.signal);
+}
 /**
  * Login with OpenAI Codex OAuth
  *
@@ -164975,20 +165838,7 @@ async function loginOpenAICodex(options) {
         if (!code) {
             throw new Error("Missing authorization code");
         }
-        const tokenResult = await openai_codex_exchangeAuthorizationCode(code, verifier);
-        if (tokenResult.type !== "success") {
-            throw new Error(tokenResult.message);
-        }
-        const accountId = getAccountId(tokenResult.access);
-        if (!accountId) {
-            throw new Error("Failed to extract accountId from token");
-        }
-        return {
-            access: tokenResult.access,
-            refresh: tokenResult.refresh,
-            expires: tokenResult.expires,
-            accountId,
-        };
+        return exchangeAuthorizationCodeForCredentials(code, verifier, openai_codex_REDIRECT_URI);
     }
     finally {
         server.close();
@@ -164998,26 +165848,32 @@ async function loginOpenAICodex(options) {
  * Refresh OpenAI Codex OAuth token
  */
 async function refreshOpenAICodexToken(refreshToken) {
-    const result = await refreshAccessToken(refreshToken);
-    if (result.type !== "success") {
-        throw new Error(result.message);
-    }
-    const accountId = getAccountId(result.access);
-    if (!accountId) {
-        throw new Error("Failed to extract accountId from token");
-    }
-    return {
-        access: result.access,
-        refresh: result.refresh,
-        expires: result.expires,
-        accountId,
-    };
+    return credentialsFromToken(await refreshAccessToken(refreshToken));
 }
 const openaiCodexOAuthProvider = {
     id: "openai-codex",
     name: "ChatGPT Plus/Pro (Codex Subscription)",
     usesCallbackServer: true,
     async login(callbacks) {
+        const loginMethod = await callbacks.onSelect({
+            message: "Select OpenAI Codex login method:",
+            options: [
+                { id: OPENAI_CODEX_BROWSER_LOGIN_METHOD, label: "Browser login (default)" },
+                { id: OPENAI_CODEX_DEVICE_CODE_LOGIN_METHOD, label: "Device code login (headless)" },
+            ],
+        });
+        if (!loginMethod) {
+            throw new Error("Login cancelled");
+        }
+        if (loginMethod === OPENAI_CODEX_DEVICE_CODE_LOGIN_METHOD) {
+            return loginOpenAICodexDeviceCode({
+                onDeviceCode: callbacks.onDeviceCode,
+                signal: callbacks.signal,
+            });
+        }
+        if (loginMethod !== OPENAI_CODEX_BROWSER_LOGIN_METHOD) {
+            throw new Error(`Unknown OpenAI Codex login method: ${loginMethod}`);
+        }
         return loginOpenAICodex({
             onAuth: callbacks.onAuth,
             onPrompt: callbacks.onPrompt,
@@ -165033,7 +165889,7 @@ const openaiCodexOAuthProvider = {
     },
 };
 //# sourceMappingURL=openai-codex.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/oauth/index.js
 /**
  * OAuth credential management for AI providers.
  *
@@ -165156,7 +166012,7 @@ async function getOAuthApiKey(providerId, credentials) {
     return { newCredentials: creds, apiKey };
 }
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/oauth.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/oauth.js
 
 //# sourceMappingURL=oauth.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/jiti@2.7.0/node_modules/jiti/dist/jiti.cjs
@@ -165192,7 +166048,7 @@ function createJiti(id, opts = {}) {
 var value = __webpack_require__(68040);
 // EXTERNAL MODULE: external "node:events"
 var external_node_events_ = __webpack_require__(78474);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/event-bus.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/event-bus.js
 
 function createEventBus() {
     const emitter = new external_node_events_.EventEmitter();
@@ -165218,7 +166074,7 @@ function createEventBus() {
     };
 }
 //# sourceMappingURL=event-bus.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/exec.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/exec.js
 /**
  * Shared command execution utilities for extensions and custom tools.
  */
@@ -165294,7 +166150,7 @@ async function execCommand(command, args, cwd, options) {
     });
 }
 //# sourceMappingURL=exec.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/source-info.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/source-info.js
 function createSourceInfo(path, metadata) {
     return {
         path,
@@ -165314,7 +166170,7 @@ function createSyntheticSourceInfo(path, options) {
     };
 }
 //# sourceMappingURL=source-info.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/loader.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/loader.js
 /**
  * Extension loader - loads TypeScript extension modules using jiti.
  *
@@ -165796,7 +166652,7 @@ async function discoverAndLoadExtensions(configuredPaths, cwd, agentDir = getAge
     return loadExtensions(allPaths, resolvedCwd, eventBus);
 }
 //# sourceMappingURL=loader.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/runner.js
 /**
  * Extension runner - executes extensions and manages their lifecycle.
  */
@@ -166589,14 +167445,20 @@ class ExtensionRunner {
         return { skillPaths, promptPaths, themePaths };
     }
     /** Emit input event. Transforms chain, "handled" short-circuits. */
-    async emitInput(text, images, source) {
+    async emitInput(text, images, source, streamingBehavior) {
         const ctx = this.createContext();
         let currentText = text;
         let currentImages = images;
         for (const ext of this.extensions) {
             for (const handler of ext.handlers.get("input") ?? []) {
                 try {
-                    const event = { type: "input", text: currentText, images: currentImages, source };
+                    const event = {
+                        type: "input",
+                        text: currentText,
+                        images: currentImages,
+                        source,
+                        streamingBehavior,
+                    };
                     const result = (await handler(event, ctx));
                     if (result?.action === "handled")
                         return result;
@@ -166621,7 +167483,7 @@ class ExtensionRunner {
     }
 }
 //# sourceMappingURL=runner.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/types.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/types.js
 /**
  * Extension system types.
  *
@@ -166667,7 +167529,7 @@ function isToolCallEventType(toolName, event) {
     return event.toolName === toolName;
 }
 //# sourceMappingURL=types.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/tool-definition-wrapper.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/tool-definition-wrapper.js
 /** Wrap a ToolDefinition into an AgentTool for the core runtime. */
 function wrapToolDefinition(definition, ctxFactory) {
     return {
@@ -166702,7 +167564,7 @@ function createToolDefinitionFromAgentTool(tool) {
     };
 }
 //# sourceMappingURL=tool-definition-wrapper.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/wrapper.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/wrapper.js
 /**
  * Tool wrappers for extension-registered tools.
  *
@@ -166725,7 +167587,7 @@ function wrapRegisteredTools(registeredTools, runner) {
     return wrapToolDefinitions(registeredTools.map((registeredTool) => registeredTool.definition), () => runner.createContext());
 }
 //# sourceMappingURL=wrapper.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/extensions/index.js
 /**
  * Extension system for lifecycle events and custom tools.
  */
@@ -166735,7 +167597,7 @@ function wrapRegisteredTools(registeredTools, runner) {
 
 
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/prompt-templates.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/prompt-templates.js
 
 
 
@@ -166974,7 +167836,7 @@ function expandPromptTemplate(text, templates) {
     return text;
 }
 //# sourceMappingURL=prompt-templates.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/skills.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/skills.js
 
 
 
@@ -167362,7 +168224,7 @@ function skills_loadSkills(options) {
     };
 }
 //# sourceMappingURL=skills.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/system-prompt.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/system-prompt.js
 /**
  * System prompt construction and project context loading
  */
@@ -167433,9 +168295,6 @@ function buildSystemPrompt(options) {
     if (hasBash && !hasGrep && !hasFind && !hasLs) {
         addGuideline("Use bash for file operations like ls, rg, find");
     }
-    else if (hasBash && (hasGrep || hasFind || hasLs)) {
-        addGuideline("Prefer grep/find/ls tools over bash for file exploration (faster, respects .gitignore)");
-    }
     for (const guideline of promptGuidelines ?? []) {
         const normalized = guideline.trim();
         if (normalized.length > 0) {
@@ -167488,7 +168347,7 @@ Pi documentation (read only when the user asks about pi itself, its SDK, extensi
 //# sourceMappingURL=system-prompt.js.map
 // EXTERNAL MODULE: external "node:fs/promises"
 var external_node_fs_promises_ = __webpack_require__(51455);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/keybinding-hints.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/keybinding-hints.js
 /**
  * Utilities for formatting keybinding hints in the UI.
  */
@@ -167525,7 +168384,7 @@ function rawKeyHint(key, description) {
     return theme.fg("dim", formatKeyText(key)) + theme.fg("muted", ` ${description}`);
 }
 //# sourceMappingURL=keybinding-hints.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/visual-truncate.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/visual-truncate.js
 /**
  * Shared utility for truncating text to visual lines (accounting for line wrapping).
  * Used by both tool-execution.ts and bash-execution.ts for consistent behavior.
@@ -167559,7 +168418,7 @@ function truncateToVisualLines(text, maxVisualLines, width, paddingX = 0) {
     return { visualLines: truncatedLines, skippedCount };
 }
 //# sourceMappingURL=visual-truncate.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/output-accumulator.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/output-accumulator.js
 
 
 
@@ -167744,7 +168603,9 @@ class OutputAccumulator {
     }
 }
 //# sourceMappingURL=output-accumulator.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/render-utils.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/render-utils.js
+
+
 
 
 
@@ -167757,6 +168618,12 @@ function shortenPath(path) {
         return `~${path.slice(home.length)}`;
     }
     return path;
+}
+function linkPath(styledText, rawPath, cwd) {
+    if (!getCapabilities().hyperlinks)
+        return styledText;
+    const absolutePath = resolvePath(rawPath, cwd);
+    return hyperlink(styledText, (0,external_node_url_.pathToFileURL)(absolutePath).href);
 }
 function str(value) {
     if (typeof value === "string")
@@ -167793,8 +168660,16 @@ function getTextOutput(result, showImages) {
 function invalidArgText(theme) {
     return theme.fg("error", "[invalid arg]");
 }
+function renderToolPath(rawPath, theme, cwd, options) {
+    if (rawPath === null)
+        return invalidArgText(theme);
+    const value = rawPath || options?.emptyFallback;
+    if (!value)
+        return theme.fg("toolOutput", "...");
+    return linkPath(theme.fg("accent", shortenPath(value)), value, cwd);
+}
 //# sourceMappingURL=render-utils.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/bash.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/bash.js
 
 
 
@@ -168856,7 +169731,7 @@ function diffWordsWithSpace(oldStr, newStr, options) {
     return wordsWithSpaceDiff.diff(oldStr, newStr, options);
 }
 
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/diff.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/diff.js
 
 
 /**
@@ -169287,7 +170162,7 @@ function splitLines(text) {
     return result;
 }
 
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/path-utils.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/path-utils.js
 
 
 
@@ -169387,7 +170262,7 @@ async function resolveReadPathAsync(filePath, cwd) {
     return resolved;
 }
 //# sourceMappingURL=path-utils.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/edit-diff.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/edit-diff.js
 /**
  * Shared diff computation utilities for the edit tool.
  * Used by both edit.ts (for execution) and tool-execution.ts (for preview rendering).
@@ -169733,7 +170608,7 @@ async function computeEditDiff(path, oldText, newText, cwd) {
     return computeEditsDiff(path, [{ oldText, newText }], cwd);
 }
 //# sourceMappingURL=edit-diff.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/file-mutation-queue.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/file-mutation-queue.js
 
 
 const fileMutationQueues = new Map();
@@ -169786,7 +170661,7 @@ async function withFileMutationQueue(filePath, fn) {
     }
 }
 //# sourceMappingURL=file-mutation-queue.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/edit.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/edit.js
 
 
 
@@ -169882,11 +170757,8 @@ function getRenderablePreviewInput(args) {
     }
     return null;
 }
-function formatEditCall(args, theme) {
-    const invalidArg = invalidArgText(theme);
-    const rawPath = str(args?.file_path ?? args?.path);
-    const path = rawPath !== null ? shortenPath(rawPath) : null;
-    const pathDisplay = path === null ? invalidArg : path ? theme.fg("accent", path) : theme.fg("toolOutput", "...");
+function formatEditCall(args, theme, cwd) {
+    const pathDisplay = renderToolPath(str(args?.file_path ?? args?.path), theme, cwd);
     return `${theme.fg("toolTitle", theme.bold("edit"))} ${pathDisplay}`;
 }
 function formatEditResult(args, preview, result, theme, isError) {
@@ -169921,10 +170793,10 @@ function getEditHeaderBg(preview, settledError, theme) {
     }
     return (text) => theme.bg("toolPendingBg", text);
 }
-function buildEditCallComponent(component, args, theme) {
+function buildEditCallComponent(component, args, theme, cwd) {
     component.setBgFn(getEditHeaderBg(component.preview, component.settledError, theme));
     component.clear();
-    component.addChild(new Text(formatEditCall(args, theme), 0, 0));
+    component.addChild(new Text(formatEditCall(args, theme, cwd), 0, 0));
     if (!component.preview) {
         return component;
     }
@@ -170034,7 +170906,7 @@ function edit_createEditToolDefinition(cwd, options) {
                     }
                 });
             }
-            return buildEditCallComponent(component, args, theme);
+            return buildEditCallComponent(component, args, theme, context.cwd);
         },
         renderResult(result, _options, theme, context) {
             const callComponent = context.state.callComponent;
@@ -170055,7 +170927,7 @@ function edit_createEditToolDefinition(cwd, options) {
                     changed = true;
                 }
                 if (changed) {
-                    buildEditCallComponent(callComponent, context.args, theme);
+                    buildEditCallComponent(callComponent, context.args, theme, context.cwd);
                 }
             }
             const output = formatEditResult(context.args, callComponent?.preview, typedResult, theme, context.isError);
@@ -170080,7 +170952,7 @@ var external_node_readline_ = __webpack_require__(80481);
 var external_stream_ = __webpack_require__(2203);
 // EXTERNAL MODULE: external "stream/promises"
 var external_stream_promises_ = __webpack_require__(49786);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/tools-manager.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/tools-manager.js
 
 
 
@@ -170409,7 +171281,7 @@ async function ensureTool(tool, silent = false) {
     }
 }
 //# sourceMappingURL=tools-manager.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/find.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/find.js
 
 
 
@@ -170707,7 +171579,7 @@ function find_createFindTool(cwd, options) {
     return wrapToolDefinition(find_createFindToolDefinition(cwd, options));
 }
 //# sourceMappingURL=find.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/grep.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/grep.js
 
 
 
@@ -171012,7 +171884,7 @@ function grep_createGrepTool(cwd, options) {
     return wrapToolDefinition(grep_createGrepToolDefinition(cwd, options));
 }
 //# sourceMappingURL=grep.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/ls.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/ls.js
 
 
 
@@ -171032,12 +171904,10 @@ const defaultLsOperations = {
     stat: external_node_fs_promises_.stat,
     readdir: external_node_fs_promises_.readdir,
 };
-function formatLsCall(args, theme) {
-    const rawPath = str(args?.path);
-    const path = rawPath !== null ? shortenPath(rawPath || ".") : null;
+function formatLsCall(args, theme, cwd) {
     const limit = args?.limit;
-    const invalidArg = invalidArgText(theme);
-    let text = `${theme.fg("toolTitle", theme.bold("ls"))} ${path === null ? invalidArg : theme.fg("accent", path)}`;
+    const pathDisplay = renderToolPath(str(args?.path), theme, cwd, { emptyFallback: "." });
+    let text = `${theme.fg("toolTitle", theme.bold("ls"))} ${pathDisplay}`;
     if (limit !== undefined) {
         text += theme.fg("toolOutput", ` (limit ${limit})`);
     }
@@ -171168,7 +172038,7 @@ function ls_createLsToolDefinition(cwd, options) {
         },
         renderCall(args, theme, context) {
             const text = context.lastComponent ?? new Text("", 0, 0);
-            text.setText(formatLsCall(args, theme));
+            text.setText(formatLsCall(args, theme, context.cwd));
             return text;
         },
         renderResult(result, options, theme, context) {
@@ -171184,7 +172054,7 @@ function ls_createLsTool(cwd, options) {
 //# sourceMappingURL=ls.js.map
 // EXTERNAL MODULE: external "node:worker_threads"
 var external_node_worker_threads_ = __webpack_require__(75919);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/exif-orientation.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/exif-orientation.js
 function readOrientationFromTiff(bytes, tiffStart) {
     if (tiffStart + 8 > bytes.length)
         return 1;
@@ -171345,7 +172215,7 @@ function applyExifOrientation(photon, image, originalBytes) {
 //# sourceMappingURL=exif-orientation.js.map
 // EXTERNAL MODULE: external "module"
 var external_module_ = __webpack_require__(73339);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/photon.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/photon.js
 /**
  * Photon image processing wrapper.
  *
@@ -171467,7 +172337,7 @@ async function loadPhoton() {
     return loadPromise;
 }
 //# sourceMappingURL=photon.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/image-resize-core.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/image-resize-core.js
 
 
 // 4.5MB of base64 payload. Provides headroom below Anthropic's 5MB limit.
@@ -171592,7 +172462,7 @@ async function resizeImageInProcess(inputBytes, mimeType, options) {
     }
 }
 //# sourceMappingURL=image-resize-core.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/image-resize.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/image-resize.js
 
 
 function toTransferableBytes(input) {
@@ -171690,7 +172560,7 @@ function formatDimensionNote(result) {
     return `[Image: original ${result.originalWidth}x${result.originalHeight}, displayed at ${result.width}x${result.height}. Multiply coordinates by ${scale.toFixed(2)} to map to original image.]`;
 }
 //# sourceMappingURL=image-resize.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/mime.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/mime.js
 
 const IMAGE_TYPE_SNIFF_BYTES = 4100;
 const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
@@ -171760,7 +172630,7 @@ function startsWithAscii(buffer, offset, text) {
     return true;
 }
 //# sourceMappingURL=mime.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/read.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/read.js
 
 
 
@@ -171794,11 +172664,8 @@ function formatReadLineRange(args, theme) {
     const endLine = args.limit !== undefined ? startLine + args.limit - 1 : "";
     return theme.fg("warning", `:${startLine}${endLine ? `-${endLine}` : ""}`);
 }
-function formatReadCall(args, theme) {
-    const rawPath = str(args?.file_path ?? args?.path);
-    const path = rawPath !== null ? shortenPath(rawPath) : null;
-    const invalidArg = invalidArgText(theme);
-    const pathDisplay = path === null ? invalidArg : path ? theme.fg("accent", path) : theme.fg("toolOutput", "...");
+function formatReadCall(args, theme, cwd) {
+    const pathDisplay = renderToolPath(str(args?.file_path ?? args?.path), theme, cwd);
     return `${theme.fg("toolTitle", theme.bold("read"))} ${pathDisplay}${formatReadLineRange(args, theme)}`;
 }
 function trimTrailingEmptyLines(lines) {
@@ -172037,7 +172904,9 @@ function read_createReadToolDefinition(cwd, options) {
         renderCall(args, theme, context) {
             const text = context.lastComponent ?? new Text("", 0, 0);
             const classification = !context.expanded ? getCompactReadClassification(args, context.cwd) : undefined;
-            text.setText(classification ? formatCompactReadCall(classification, args, theme) : formatReadCall(args, theme));
+            text.setText(classification
+                ? formatCompactReadCall(classification, args, theme)
+                : formatReadCall(args, theme, context.cwd));
             return text;
         },
         renderResult(result, options, theme, context) {
@@ -172051,7 +172920,7 @@ function read_createReadTool(cwd, options) {
     return wrapToolDefinition(read_createReadToolDefinition(cwd, options));
 }
 //# sourceMappingURL=read.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/write.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/write.js
 
 
 
@@ -172144,12 +173013,11 @@ function write_trimTrailingEmptyLines(lines) {
     }
     return lines.slice(0, end);
 }
-function formatWriteCall(args, options, theme, cache) {
+function formatWriteCall(args, options, theme, cache, cwd) {
     const rawPath = str(args?.file_path ?? args?.path);
     const fileContent = str(args?.content);
-    const path = rawPath !== null ? shortenPath(rawPath) : null;
-    const invalidArg = invalidArgText(theme);
-    let text = `${theme.fg("toolTitle", theme.bold("write"))} ${path === null ? invalidArg : path ? theme.fg("accent", path) : theme.fg("toolOutput", "...")}`;
+    const pathDisplay = renderToolPath(rawPath, theme, cwd);
+    let text = `${theme.fg("toolTitle", theme.bold("write"))} ${pathDisplay}`;
     if (fileContent === null) {
         text += `\n\n${theme.fg("error", "[invalid content arg - expected string]")}`;
     }
@@ -172230,7 +173098,7 @@ function write_createWriteToolDefinition(cwd, options) {
             else {
                 component.cache = undefined;
             }
-            component.setText(formatWriteCall(renderArgs, { expanded: context.expanded, isPartial: context.isPartial }, theme, component.cache));
+            component.setText(formatWriteCall(renderArgs, { expanded: context.expanded, isPartial: context.isPartial }, theme, component.cache, context.cwd));
             return component;
         },
         renderResult(result, _options, theme, context) {
@@ -172250,7 +173118,7 @@ function write_createWriteTool(cwd, options) {
     return wrapToolDefinition(write_createWriteToolDefinition(cwd, options));
 }
 //# sourceMappingURL=write.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/tools/index.js
 
 
 
@@ -172363,7 +173231,7 @@ function createAllTools(cwd, options) {
     };
 }
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session.js
 /**
  * AgentSession - Core abstraction for agent lifecycle and session management.
  *
@@ -172459,6 +173327,7 @@ class AgentSession {
     _extensionRunnerRef;
     _initialActiveToolNames;
     _allowedToolNames;
+    _excludedToolNames;
     _baseToolsOverride;
     _sessionStartEvent;
     _extensionUIContext;
@@ -172489,6 +173358,7 @@ class AgentSession {
         this._extensionRunnerRef = config.extensionRunnerRef;
         this._initialActiveToolNames = config.initialActiveToolNames;
         this._allowedToolNames = config.allowedToolNames ? new Set(config.allowedToolNames) : undefined;
+        this._excludedToolNames = config.excludedToolNames ? new Set(config.excludedToolNames) : undefined;
         this._baseToolsOverride = config.baseToolsOverride;
         this._sessionStartEvent = config.sessionStartEvent ?? { type: "session_start", reason: "startup" };
         // Always subscribe to agent events for internal handling
@@ -172833,6 +173703,16 @@ class AgentSession {
      * Call this when completely done with the session.
      */
     dispose() {
+        try {
+            this.abortRetry();
+            this.abortCompaction();
+            this.abortBranchSummary();
+            this.abortBash();
+            this.agent.abort();
+        }
+        catch {
+            // Dispose must succeed even if an abort hook throws.
+        }
         this._extensionRunner.invalidate("This extension ctx is stale after session replacement or reload. Do not use a captured pi or command ctx after ctx.newSession(), ctx.fork(), ctx.switchSession(), or ctx.reload(). For newSession, fork, and switchSession, move post-replacement work into withSession and use the ctx passed to withSession. For reload, do not use the old ctx after await ctx.reload().");
         this._disconnectFromAgent();
         this._eventListeners = [];
@@ -172873,13 +173753,14 @@ class AgentSession {
         return this.agent.state.tools.map((t) => t.name);
     }
     /**
-     * Get all configured tools with name, description, parameter schema, and source metadata.
+     * Get all configured tools with name, description, parameter schema, prompt guidelines, and source metadata.
      */
     getAllTools() {
         return Array.from(this._toolDefinitions.values()).map(({ definition, sourceInfo }) => ({
             name: definition.name,
             description: definition.description,
             parameters: definition.parameters,
+            promptGuidelines: definition.promptGuidelines,
             sourceInfo,
         }));
     }
@@ -173034,7 +173915,12 @@ class AgentSession {
             });
             this._retryAttempt = 0;
         }
-        return await this._checkCompaction(msg);
+        if (await this._checkCompaction(msg)) {
+            return true;
+        }
+        // The agent loop drains both queues before emitting agent_end. Any messages
+        // here were queued by agent_end extension handlers and need a continuation.
+        return this.agent.hasQueuedMessages();
     }
     /**
      * Send a prompt to the agent.
@@ -173064,7 +173950,7 @@ class AgentSession {
             let currentText = text;
             let currentImages = options?.images;
             if (this._extensionRunner.hasHandlers("input")) {
-                const inputResult = await this._extensionRunner.emitInput(currentText, currentImages, options?.source ?? "interactive");
+                const inputResult = await this._extensionRunner.emitInput(currentText, currentImages, options?.source ?? "interactive", this.isStreaming ? options?.streamingBehavior : undefined);
                 if (inputResult.action === "handled") {
                     preflightResult?.(true);
                     return;
@@ -174162,7 +175048,8 @@ class AgentSession {
         const previousRegistryNames = new Set(this._toolRegistry.keys());
         const previousActiveToolNames = this.getActiveToolNames();
         const allowedToolNames = this._allowedToolNames;
-        const isAllowedTool = (name) => !allowedToolNames || allowedToolNames.has(name);
+        const excludedToolNames = this._excludedToolNames;
+        const isAllowedTool = (name) => (!allowedToolNames || allowedToolNames.has(name)) && !excludedToolNames?.has(name);
         const registeredTools = this._extensionRunner.getAllRegisteredTools();
         const allCustomTools = [
             ...registeredTools,
@@ -174292,6 +175179,9 @@ class AgentSession {
     // =========================================================================
     // Auto-Retry
     // =========================================================================
+    _isNonRetryableProviderLimitError(errorMessage) {
+        return /GoUsageLimitError|FreeUsageLimitError|Monthly usage limit reached|available balance|insufficient_quota|out of budget|quota exceeded|billing/i.test(errorMessage);
+    }
     /**
      * Check if an error is retryable (overloaded, rate limit, server errors).
      * Context overflow errors are NOT retryable (handled by compaction instead).
@@ -174304,6 +175194,8 @@ class AgentSession {
         if ((0,dist.isContextOverflow)(message, contextWindow))
             return false;
         const err = message.errorMessage;
+        if (this._isNonRetryableProviderLimitError(err))
+            return false;
         // Match: overloaded_error, provider returned error, rate limit, 429, 500, 502, 503, 504, service unavailable, network/connection errors (including connection lost), WebSocket transport closes/errors, fetch failed, premature stream endings, HTTP/2 closed before response, terminated, retry delay exceeded
         return /overloaded|provider.?returned.?error|rate.?limit|too many requests|429|500|502|503|504|service.?unavailable|server.?error|internal.?error|network.?error|connection.?error|connection.?refused|connection.?lost|websocket.?closed|websocket.?error|other side closed|fetch failed|upstream.?connect|reset before headers|socket hang up|ended without|stream ended before message_stop|http2 request did not get a response|timed? out|timeout|terminated|retry delay/i.test(err);
     }
@@ -174864,7 +175756,7 @@ class AgentSession {
 //# sourceMappingURL=agent-session.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/proper-lockfile@4.1.2/node_modules/proper-lockfile/index.js
 var proper_lockfile = __webpack_require__(3792);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/resolve-config-value.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/resolve-config-value.js
 /**
  * Resolve configuration values that may be shell commands, environment variables, or literals.
  * Used by auth-storage.ts and model-registry.ts.
@@ -174873,17 +175765,130 @@ var proper_lockfile = __webpack_require__(3792);
 
 // Cache for shell command results (persists for process lifetime)
 const commandResultCache = new Map();
+const ENV_VAR_NAME_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const ENV_VAR_NAME_PREFIX_RE = /^[A-Za-z_][A-Za-z0-9_]*/;
+const LEGACY_ENV_VAR_NAME_RE = /^[A-Z_][A-Z0-9_]*$/;
+function appendLiteral(parts, value) {
+    if (!value)
+        return;
+    const previousPart = parts[parts.length - 1];
+    if (previousPart?.type === "literal") {
+        previousPart.value += value;
+        return;
+    }
+    parts.push({ type: "literal", value });
+}
+function parseConfigValueTemplate(config) {
+    const parts = [];
+    let index = 0;
+    while (index < config.length) {
+        const dollarIndex = config.indexOf("$", index);
+        if (dollarIndex < 0) {
+            appendLiteral(parts, config.slice(index));
+            break;
+        }
+        appendLiteral(parts, config.slice(index, dollarIndex));
+        const nextChar = config[dollarIndex + 1];
+        if (nextChar === "$" || nextChar === "!") {
+            appendLiteral(parts, nextChar);
+            index = dollarIndex + 2;
+            continue;
+        }
+        if (nextChar === "{") {
+            const endIndex = config.indexOf("}", dollarIndex + 2);
+            if (endIndex < 0) {
+                appendLiteral(parts, "$");
+                index = dollarIndex + 1;
+                continue;
+            }
+            const name = config.slice(dollarIndex + 2, endIndex);
+            if (ENV_VAR_NAME_RE.test(name)) {
+                parts.push({ type: "env", name });
+            }
+            else {
+                appendLiteral(parts, config.slice(dollarIndex, endIndex + 1));
+            }
+            index = endIndex + 1;
+            continue;
+        }
+        const match = config.slice(dollarIndex + 1).match(ENV_VAR_NAME_PREFIX_RE);
+        if (match) {
+            parts.push({ type: "env", name: match[0] });
+            index = dollarIndex + 1 + match[0].length;
+            continue;
+        }
+        appendLiteral(parts, "$");
+        index = dollarIndex + 1;
+    }
+    return parts;
+}
+function parseConfigValueReference(config) {
+    if (config.startsWith("!")) {
+        return { type: "command", config };
+    }
+    return { type: "template", parts: parseConfigValueTemplate(config) };
+}
+function resolveEnvConfigValue(name) {
+    return process.env[name] || undefined;
+}
+function getTemplateEnvVarNames(parts) {
+    const names = [];
+    for (const part of parts) {
+        if (part.type !== "env" || names.includes(part.name))
+            continue;
+        names.push(part.name);
+    }
+    return names;
+}
+function resolveTemplate(parts) {
+    let resolved = "";
+    for (const part of parts) {
+        if (part.type === "literal") {
+            resolved += part.value;
+            continue;
+        }
+        const envValue = resolveEnvConfigValue(part.name);
+        if (envValue === undefined)
+            return undefined;
+        resolved += envValue;
+    }
+    return resolved;
+}
+function getConfigValueEnvVarName(config) {
+    const reference = parseConfigValueReference(config);
+    if (reference.type !== "template")
+        return undefined;
+    return reference.parts.length === 1 && reference.parts[0]?.type === "env" ? reference.parts[0].name : undefined;
+}
+function getConfigValueEnvVarNames(config) {
+    const reference = parseConfigValueReference(config);
+    return reference.type === "template" ? getTemplateEnvVarNames(reference.parts) : [];
+}
+function getMissingConfigValueEnvVarNames(config) {
+    return getConfigValueEnvVarNames(config).filter((name) => resolveEnvConfigValue(name) === undefined);
+}
+function isCommandConfigValue(config) {
+    return parseConfigValueReference(config).type === "command";
+}
+function isConfigValueConfigured(config) {
+    return getMissingConfigValueEnvVarNames(config).length === 0;
+}
+function isLegacyEnvVarNameConfigValue(config) {
+    return LEGACY_ENV_VAR_NAME_RE.test(config);
+}
 /**
  * Resolve a config value (API key, header value, etc.) to an actual value.
  * - If starts with "!", executes the rest as a shell command and uses stdout (cached)
- * - Otherwise checks environment variable first, then treats as literal (not cached)
+ * - Interpolates "$ENV_VAR" or "${ENV_VAR}" references with the named environment variable
+ * - In non-command values, "$$" escapes a literal "$" and "$!" escapes a literal "!"
+ * - Otherwise treats the value as a literal
  */
 function resolveConfigValue(config) {
-    if (config.startsWith("!")) {
-        return executeCommand(config);
+    const reference = parseConfigValueReference(config);
+    if (reference.type === "command") {
+        return executeCommand(reference.config);
     }
-    const envValue = process.env[config];
-    return envValue || config;
+    return resolveTemplate(reference.parts);
 }
 function executeWithConfiguredShell(command) {
     try {
@@ -174946,19 +175951,29 @@ function executeCommand(commandConfig) {
  * Resolve all header values using the same resolution logic as API keys.
  */
 function resolveConfigValueUncached(config) {
-    if (config.startsWith("!")) {
-        return executeCommandUncached(config);
+    const reference = parseConfigValueReference(config);
+    if (reference.type === "command") {
+        return executeCommandUncached(reference.config);
     }
-    const envValue = process.env[config];
-    return envValue || config;
+    return resolveTemplate(reference.parts);
 }
 function resolveConfigValueOrThrow(config, description) {
     const resolvedValue = resolveConfigValueUncached(config);
     if (resolvedValue !== undefined) {
         return resolvedValue;
     }
-    if (config.startsWith("!")) {
-        throw new Error(`Failed to resolve ${description} from shell command: ${config.slice(1)}`);
+    const reference = parseConfigValueReference(config);
+    if (reference.type === "command") {
+        throw new Error(`Failed to resolve ${description} from shell command: ${reference.config.slice(1)}`);
+    }
+    if (reference.type === "template") {
+        const missingEnvVars = getMissingConfigValueEnvVarNames(config);
+        if (missingEnvVars.length === 1) {
+            throw new Error(`Failed to resolve ${description} from environment variable: ${missingEnvVars[0]}`);
+        }
+        if (missingEnvVars.length > 1) {
+            throw new Error(`Failed to resolve ${description} from environment variables: ${missingEnvVars.join(", ")}`);
+        }
     }
     throw new Error(`Failed to resolve ${description}`);
 }
@@ -174991,7 +176006,7 @@ function resolve_config_value_clearConfigValueCache() {
     commandResultCache.clear();
 }
 //# sourceMappingURL=resolve-config-value.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/auth-storage.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/auth-storage.js
 /**
  * Credential storage for API keys and OAuth tokens.
  * Handles loading, saving, and refreshing credentials from auth.json.
@@ -175434,7 +176449,29 @@ class AuthStorage {
     }
 }
 //# sourceMappingURL=auth-storage.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/provider-display-names.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/deprecation.js
+
+const emittedDeprecationWarnings = new Set();
+function warnDeprecation(message) {
+    if (emittedDeprecationWarnings.has(message))
+        return;
+    emittedDeprecationWarnings.add(message);
+    console.warn(chalk_source/* default */.Ay.yellow(`Deprecation warning: ${message}`));
+}
+/** Clear deprecation warning state. Exported for tests. */
+function clearDeprecationWarningsForTests() {
+    emittedDeprecationWarnings.clear();
+}
+//# sourceMappingURL=deprecation.js.map
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/json.js
+/** Strip `//` line comments and trailing commas from JSON, leaving string literals untouched. */
+function stripJsonComments(input) {
+    return input
+        .replace(/"(?:\\.|[^"\\])*"|\/\/[^\n]*/g, (m) => (m[0] === '"' ? m : ""))
+        .replace(/"(?:\\.|[^"\\])*"|,(\s*[}\]])/g, (m, tail) => tail ?? (m[0] === '"' ? m : ""));
+}
+//# sourceMappingURL=json.js.map
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/provider-display-names.js
 const BUILT_IN_PROVIDER_DISPLAY_NAMES = {
     anthropic: "Anthropic",
     "amazon-bedrock": "Amazon Bedrock",
@@ -175468,10 +176505,12 @@ const BUILT_IN_PROVIDER_DISPLAY_NAMES = {
     "xiaomi-token-plan-sgp": "Xiaomi MiMo Token Plan (Singapore)",
 };
 //# sourceMappingURL=provider-display-names.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/model-registry.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/model-registry.js
 /**
  * Model registry - manages built-in and custom models, provides API key resolution.
  */
+
+
 
 
 
@@ -175637,11 +176676,56 @@ function formatValidationPath(error) {
     const path = error.instancePath.replace(/^\//, "").replace(/\//g, ".");
     return path || "root";
 }
-/** Strip `//` line comments and trailing commas from JSON, leaving string literals untouched. */
-function stripJsonComments(input) {
-    return input
-        .replace(/"(?:\\.|[^"\\])*"|\/\/[^\n]*/g, (m) => (m[0] === '"' ? m : ""))
-        .replace(/"(?:\\.|[^"\\])*"|,(\s*[}\]])/g, (m, tail) => tail ?? (m[0] === '"' ? m : ""));
+function migrateLegacyRegisterProviderConfigValue(providerName, field, value) {
+    if (!isLegacyEnvVarNameConfigValue(value))
+        return value;
+    warnDeprecation(`registerProvider("${providerName}") ${field} value "${value}" is treated as a legacy environment variable reference. This will no longer be detected as an environment variable reference in a future release. Pass "$${value}" instead.`);
+    return `$${value}`;
+}
+function migrateLegacyRegisterProviderHeaders(providerName, field, headers) {
+    if (!headers)
+        return undefined;
+    let migratedHeaders;
+    for (const [key, value] of Object.entries(headers)) {
+        const migratedValue = migrateLegacyRegisterProviderConfigValue(providerName, `${field} header "${key}"`, value);
+        if (migratedValue === value)
+            continue;
+        migratedHeaders ??= { ...headers };
+        migratedHeaders[key] = migratedValue;
+    }
+    return migratedHeaders ?? headers;
+}
+function migrateLegacyRegisterProviderConfigValues(providerName, config) {
+    let migratedConfig;
+    const setMigratedConfigValue = (key, value) => {
+        migratedConfig ??= { ...config };
+        migratedConfig[key] = value;
+    };
+    if (config.apiKey) {
+        const apiKey = migrateLegacyRegisterProviderConfigValue(providerName, "apiKey", config.apiKey);
+        if (apiKey !== config.apiKey) {
+            setMigratedConfigValue("apiKey", apiKey);
+        }
+    }
+    const headers = migrateLegacyRegisterProviderHeaders(providerName, "headers", config.headers);
+    if (headers !== config.headers) {
+        setMigratedConfigValue("headers", headers);
+    }
+    if (config.models) {
+        let models;
+        for (let index = 0; index < config.models.length; index++) {
+            const model = config.models[index];
+            const modelHeaders = migrateLegacyRegisterProviderHeaders(providerName, `model "${model.id}" headers`, model.headers);
+            if (modelHeaders === model.headers)
+                continue;
+            models ??= [...config.models];
+            models[index] = { ...model, headers: modelHeaders };
+        }
+        if (models) {
+            setMigratedConfigValue("models", models);
+        }
+    }
+    return migratedConfig ?? config;
 }
 function emptyCustomModelsResult(error) {
     return { models: [], overrides: new Map(), modelOverrides: new Map(), error };
@@ -175962,8 +177046,9 @@ class ModelRegistry {
      * Get API key for a model.
      */
     hasConfiguredAuth(model) {
+        const providerApiKey = this.providerRequestConfigs.get(model.provider)?.apiKey;
         return (this.authStorage.hasAuth(model.provider) ||
-            this.providerRequestConfigs.get(model.provider)?.apiKey !== undefined);
+            (providerApiKey !== undefined && isConfigValueConfigured(providerApiKey)));
     }
     getModelRequestKey(provider, modelId) {
         return `${provider}:${modelId}`;
@@ -176034,11 +177119,14 @@ class ModelRegistry {
         if (!providerApiKey) {
             return authStatus;
         }
-        if (providerApiKey.startsWith("!")) {
+        if (isCommandConfigValue(providerApiKey)) {
             return { configured: true, source: "models_json_command" };
         }
-        if (process.env[providerApiKey]) {
-            return { configured: true, source: "environment", label: providerApiKey };
+        const envVarNames = getConfigValueEnvVarNames(providerApiKey);
+        if (envVarNames.length > 0) {
+            return isConfigValueConfigured(providerApiKey)
+                ? { configured: true, source: "environment", label: envVarNames.join(", ") }
+                : { configured: false };
         }
         return { configured: true, source: "models_json_key" };
     }
@@ -176080,9 +177168,10 @@ class ModelRegistry {
      * If provider has oauth: registers OAuth provider for /login support.
      */
     registerProvider(providerName, config) {
-        this.validateProviderConfig(providerName, config);
-        this.applyProviderConfig(providerName, config);
-        this.upsertRegisteredProvider(providerName, config);
+        const migratedConfig = migrateLegacyRegisterProviderConfigValues(providerName, config);
+        this.validateProviderConfig(providerName, migratedConfig);
+        this.applyProviderConfig(providerName, migratedConfig);
+        this.upsertRegisteredProvider(providerName, migratedConfig);
     }
     /**
      * Unregister a previously registered provider.
@@ -178643,7 +179732,7 @@ minimatch.unescape = unescape_unescape;
 //# sourceMappingURL=index.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/hosted-git-info@9.0.3/node_modules/hosted-git-info/lib/index.js
 var hosted_git_info_lib = __webpack_require__(9911);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/git.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/git.js
 
 function splitRef(url) {
     const scpLikeMatch = url.match(/^git@([^:]+):(.+)$/);
@@ -178807,8 +179896,44 @@ function parseGitUrl(source) {
     return parseGenericGitUrl(url);
 }
 //# sourceMappingURL=git.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/output-guard.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/output-guard.js
 let stdoutTakeoverState;
+const RAW_STDOUT_RETRY_DELAY_MS = 10;
+let rawStdoutWriteTail = Promise.resolve();
+function getRawStdoutWrite() {
+    if (stdoutTakeoverState) {
+        return stdoutTakeoverState.rawStdoutWrite;
+    }
+    return process.stdout.write.bind(process.stdout);
+}
+async function writeRawStdoutChunk(text) {
+    while (true) {
+        try {
+            await new Promise((resolve, reject) => {
+                try {
+                    getRawStdoutWrite()(text, (error) => {
+                        if (error)
+                            reject(error);
+                        else
+                            resolve();
+                    });
+                }
+                catch (error) {
+                    reject(error instanceof Error ? error : new Error(String(error)));
+                }
+            });
+            return;
+        }
+        catch (error) {
+            const writeError = error instanceof Error ? error : new Error(String(error));
+            const code = writeError.code;
+            if (code !== "ENOBUFS" && code !== "EAGAIN" && code !== "EWOULDBLOCK") {
+                throw writeError;
+            }
+            await new Promise((resolve) => setTimeout(resolve, RAW_STDOUT_RETRY_DELAY_MS));
+        }
+    }
+}
 function takeOverStdout() {
     if (stdoutTakeoverState) {
         return;
@@ -178839,35 +179964,29 @@ function isStdoutTakenOver() {
     return stdoutTakeoverState !== undefined;
 }
 function writeRawStdout(text) {
-    if (stdoutTakeoverState) {
-        stdoutTakeoverState.rawStdoutWrite(text);
+    if (text.length === 0) {
         return;
     }
-    process.stdout.write(text);
-}
-async function flushRawStdout() {
-    if (stdoutTakeoverState) {
-        await new Promise((resolve, reject) => {
-            stdoutTakeoverState?.rawStdoutWrite("", (err) => {
-                if (err)
-                    reject(err);
-                else
-                    resolve();
-            });
-        });
-        return;
-    }
-    await new Promise((resolve, reject) => {
-        process.stdout.write("", (err) => {
-            if (err)
-                reject(err);
-            else
-                resolve();
-        });
+    rawStdoutWriteTail = rawStdoutWriteTail.then(() => writeRawStdoutChunk(text));
+    void rawStdoutWriteTail.catch(() => {
+        process.exit(1);
     });
 }
+async function waitForRawStdoutBackpressure() {
+    while (true) {
+        const tail = rawStdoutWriteTail;
+        await tail;
+        if (tail === rawStdoutWriteTail) {
+            return;
+        }
+    }
+}
+async function flushRawStdout() {
+    await waitForRawStdoutBackpressure();
+    await writeRawStdoutChunk("");
+}
 //# sourceMappingURL=output-guard.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/package-manager.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/package-manager.js
 
 
 
@@ -180268,13 +181387,25 @@ class DefaultPackageManager {
     }
     getNpmInstallArgs(specs, installRoot) {
         const packageManagerName = this.getPackageManagerName();
+        // Extension packages run inside pi and resolve pi APIs through loader aliases/virtual modules.
+        // Disable peer dependency resolution for managed installs (npm's --legacy-peer-deps, and
+        // equivalent bun/pnpm settings) so package managers do not install or solve host-provided
+        // @earendil-works/pi-* peers. Stale auto-installed pi peers can otherwise block updates.
         if (packageManagerName === "bun") {
-            return ["install", ...specs, "--cwd", installRoot];
+            return ["install", ...specs, "--cwd", installRoot, "--omit=peer"];
         }
         if (packageManagerName === "pnpm") {
-            return ["install", ...specs, "--prefix", installRoot, "--config.strict-dep-builds=false"];
+            return [
+                "install",
+                ...specs,
+                "--prefix",
+                installRoot,
+                "--config.auto-install-peers=false",
+                "--config.strict-peer-dependencies=false",
+                "--config.strict-dep-builds=false",
+            ];
         }
-        return ["install", ...specs, "--prefix", installRoot];
+        return ["install", ...specs, "--prefix", installRoot, "--legacy-peer-deps"];
     }
     async installNpm(source, scope, temporary) {
         const installRoot = this.getNpmInstallRoot(scope, temporary);
@@ -180898,7 +182029,7 @@ class DefaultPackageManager {
 //# sourceMappingURL=package-manager.js.map
 // EXTERNAL MODULE: ../../node_modules/.pnpm/undici@8.3.0/node_modules/undici/index.js
 var undici = __webpack_require__(76638);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/http-dispatcher.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/http-dispatcher.js
 
 const DEFAULT_HTTP_IDLE_TIMEOUT_MS = 300_000;
 const HTTP_IDLE_TIMEOUT_CHOICES = [
@@ -180947,7 +182078,7 @@ function configureHttpDispatcher(timeoutMs = DEFAULT_HTTP_IDLE_TIMEOUT_MS) {
     undici/* install */.ai?.();
 }
 //# sourceMappingURL=http-dispatcher.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/settings-manager.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/settings-manager.js
 
 
 
@@ -180978,6 +182109,16 @@ function deepMergeSettings(base, overrides) {
         }
     }
     return result;
+}
+function parseTimeoutSetting(value, settingName) {
+    const timeoutMs = parseHttpIdleTimeoutMs(value);
+    if (timeoutMs !== undefined) {
+        return timeoutMs;
+    }
+    if (value !== undefined) {
+        throw new Error(`Invalid ${settingName} setting: ${String(value)}`);
+    }
+    return undefined;
 }
 class FileSettingsStorage {
     globalSettingsPath;
@@ -181444,15 +182585,7 @@ class SettingsManager {
         };
     }
     getHttpIdleTimeoutMs() {
-        const value = this.settings.httpIdleTimeoutMs;
-        const timeoutMs = parseHttpIdleTimeoutMs(value);
-        if (timeoutMs !== undefined) {
-            return timeoutMs;
-        }
-        if (value !== undefined) {
-            throw new Error(`Invalid httpIdleTimeoutMs setting: ${String(value)}`);
-        }
-        return DEFAULT_HTTP_IDLE_TIMEOUT_MS;
+        return parseTimeoutSetting(this.settings.httpIdleTimeoutMs, "httpIdleTimeoutMs") ?? DEFAULT_HTTP_IDLE_TIMEOUT_MS;
     }
     setHttpIdleTimeoutMs(timeoutMs) {
         if (!Number.isFinite(timeoutMs) || timeoutMs < 0) {
@@ -181468,6 +182601,9 @@ class SettingsManager {
             maxRetries: this.settings.retry?.provider?.maxRetries,
             maxRetryDelayMs: this.settings.retry?.provider?.maxRetryDelayMs ?? 60000,
         };
+    }
+    getWebSocketConnectTimeoutMs() {
+        return parseTimeoutSetting(this.settings.websocketConnectTimeoutMs, "websocketConnectTimeoutMs");
     }
     getHideThinkingBlock() {
         return this.settings.hideThinkingBlock ?? false;
@@ -181743,7 +182879,7 @@ class SettingsManager {
     }
 }
 //# sourceMappingURL=settings-manager.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/resource-loader.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/resource-loader.js
 
 
 
@@ -182478,349 +183614,7 @@ class DefaultResourceLoader {
     }
 }
 //# sourceMappingURL=resource-loader.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/args.js
-/**
- * CLI argument parsing and help display
- */
-
-
-const VALID_THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh"];
-function isValidThinkingLevel(level) {
-    return VALID_THINKING_LEVELS.includes(level);
-}
-function parseArgs(args) {
-    const result = {
-        messages: [],
-        fileArgs: [],
-        unknownFlags: new Map(),
-        diagnostics: [],
-    };
-    for (let i = 0; i < args.length; i++) {
-        const arg = args[i];
-        if (arg === "--help" || arg === "-h") {
-            result.help = true;
-        }
-        else if (arg === "--version" || arg === "-v") {
-            result.version = true;
-        }
-        else if (arg === "--mode" && i + 1 < args.length) {
-            const mode = args[++i];
-            if (mode === "text" || mode === "json" || mode === "rpc") {
-                result.mode = mode;
-            }
-        }
-        else if (arg === "--continue" || arg === "-c") {
-            result.continue = true;
-        }
-        else if (arg === "--resume" || arg === "-r") {
-            result.resume = true;
-        }
-        else if (arg === "--provider" && i + 1 < args.length) {
-            result.provider = args[++i];
-        }
-        else if (arg === "--model" && i + 1 < args.length) {
-            result.model = args[++i];
-        }
-        else if (arg === "--api-key" && i + 1 < args.length) {
-            result.apiKey = args[++i];
-        }
-        else if (arg === "--system-prompt" && i + 1 < args.length) {
-            result.systemPrompt = args[++i];
-        }
-        else if (arg === "--append-system-prompt" && i + 1 < args.length) {
-            result.appendSystemPrompt = result.appendSystemPrompt ?? [];
-            result.appendSystemPrompt.push(args[++i]);
-        }
-        else if (arg === "--no-session") {
-            result.noSession = true;
-        }
-        else if (arg === "--session" && i + 1 < args.length) {
-            result.session = args[++i];
-        }
-        else if (arg === "--fork" && i + 1 < args.length) {
-            result.fork = args[++i];
-        }
-        else if (arg === "--session-dir" && i + 1 < args.length) {
-            result.sessionDir = args[++i];
-        }
-        else if (arg === "--models" && i + 1 < args.length) {
-            result.models = args[++i].split(",").map((s) => s.trim());
-        }
-        else if (arg === "--no-tools" || arg === "-nt") {
-            result.noTools = true;
-        }
-        else if (arg === "--no-builtin-tools" || arg === "-nbt") {
-            result.noBuiltinTools = true;
-        }
-        else if ((arg === "--tools" || arg === "-t") && i + 1 < args.length) {
-            result.tools = args[++i]
-                .split(",")
-                .map((s) => s.trim())
-                .filter((name) => name.length > 0);
-        }
-        else if (arg === "--thinking" && i + 1 < args.length) {
-            const level = args[++i];
-            if (isValidThinkingLevel(level)) {
-                result.thinking = level;
-            }
-            else {
-                result.diagnostics.push({
-                    type: "warning",
-                    message: `Invalid thinking level "${level}". Valid values: ${VALID_THINKING_LEVELS.join(", ")}`,
-                });
-            }
-        }
-        else if (arg === "--print" || arg === "-p") {
-            result.print = true;
-            const next = args[i + 1];
-            if (next !== undefined && !next.startsWith("@") && (!next.startsWith("-") || next.startsWith("---"))) {
-                result.messages.push(next);
-                i++;
-            }
-        }
-        else if (arg === "--export" && i + 1 < args.length) {
-            result.export = args[++i];
-        }
-        else if ((arg === "--extension" || arg === "-e") && i + 1 < args.length) {
-            result.extensions = result.extensions ?? [];
-            result.extensions.push(args[++i]);
-        }
-        else if (arg === "--no-extensions" || arg === "-ne") {
-            result.noExtensions = true;
-        }
-        else if (arg === "--skill" && i + 1 < args.length) {
-            result.skills = result.skills ?? [];
-            result.skills.push(args[++i]);
-        }
-        else if (arg === "--prompt-template" && i + 1 < args.length) {
-            result.promptTemplates = result.promptTemplates ?? [];
-            result.promptTemplates.push(args[++i]);
-        }
-        else if (arg === "--theme" && i + 1 < args.length) {
-            result.themes = result.themes ?? [];
-            result.themes.push(args[++i]);
-        }
-        else if (arg === "--no-skills" || arg === "-ns") {
-            result.noSkills = true;
-        }
-        else if (arg === "--no-prompt-templates" || arg === "-np") {
-            result.noPromptTemplates = true;
-        }
-        else if (arg === "--no-themes") {
-            result.noThemes = true;
-        }
-        else if (arg === "--no-context-files" || arg === "-nc") {
-            result.noContextFiles = true;
-        }
-        else if (arg === "--list-models") {
-            // Check if next arg is a search pattern (not a flag or file arg)
-            if (i + 1 < args.length && !args[i + 1].startsWith("-") && !args[i + 1].startsWith("@")) {
-                result.listModels = args[++i];
-            }
-            else {
-                result.listModels = true;
-            }
-        }
-        else if (arg === "--verbose") {
-            result.verbose = true;
-        }
-        else if (arg === "--offline") {
-            result.offline = true;
-        }
-        else if (arg.startsWith("@")) {
-            result.fileArgs.push(arg.slice(1)); // Remove @ prefix
-        }
-        else if (arg.startsWith("--")) {
-            const eqIndex = arg.indexOf("=");
-            if (eqIndex !== -1) {
-                result.unknownFlags.set(arg.slice(2, eqIndex), arg.slice(eqIndex + 1));
-            }
-            else {
-                const flagName = arg.slice(2);
-                const next = args[i + 1];
-                if (next !== undefined && !next.startsWith("-") && !next.startsWith("@")) {
-                    result.unknownFlags.set(flagName, next);
-                    i++;
-                }
-                else {
-                    result.unknownFlags.set(flagName, true);
-                }
-            }
-        }
-        else if (arg.startsWith("-") && !arg.startsWith("--")) {
-            result.diagnostics.push({ type: "error", message: `Unknown option: ${arg}` });
-        }
-        else if (!arg.startsWith("-")) {
-            result.messages.push(arg);
-        }
-    }
-    return result;
-}
-function printHelp(extensionFlags) {
-    const extensionFlagsText = extensionFlags && extensionFlags.length > 0
-        ? `\n${chalk_source/* default */.Ay.bold("Extension CLI Flags:")}\n${extensionFlags
-            .map((flag) => {
-            const value = flag.type === "string" ? " <value>" : "";
-            const description = flag.description ?? `Registered by ${flag.extensionPath}`;
-            return `  --${flag.name}${value}`.padEnd(30) + description;
-        })
-            .join("\n")}\n`
-        : "";
-    console.log(`${chalk_source/* default */.Ay.bold(APP_NAME)} - AI coding assistant with read, bash, edit, write tools
-
-${chalk_source/* default */.Ay.bold("Usage:")}
-  ${APP_NAME} [options] [@files...] [messages...]
-
-${chalk_source/* default */.Ay.bold("Commands:")}
-  ${APP_NAME} install <source> [-l]     Install extension source and add to settings
-  ${APP_NAME} remove <source> [-l]      Remove extension source from settings
-  ${APP_NAME} uninstall <source> [-l]   Alias for remove
-  ${APP_NAME} update [source|self|pi]   Update pi and installed extensions
-  ${APP_NAME} list                      List installed extensions from settings
-  ${APP_NAME} config                    Open TUI to enable/disable package resources
-  ${APP_NAME} <command> --help          Show help for install/remove/uninstall/update/list
-
-${chalk_source/* default */.Ay.bold("Options:")}
-  --provider <name>              Provider name (default: google)
-  --model <pattern>              Model pattern or ID (supports "provider/id" and optional ":<thinking>")
-  --api-key <key>                API key (defaults to env vars)
-  --system-prompt <text>         System prompt (default: coding assistant prompt)
-  --append-system-prompt <text>  Append text or file contents to the system prompt (can be used multiple times)
-  --mode <mode>                  Output mode: text (default), json, or rpc
-  --print, -p                    Non-interactive mode: process prompt and exit
-  --continue, -c                 Continue previous session
-  --resume, -r                   Select a session to resume
-  --session <path|id>            Use specific session file or partial UUID
-  --fork <path|id>               Fork specific session file or partial UUID into a new session
-  --session-dir <dir>            Directory for session storage and lookup
-  --no-session                   Don't save session (ephemeral)
-  --models <patterns>            Comma-separated model patterns for Ctrl+P cycling
-                                 Supports globs (anthropic/*, *sonnet*) and fuzzy matching
-  --no-tools, -nt                Disable all tools by default (built-in and extension)
-  --no-builtin-tools, -nbt       Disable built-in tools by default but keep extension/custom tools enabled
-  --tools, -t <tools>            Comma-separated allowlist of tool names to enable
-                                 Applies to built-in, extension, and custom tools
-  --thinking <level>             Set thinking level: off, minimal, low, medium, high, xhigh
-  --extension, -e <path>         Load an extension file (can be used multiple times)
-  --no-extensions, -ne           Disable extension discovery (explicit -e paths still work)
-  --skill <path>                 Load a skill file or directory (can be used multiple times)
-  --no-skills, -ns               Disable skills discovery and loading
-  --prompt-template <path>       Load a prompt template file or directory (can be used multiple times)
-  --no-prompt-templates, -np     Disable prompt template discovery and loading
-  --theme <path>                 Load a theme file or directory (can be used multiple times)
-  --no-themes                    Disable theme discovery and loading
-  --no-context-files, -nc        Disable AGENTS.md and CLAUDE.md discovery and loading
-  --export <file>                Export session file to HTML and exit
-  --list-models [search]         List available models (with optional fuzzy search)
-  --verbose                      Force verbose startup (overrides quietStartup setting)
-  --offline                      Disable startup network operations (same as PI_OFFLINE=1)
-  --help, -h                     Show this help
-  --version, -v                  Show version number
-
-Extensions can register additional flags (e.g., --plan from plan-mode extension).${extensionFlagsText}
-
-${chalk_source/* default */.Ay.bold("Examples:")}
-  # Interactive mode
-  ${APP_NAME}
-
-  # Interactive mode with initial prompt
-  ${APP_NAME} "List all .ts files in src/"
-
-  # Include files in initial message
-  ${APP_NAME} @prompt.md @image.png "What color is the sky?"
-
-  # Non-interactive mode (process and exit)
-  ${APP_NAME} -p "List all .ts files in src/"
-
-  # Multiple messages (interactive)
-  ${APP_NAME} "Read package.json" "What dependencies do we have?"
-
-  # Continue previous session
-  ${APP_NAME} --continue "What did we discuss?"
-
-  # Use different model
-  ${APP_NAME} --provider openai --model gpt-4o-mini "Help me refactor this code"
-
-  # Use model with provider prefix (no --provider needed)
-  ${APP_NAME} --model openai/gpt-4o "Help me refactor this code"
-
-  # Use model with thinking level shorthand
-  ${APP_NAME} --model sonnet:high "Solve this complex problem"
-
-  # Limit model cycling to specific models
-  ${APP_NAME} --models claude-sonnet,claude-haiku,gpt-4o
-
-  # Limit to a specific provider with glob pattern
-  ${APP_NAME} --models "github-copilot/*"
-
-  # Cycle models with fixed thinking levels
-  ${APP_NAME} --models sonnet:high,haiku:low
-
-  # Start with a specific thinking level
-  ${APP_NAME} --thinking high "Solve this complex problem"
-
-  # Read-only mode (no file modifications possible)
-  ${APP_NAME} --tools read,grep,find,ls -p "Review the code in src/"
-
-  # Export a session file to HTML
-  ${APP_NAME} --export ~/${CONFIG_DIR_NAME}/agent/sessions/--path--/session.jsonl
-  ${APP_NAME} --export session.jsonl output.html
-
-${chalk_source/* default */.Ay.bold("Environment Variables:")}
-  ANTHROPIC_API_KEY                - Anthropic Claude API key
-  ANTHROPIC_OAUTH_TOKEN            - Anthropic OAuth token (alternative to API key)
-  OPENAI_API_KEY                   - OpenAI GPT API key
-  AZURE_OPENAI_API_KEY             - Azure OpenAI API key
-  AZURE_OPENAI_BASE_URL            - Azure OpenAI/Cognitive Services base URL (e.g. https://{resource}.openai.azure.com)
-  AZURE_OPENAI_RESOURCE_NAME       - Azure OpenAI resource name (alternative to base URL)
-  AZURE_OPENAI_API_VERSION         - Azure OpenAI API version (default: v1)
-  AZURE_OPENAI_DEPLOYMENT_NAME_MAP - Azure OpenAI model=deployment map (comma-separated)
-  DEEPSEEK_API_KEY                 - DeepSeek API key
-  GEMINI_API_KEY                   - Google Gemini API key
-  GROQ_API_KEY                     - Groq API key
-  CEREBRAS_API_KEY                 - Cerebras API key
-  XAI_API_KEY                      - xAI Grok API key
-  FIREWORKS_API_KEY                - Fireworks API key
-  TOGETHER_API_KEY                 - Together AI API key
-  OPENROUTER_API_KEY               - OpenRouter API key
-  AI_GATEWAY_API_KEY               - Vercel AI Gateway API key
-  ZAI_API_KEY                      - ZAI API key
-  MISTRAL_API_KEY                  - Mistral API key
-  MINIMAX_API_KEY                  - MiniMax API key
-  MOONSHOT_API_KEY                 - Moonshot AI API key
-  OPENCODE_API_KEY                 - OpenCode Zen/OpenCode Go API key
-  KIMI_API_KEY                     - Kimi For Coding API key
-  CLOUDFLARE_API_KEY               - Cloudflare API token (Workers AI and AI Gateway)
-  CLOUDFLARE_ACCOUNT_ID            - Cloudflare account id (required for both)
-  CLOUDFLARE_GATEWAY_ID            - Cloudflare AI Gateway slug (required for AI Gateway)
-  XIAOMI_API_KEY                   - Xiaomi MiMo API key (api.xiaomimimo.com billing)
-  XIAOMI_TOKEN_PLAN_CN_API_KEY     - Xiaomi MiMo Token Plan API key (China region)
-  XIAOMI_TOKEN_PLAN_AMS_API_KEY    - Xiaomi MiMo Token Plan API key (Amsterdam region)
-  XIAOMI_TOKEN_PLAN_SGP_API_KEY    - Xiaomi MiMo Token Plan API key (Singapore region)
-  AWS_PROFILE                      - AWS profile for Amazon Bedrock
-  AWS_ACCESS_KEY_ID                - AWS access key for Amazon Bedrock
-  AWS_SECRET_ACCESS_KEY            - AWS secret key for Amazon Bedrock
-  AWS_BEARER_TOKEN_BEDROCK         - Bedrock API key (bearer token)
-  AWS_REGION                       - AWS region for Amazon Bedrock (e.g., us-east-1)
-  ${ENV_AGENT_DIR.padEnd(32)} - Config directory (default: ~/${CONFIG_DIR_NAME}/agent)
-  ${ENV_SESSION_DIR.padEnd(32)} - Session storage directory (overridden by --session-dir)
-  PI_PACKAGE_DIR                   - Override package directory (for Nix/Guix store paths)
-  PI_OFFLINE                       - Disable startup network operations when set to 1/true/yes
-  PI_TELEMETRY                     - Override install telemetry when set to 1/true/yes or 0/false/no
-  PI_SHARE_VIEWER_URL              - Base URL for /share command (default: https://pi.dev/session/)
-
-${chalk_source/* default */.Ay.bold("Built-in Tool Names:")}
-  read   - Read file contents
-  bash   - Execute bash commands
-  edit   - Edit files with find/replace
-  write  - Write files (creates/overwrites)
-  grep   - Search file contents (read-only, off by default)
-  find   - Find files by glob pattern (read-only, off by default)
-  ls     - List directory contents (read-only, off by default)
-`);
-}
-//# sourceMappingURL=args.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/model-resolver.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/model-resolver.js
 /**
  * Model resolution, scoping, and initial selection
  */
@@ -182832,7 +183626,7 @@ ${chalk_source/* default */.Ay.bold("Built-in Tool Names:")}
 /** Default model IDs for each known provider */
 const defaultModelPerProvider = {
     "amazon-bedrock": "us.anthropic.claude-opus-4-6-v1",
-    anthropic: "claude-opus-4-7",
+    anthropic: "claude-opus-4-8",
     openai: "gpt-5.4",
     "azure-openai-responses": "gpt-5.4",
     "openai-codex": "gpt-5.5",
@@ -183316,7 +184110,7 @@ async function restoreModelFromSession(savedProvider, savedModelId, currentModel
     return { model: undefined, fallbackMessage: undefined };
 }
 //# sourceMappingURL=model-resolver.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/telemetry.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/telemetry.js
 function isTruthyEnvFlag(value) {
     if (!value)
         return false;
@@ -183326,7 +184120,7 @@ function isInstallTelemetryEnabled(settingsManager, telemetryEnv = process.env.P
     return telemetryEnv !== undefined ? isTruthyEnvFlag(telemetryEnv) : settingsManager.getEnableInstallTelemetry();
 }
 //# sourceMappingURL=telemetry.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/timings.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/timings.js
 /**
  * Central timing instrumentation for startup profiling.
  * Enable with PI_TIMING=1 environment variable.
@@ -183358,7 +184152,7 @@ function printTimings() {
     console.error("------------------------\n");
 }
 //# sourceMappingURL=timings.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/session-cwd.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/session-cwd.js
 
 function getMissingSessionCwdIssue(sessionManager, fallbackCwd) {
     const sessionFile = sessionManager.getSessionFile();
@@ -183397,7 +184191,7 @@ function assertSessionCwdExists(sessionManager, fallbackCwd) {
     }
 }
 //# sourceMappingURL=session-cwd.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session-services.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session-services.js
 
 
 
@@ -183510,13 +184304,14 @@ async function createAgentSessionFromServices(options) {
         thinkingLevel: options.thinkingLevel,
         scopedModels: options.scopedModels,
         tools: options.tools,
+        excludeTools: options.excludeTools,
         noTools: options.noTools,
         customTools: options.customTools,
         sessionStartEvent: options.sessionStartEvent,
     });
 }
 //# sourceMappingURL=agent-session-services.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session-runtime.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/agent-session-runtime.js
 
 
 
@@ -183817,7 +184612,7 @@ async function createAgentSessionRuntime(createRuntime, options) {
 }
 
 //# sourceMappingURL=agent-session-runtime.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/sdk.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/sdk.js
 
 
 
@@ -183973,11 +184768,9 @@ async function createAgentSession(options = {}) {
     }
     const defaultActiveToolNames = ["read", "bash", "edit", "write"];
     const allowedToolNames = options.tools ?? (options.noTools === "all" ? [] : undefined);
-    const initialActiveToolNames = options.tools
-        ? [...options.tools]
-        : options.noTools
-            ? []
-            : defaultActiveToolNames;
+    const excludedToolNames = options.excludeTools;
+    const excludedToolNameSet = excludedToolNames ? new Set(excludedToolNames) : undefined;
+    const initialActiveToolNames = (options.tools ? [...options.tools] : options.noTools ? [] : defaultActiveToolNames).filter((name) => !excludedToolNameSet?.has(name));
     let agent;
     // Create convertToLlm wrapper that filters images if blockImages is enabled (defense-in-depth)
     const convertToLlmWithBlockImages = (messages) => {
@@ -184024,11 +184817,16 @@ async function createAgentSession(options = {}) {
                 throw new Error(auth.error);
             }
             const providerRetrySettings = settingsManager.getProviderRetrySettings();
+            const timeoutMs = options?.timeoutMs ??
+                providerRetrySettings.timeoutMs ??
+                (model.api === "openai-codex-responses" ? settingsManager.getHttpIdleTimeoutMs() : undefined);
+            const websocketConnectTimeoutMs = options?.websocketConnectTimeoutMs ?? settingsManager.getWebSocketConnectTimeoutMs();
             const attributionHeaders = getAttributionHeaders(model, settingsManager, options?.sessionId);
             return (0,dist.streamSimple)(model, context, {
                 ...options,
                 apiKey: auth.apiKey,
-                timeoutMs: options?.timeoutMs ?? providerRetrySettings.timeoutMs,
+                timeoutMs,
+                websocketConnectTimeoutMs,
                 maxRetries: options?.maxRetries ?? providerRetrySettings.maxRetries,
                 maxRetryDelayMs: options?.maxRetryDelayMs ?? providerRetrySettings.maxRetryDelayMs,
                 headers: attributionHeaders || auth.headers || options?.headers
@@ -184092,6 +184890,7 @@ async function createAgentSession(options = {}) {
         modelRegistry,
         initialActiveToolNames,
         allowedToolNames,
+        excludedToolNames,
         extensionRunnerRef,
         sessionStartEvent: options.sessionStartEvent,
     });
@@ -184103,7 +184902,7 @@ async function createAgentSession(options = {}) {
     };
 }
 //# sourceMappingURL=sdk.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/file-processor.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/file-processor.js
 /**
  * Process @file CLI arguments into text content and image attachments
  */
@@ -184186,7 +184985,7 @@ async function processFileArguments(fileArgs, options) {
     return { text, images };
 }
 //# sourceMappingURL=file-processor.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/initial-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/initial-message.js
 /**
  * Combine stdin content, @file text, and the first CLI message into a single
  * initial prompt for non-interactive mode.
@@ -184209,7 +185008,7 @@ function buildInitialMessage({ parsed, fileText, fileImages, stdinContent, }) {
     };
 }
 //# sourceMappingURL=initial-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/list-models.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/list-models.js
 /**
  * List available models with optional fuzzy search
  */
@@ -184308,7 +185107,7 @@ async function listModels(modelRegistry, searchPattern) {
     }
 }
 //# sourceMappingURL=list-models.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/keybindings.js
 
 
 
@@ -184604,7 +185403,7 @@ class KeybindingsManager extends keybindings_KeybindingsManager {
     }
 }
 //# sourceMappingURL=keybindings.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/dynamic-border.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/dynamic-border.js
 
 /**
  * Dynamic border component that adjusts to viewport width.
@@ -184626,7 +185425,7 @@ class DynamicBorder {
     }
 }
 //# sourceMappingURL=dynamic-border.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/session-selector-search.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/session-selector-search.js
 
 function normalizeWhitespaceLower(text) {
     return text.toLowerCase().replace(/\s+/g, " ").trim();
@@ -184782,7 +185581,7 @@ function filterAndSortSessions(sessions, query, sortMode, nameFilter = "all") {
     return scored.map((r) => r.session);
 }
 //# sourceMappingURL=session-selector-search.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/session-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/session-selector.js
 
 
 
@@ -185644,7 +186443,7 @@ class SessionSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=session-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/session-picker.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/session-picker.js
 /**
  * TUI session selector for --resume flag
  */
@@ -185680,10 +186479,12 @@ async function selectSession(currentSessionsLoader, allSessionsLoader) {
     });
 }
 //# sourceMappingURL=session-picker.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/migrations.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/migrations.js
 /**
  * One-time migrations that run on startup.
  */
+
+
 
 
 
@@ -185745,6 +186546,120 @@ function migrateAuthToAuthJson() {
         (0,external_fs_.writeFileSync)(authPath, JSON.stringify(migrated, null, 2), { mode: 0o600 });
     }
     return providers;
+}
+function migrateLegacyEnvVarString(value) {
+    return isLegacyEnvVarNameConfigValue(value) ? `$${value}` : undefined;
+}
+function migrateStringProperty(record, key, location, migrations) {
+    const value = record[key];
+    if (typeof value !== "string")
+        return false;
+    const migrated = migrateLegacyEnvVarString(value);
+    if (migrated === undefined)
+        return false;
+    record[key] = migrated;
+    migrations.push({ location, from: value, to: migrated });
+    return true;
+}
+function migrateHeadersConfig(headers, location, migrations) {
+    if (typeof headers !== "object" || headers === null || Array.isArray(headers))
+        return false;
+    const headerRecord = headers;
+    let migrated = false;
+    for (const [key, value] of Object.entries(headerRecord)) {
+        if (typeof value !== "string")
+            continue;
+        const migratedValue = migrateLegacyEnvVarString(value);
+        if (migratedValue === undefined)
+            continue;
+        headerRecord[key] = migratedValue;
+        migrations.push({ location: `${location}[${JSON.stringify(key)}]`, from: value, to: migratedValue });
+        migrated = true;
+    }
+    return migrated;
+}
+function migrateAuthJsonConfigValues(agentDir) {
+    const authPath = (0,external_path_.join)(agentDir, "auth.json");
+    if (!(0,external_fs_.existsSync)(authPath))
+        return [];
+    try {
+        const parsed = JSON.parse((0,external_fs_.readFileSync)(authPath, "utf-8"));
+        if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed))
+            return [];
+        const authData = parsed;
+        const migrations = [];
+        for (const [provider, credential] of Object.entries(authData)) {
+            if (typeof credential !== "object" || credential === null || Array.isArray(credential))
+                continue;
+            const credentialRecord = credential;
+            if (credentialRecord.type !== "api_key")
+                continue;
+            migrateStringProperty(credentialRecord, "key", `auth.json[${JSON.stringify(provider)}].key`, migrations);
+        }
+        if (migrations.length === 0)
+            return [];
+        (0,external_fs_.writeFileSync)(authPath, `${JSON.stringify(parsed, null, 2)}\n`, "utf-8");
+        (0,external_fs_.chmodSync)(authPath, 0o600);
+        return migrations;
+    }
+    catch {
+        return [];
+    }
+}
+function migrateModelsJsonConfigValues(agentDir) {
+    const modelsPath = (0,external_path_.join)(agentDir, "models.json");
+    if (!(0,external_fs_.existsSync)(modelsPath))
+        return [];
+    const parsed = JSON.parse(stripJsonComments((0,external_fs_.readFileSync)(modelsPath, "utf-8")));
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed))
+        return [];
+    const modelsData = parsed;
+    const providers = modelsData.providers;
+    if (typeof providers !== "object" || providers === null || Array.isArray(providers))
+        return [];
+    const migrations = [];
+    for (const [provider, providerConfig] of Object.entries(providers)) {
+        if (typeof providerConfig !== "object" || providerConfig === null || Array.isArray(providerConfig))
+            continue;
+        const providerRecord = providerConfig;
+        const providerLocation = `models.json.providers[${JSON.stringify(provider)}]`;
+        migrateStringProperty(providerRecord, "apiKey", `${providerLocation}.apiKey`, migrations);
+        migrateHeadersConfig(providerRecord.headers, `${providerLocation}.headers`, migrations);
+        if (Array.isArray(providerRecord.models)) {
+            for (let index = 0; index < providerRecord.models.length; index++) {
+                const modelConfig = providerRecord.models[index];
+                if (typeof modelConfig !== "object" || modelConfig === null || Array.isArray(modelConfig))
+                    continue;
+                const modelRecord = modelConfig;
+                const modelKey = typeof modelRecord.id === "string" ? JSON.stringify(modelRecord.id) : String(index);
+                migrateHeadersConfig(modelRecord.headers, `${providerLocation}.models[${modelKey}].headers`, migrations);
+            }
+        }
+        const modelOverrides = providerRecord.modelOverrides;
+        if (typeof modelOverrides === "object" && modelOverrides !== null && !Array.isArray(modelOverrides)) {
+            for (const [modelId, modelOverride] of Object.entries(modelOverrides)) {
+                if (typeof modelOverride !== "object" || modelOverride === null || Array.isArray(modelOverride))
+                    continue;
+                const modelOverrideRecord = modelOverride;
+                migrateHeadersConfig(modelOverrideRecord.headers, `${providerLocation}.modelOverrides[${JSON.stringify(modelId)}].headers`, migrations);
+            }
+        }
+    }
+    if (migrations.length === 0)
+        return [];
+    (0,external_fs_.writeFileSync)(modelsPath, `${JSON.stringify(parsed, null, 2)}\n`, "utf-8");
+    return migrations;
+}
+function migrateExplicitEnvVarConfigValues() {
+    const agentDir = getAgentDir();
+    const migrations = [...migrateAuthJsonConfigValues(agentDir), ...migrateModelsJsonConfigValues(agentDir)];
+    if (migrations.length === 0)
+        return;
+    const details = migrations.map((migration) => `  - ${migration.location}: ${migration.from} -> ${migration.to}`);
+    console.log(chalk_source/* default */.Ay.yellow([
+        "Warning: Migrated API key/header environment references to explicit $ENV_VAR syntax. Plain strings will be treated as literals.",
+        ...details,
+    ].join("\n")));
 }
 /**
  * Migrate sessions from ~/.pi/agent/*.jsonl to proper session directories.
@@ -185955,6 +186870,7 @@ async function showDeprecationWarnings(warnings) {
  */
 function runMigrations(cwd) {
     const migratedAuthProviders = migrateAuthToAuthJson();
+    migrateExplicitEnvVarConfigValues();
     migrateSessionsFromAgentRoot();
     migrateToolsToBin();
     migrateKeybindingsConfigFile();
@@ -185962,7 +186878,7 @@ function runMigrations(cwd) {
     return { migratedAuthProviders, deprecationWarnings };
 }
 //# sourceMappingURL=migrations.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/footer-data-provider.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/footer-data-provider.js
 
 
 
@@ -186273,7 +187189,7 @@ class FooterDataProvider {
     }
 }
 //# sourceMappingURL=footer-data-provider.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/slash-commands.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/core/slash-commands.js
 
 const BUILTIN_SLASH_COMMANDS = [
     { name: "settings", description: "Open settings menu" },
@@ -186299,7 +187215,7 @@ const BUILTIN_SLASH_COMMANDS = [
     { name: "quit", description: `Quit ${APP_NAME}` },
 ];
 //# sourceMappingURL=slash-commands.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/changelog.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/changelog.js
 
 /**
  * Parse changelog entries from CHANGELOG.md
@@ -186387,7 +187303,7 @@ function getNewEntries(entries, lastVersion) {
 // Re-export getChangelogPath from paths.ts for convenience
 
 //# sourceMappingURL=changelog.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/clipboard-native.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/clipboard-native.js
 
 
 
@@ -186408,7 +187324,7 @@ function loadClipboardNative(requires = [moduleRequire, executableDirRequire]) {
 const clipboard = !process.env.TERMUX_VERSION && hasDisplay ? loadClipboardNative() : null;
 
 //# sourceMappingURL=clipboard-native.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/clipboard-image.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/clipboard-image.js
 
 
 
@@ -186654,7 +187570,7 @@ async function readClipboardImage(options) {
     return image;
 }
 //# sourceMappingURL=clipboard-image.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/clipboard.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/clipboard.js
 
 
 
@@ -186772,13 +187688,13 @@ async function copyToClipboard(text) {
     }
 }
 //# sourceMappingURL=clipboard.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/pi-user-agent.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/pi-user-agent.js
 function getPiUserAgent(version) {
     const runtime = process.versions.bun ? `bun/${process.versions.bun}` : `node/${process.version}`;
     return `pi/${version} (${process.platform}; ${runtime}; ${process.arch})`;
 }
 //# sourceMappingURL=pi-user-agent.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/version-check.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/version-check.js
 
 const LATEST_VERSION_URL = "https://pi.dev/api/latest-version";
 const DEFAULT_VERSION_CHECK_TIMEOUT_MS = 10000;
@@ -186861,7 +187777,7 @@ async function checkForNewPiVersion(currentVersion) {
     }
 }
 //# sourceMappingURL=version-check.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/armin.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/armin.js
 /**
  * Armin says hi! A fun easter egg with animated XBM art.
  */
@@ -187195,7 +188111,7 @@ class ArminComponent {
     }
 }
 //# sourceMappingURL=armin.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/assistant-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/assistant-message.js
 
 
 const OSC133_ZONE_START = "\x1b]133;A\x07";
@@ -187317,7 +188233,7 @@ class AssistantMessageComponent extends Container {
     }
 }
 //# sourceMappingURL=assistant-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/bash-execution.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/bash-execution.js
 /**
  * Component for displaying bash command execution with streaming output.
  */
@@ -187493,7 +188409,7 @@ class BashExecutionComponent extends Container {
     }
 }
 //# sourceMappingURL=bash-execution.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/bordered-loader.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/bordered-loader.js
 
 
 
@@ -187548,7 +188464,7 @@ class BorderedLoader extends Container {
     }
 }
 //# sourceMappingURL=bordered-loader.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/branch-summary-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/branch-summary-message.js
 
 
 
@@ -187593,7 +188509,7 @@ class BranchSummaryMessageComponent extends Box {
     }
 }
 //# sourceMappingURL=branch-summary-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/compaction-summary-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/compaction-summary-message.js
 
 
 
@@ -187639,7 +188555,7 @@ class CompactionSummaryMessageComponent extends Box {
     }
 }
 //# sourceMappingURL=compaction-summary-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/countdown-timer.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/countdown-timer.js
 /**
  * Reusable countdown timer for dialog components.
  */
@@ -187673,7 +188589,7 @@ class CountdownTimer {
     }
 }
 //# sourceMappingURL=countdown-timer.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-editor.js
 
 /**
  * Custom editor that handles app-level keybindings for coding-agent.
@@ -187744,7 +188660,7 @@ class CustomEditor extends Editor {
     }
 }
 //# sourceMappingURL=custom-editor.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/custom-message.js
 
 
 /**
@@ -187824,7 +188740,7 @@ class CustomMessageComponent extends Container {
     }
 }
 //# sourceMappingURL=custom-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/daxnuts.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/daxnuts.js
 /**
  * POWERED BY DAXNUTS - Easter egg for OpenCode + Kimi K2.5
  *
@@ -187965,7 +188881,7 @@ class DaxnutsComponent {
     }
 }
 //# sourceMappingURL=daxnuts.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/earendil-announcement.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/earendil-announcement.js
 
 
 
@@ -188006,7 +188922,7 @@ class EarendilAnnouncementComponent extends Container {
     }
 }
 //# sourceMappingURL=earendil-announcement.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/extension-editor.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/extension-editor.js
 /**
  * Multi-line editor component for extensions.
  * Supports Ctrl+G for external editor.
@@ -188126,7 +189042,7 @@ class ExtensionEditorComponent extends Container {
     }
 }
 //# sourceMappingURL=extension-editor.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/extension-input.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/extension-input.js
 /**
  * Simple text input component for extensions.
  */
@@ -188188,7 +189104,7 @@ class ExtensionInputComponent extends Container {
     }
 }
 //# sourceMappingURL=extension-input.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/extension-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/extension-selector.js
 /**
  * Generic selector component for extensions.
  * Displays a list of string options with keyboard navigation.
@@ -188272,7 +189188,7 @@ class ExtensionSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=extension-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/footer.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/footer.js
 
 
 
@@ -188483,7 +189399,7 @@ class FooterComponent {
     }
 }
 //# sourceMappingURL=footer.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/login-dialog.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/login-dialog.js
 
 
 
@@ -188554,7 +189470,7 @@ class LoginDialogComponent extends Container {
     /**
      * Called by onAuth callback - show URL and optional instructions
      */
-    showAuth(url, instructions, options = {}) {
+    showAuth(url, instructions) {
         this.contentContainer.clear();
         this.contentContainer.addChild(new Spacer(1));
         const linkedUrl = `\x1b]8;;${url}\x07${url}\x1b]8;;\x07`;
@@ -188566,9 +189482,7 @@ class LoginDialogComponent extends Container {
             this.contentContainer.addChild(new Spacer(1));
             this.contentContainer.addChild(new Text(theme.fg("warning", instructions), 1, 0));
         }
-        if (options.autoOpenBrowser ?? true) {
-            this.openUrl(url);
-        }
+        this.openUrl(url);
         this.tui.requestRender();
     }
     /**
@@ -188669,7 +189583,7 @@ class LoginDialogComponent extends Container {
     }
 }
 //# sourceMappingURL=login-dialog.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/model-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/model-selector.js
 
 
 
@@ -188948,7 +189862,7 @@ class ModelSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=model-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/oauth-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/oauth-selector.js
 
 
 
@@ -189114,7 +190028,7 @@ class OAuthSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=oauth-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/scoped-models-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/scoped-models-selector.js
 
 
 
@@ -189405,7 +190319,7 @@ class ScopedModelsSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=scoped-models-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/settings-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/settings-selector.js
 
 
 
@@ -189796,7 +190710,7 @@ class SettingsSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=settings-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/skill-invocation-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/skill-invocation-message.js
 
 
 
@@ -189844,7 +190758,7 @@ class SkillInvocationMessageComponent extends Box {
     }
 }
 //# sourceMappingURL=skill-invocation-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/image-convert.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/image-convert.js
 
 
 /**
@@ -189884,7 +190798,7 @@ async function image_convert_convertToPng(base64Data, mimeType) {
     }
 }
 //# sourceMappingURL=image-convert.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tool-execution.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tool-execution.js
 
 
 
@@ -190180,7 +191094,7 @@ class ToolExecutionComponent extends Container {
     }
 }
 //# sourceMappingURL=tool-execution.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tree-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/tree-selector.js
 
 
 
@@ -191274,7 +192188,7 @@ class TreeSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=tree-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/user-message.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/user-message.js
 
 
 const user_message_OSC133_ZONE_START = "\x1b]133;A\x07";
@@ -191290,7 +192204,7 @@ class UserMessageComponent extends Container {
         this.contentBox = new Box(1, 1, (content) => theme.bg("userMessageBg", content));
         this.contentBox.addChild(new Markdown(text, 0, 0, markdownTheme, {
             color: (content) => theme.fg("userMessageText", content),
-        }));
+        }, { preserveOrderedListMarkers: true }));
         this.addChild(this.contentBox);
     }
     render(width) {
@@ -191304,7 +192218,7 @@ class UserMessageComponent extends Container {
     }
 }
 //# sourceMappingURL=user-message.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/user-message-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/user-message-selector.js
 
 
 
@@ -191419,11 +192333,12 @@ class UserMessageSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=user-message-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/interactive-mode.js
 /**
  * Interactive mode for the coding agent.
  * Handles TUI rendering and user interaction, delegating business logic to AgentSession.
  */
+
 
 
 
@@ -191513,6 +192428,27 @@ function isAnthropicSubscriptionAuthKey(apiKey) {
 function isUnknownModel(model) {
     return !!model && model.provider === "unknown" && model.id === "unknown" && model.api === "unknown";
 }
+function quoteIfNeeded(value) {
+    if (value.length > 0 && !/[^a-zA-Z0-9_\-./~:@]/.test(value)) {
+        return value;
+    }
+    return `'${value.replace(/'/g, `'\\''`)}'`;
+}
+function formatResumeCommand(sessionManager) {
+    if (!process.stdout.isTTY)
+        return undefined;
+    if (!sessionManager.isPersisted())
+        return undefined;
+    const sessionFile = sessionManager.getSessionFile();
+    if (!sessionFile || !external_node_fs_.existsSync(sessionFile))
+        return undefined;
+    const args = [APP_NAME];
+    if (!sessionManager.usesDefaultSessionDir()) {
+        args.push("--session-dir", quoteIfNeeded(sessionManager.getSessionDir()));
+    }
+    args.push("--session", sessionManager.getSessionId());
+    return args.join(" ");
+}
 function hasDefaultModelProvider(providerId) {
     return providerId in defaultModelPerProvider;
 }
@@ -191547,6 +192483,7 @@ class InteractiveMode {
     version;
     isInitialized = false;
     onInputCallback;
+    pendingUserInputs = [];
     loadingAnimation = undefined;
     workingMessage = undefined;
     workingVisible = true;
@@ -193552,6 +194489,9 @@ class InteractiveMode {
             if (this.onInputCallback) {
                 this.onInputCallback(text);
             }
+            else {
+                this.pendingUserInputs.push(text);
+            }
             this.editor.addToHistory?.(text);
         };
     }
@@ -194030,6 +194970,10 @@ class InteractiveMode {
         }
     }
     async getUserInput() {
+        const queuedInput = this.pendingUserInputs.shift();
+        if (queuedInput !== undefined) {
+            return queuedInput;
+        }
         return new Promise((resolve) => {
             this.onInputCallback = (text) => {
                 this.onInputCallback = undefined;
@@ -194065,16 +195009,36 @@ class InteractiveMode {
      * repaint the final frame while the process is exiting.
      */
     isShuttingDown = false;
-    async shutdown() {
+    async shutdown(options) {
         if (this.isShuttingDown)
             return;
         this.isShuttingDown = true;
         this.unregisterSignalHandlers();
+        if (options?.fromSignal) {
+            // Signal-triggered shutdown (SIGTERM/SIGHUP). Emit extension cleanup
+            // (session_shutdown) BEFORE touching the terminal. Extension teardown
+            // such as removing sockets does not write to the tty, so it must not be
+            // skipped if a later terminal-restore write fails on a dead or stalled
+            // terminal. If the terminal is gone, the restore writes below emit EIO,
+            // which the stdout/stderr error handler turns into emergencyTerminalExit;
+            // the render loop is already idle, so this cannot hot-spin (see #4144).
+            await this.runtimeHost.dispose();
+            await this.ui.terminal.drainInput(1000);
+            this.stop();
+            process.exit(0);
+        }
+        // Interactive quit (Ctrl+D, Ctrl+C, /quit, extension shutdown()). Stop the
+        // TUI before emitting shutdown events so extension UI cleanup cannot repaint
+        // the final frame while the process is exiting.
         // Drain any in-flight Kitty key release events before stopping.
         // This prevents escape sequences from leaking to the parent shell over slow SSH.
         await this.ui.terminal.drainInput(1000);
         this.stop();
         await this.runtimeHost.dispose();
+        const resumeCommand = formatResumeCommand(this.sessionManager);
+        if (resumeCommand) {
+            process.stdout.write(`${chalk_source/* default */.Ay.dim("To resume this session:")} ${resumeCommand}\n`);
+        }
         process.exit(0);
     }
     emergencyTerminalExit() {
@@ -194133,11 +195097,12 @@ class InteractiveMode {
         }
         for (const signal of signals) {
             const handler = () => {
-                if (signal === "SIGHUP") {
-                    this.emergencyTerminalExit();
-                }
+                // SIGHUP no longer hard-exits: graceful shutdown emits session_shutdown
+                // first, then attempts terminal restore. A genuinely dead terminal
+                // surfaces as an EIO on the restore writes, which the stdout/stderr
+                // error handler converts into emergencyTerminalExit (see #4144, #5080).
                 killTrackedDetachedChildren();
-                void this.shutdown();
+                void this.shutdown({ fromSignal: true });
             };
             process.prependListener(signal, handler);
             this.signalCleanupHandlers.push(() => process.off(signal, handler));
@@ -195064,7 +196029,9 @@ class InteractiveMode {
     }
     showSessionSelector() {
         this.showSelector((done) => {
-            const selector = new SessionSelectorComponent((onProgress) => SessionManager.list(this.sessionManager.getCwd(), this.sessionManager.getSessionDir(), onProgress), SessionManager.listAll, async (sessionPath) => {
+            const selector = new SessionSelectorComponent((onProgress) => SessionManager.list(this.sessionManager.getCwd(), this.sessionManager.getSessionDir(), onProgress), (onProgress) => this.sessionManager.usesDefaultSessionDir()
+                ? SessionManager.listAll(onProgress)
+                : SessionManager.listAll(this.sessionManager.getSessionDir(), onProgress), async (sessionPath) => {
                 done();
                 await this.handleResumeSession(sessionPath);
             }, () => {
@@ -196075,7 +197042,7 @@ class InteractiveMode {
     }
 }
 //# sourceMappingURL=interactive-mode.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/print-mode.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/print-mode.js
 /**
  * Print mode (single-shot): Send prompts, output result, exit.
  *
@@ -196207,7 +197174,7 @@ async function runPrintMode(runtimeHost, options) {
     }
 }
 //# sourceMappingURL=print-mode.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/rpc/jsonl.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/rpc/jsonl.js
 
 /**
  * Serialize a single strict JSONL record.
@@ -196257,7 +197224,7 @@ function attachJsonlLineReader(stream, onLine) {
     };
 }
 //# sourceMappingURL=jsonl.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/rpc/rpc-client.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/rpc/rpc-client.js
 /**
  * RPC Client for programmatic access to the coding agent.
  *
@@ -196275,6 +197242,7 @@ class RpcClient {
     pendingRequests = new Map();
     requestId = 0;
     stderr = "";
+    exitError = null;
     options;
     constructor(options = {}) {
         this.options = options;
@@ -196286,6 +197254,7 @@ class RpcClient {
         if (this.process) {
             throw new Error("Client already started");
         }
+        this.exitError = null;
         const cliPath = this.options.cliPath ?? "dist/cli.js";
         const args = ["--mode", "rpc"];
         if (this.options.provider) {
@@ -196297,24 +197266,48 @@ class RpcClient {
         if (this.options.args) {
             args.push(...this.options.args);
         }
-        this.process = (0,external_node_child_process_.spawn)("node", [cliPath, ...args], {
+        const childProcess = (0,external_node_child_process_.spawn)("node", [cliPath, ...args], {
             cwd: this.options.cwd,
             env: { ...process.env, ...this.options.env },
             stdio: ["pipe", "pipe", "pipe"],
         });
+        this.process = childProcess;
         // Collect stderr for debugging
-        this.process.stderr?.on("data", (data) => {
+        childProcess.stderr?.on("data", (data) => {
             this.stderr += data.toString();
             process.stderr.write(data);
         });
+        childProcess.once("exit", (code, signal) => {
+            if (this.process !== childProcess)
+                return;
+            const error = this.createProcessExitError(code, signal);
+            this.exitError = error;
+            this.rejectPendingRequests(error);
+        });
+        childProcess.once("error", (error) => {
+            if (this.process !== childProcess)
+                return;
+            const processError = new Error(`Agent process error: ${error.message}. Stderr: ${this.stderr}`);
+            this.exitError = processError;
+            this.rejectPendingRequests(processError);
+        });
+        childProcess.stdin?.on("error", (error) => {
+            if (this.process !== childProcess)
+                return;
+            const stdinError = this.exitError ?? new Error(`Agent process stdin error: ${error.message}. Stderr: ${this.stderr}`);
+            this.exitError = stdinError;
+            this.rejectPendingRequests(stdinError);
+        });
         // Set up strict JSONL reader for stdout.
-        this.stopReadingStdout = attachJsonlLineReader(this.process.stdout, (line) => {
+        this.stopReadingStdout = attachJsonlLineReader(childProcess.stdout, (line) => {
             this.handleLine(line);
         });
         // Wait a moment for process to initialize
         await new Promise((resolve) => setTimeout(resolve, 100));
         if (this.process.exitCode !== null) {
-            throw new Error(`Agent process exited immediately with code ${this.process.exitCode}. Stderr: ${this.stderr}`);
+            const error = this.exitError ?? this.createProcessExitError(this.process.exitCode, this.process.signalCode);
+            this.exitError = error;
+            throw error;
         }
     }
     /**
@@ -196631,14 +197624,37 @@ class RpcClient {
             // Ignore non-JSON lines
         }
     }
+    createProcessExitError(code, signal) {
+        return new Error(`Agent process exited (code=${code} signal=${signal}). Stderr: ${this.stderr}`);
+    }
+    rejectPendingRequests(error) {
+        for (const pending of this.pendingRequests.values()) {
+            pending.reject(error);
+        }
+        this.pendingRequests.clear();
+    }
     async send(command) {
-        if (!this.process?.stdin) {
+        const childProcess = this.process;
+        const stdin = childProcess?.stdin;
+        if (!childProcess || !stdin) {
             throw new Error("Client not started");
+        }
+        if (this.exitError) {
+            throw this.exitError;
+        }
+        if (childProcess.exitCode !== null) {
+            const error = this.createProcessExitError(childProcess.exitCode, childProcess.signalCode);
+            this.exitError = error;
+            throw error;
+        }
+        if (stdin.destroyed || !stdin.writable) {
+            const error = new Error(`Agent process stdin is not writable. Stderr: ${this.stderr}`);
+            this.exitError = error;
+            throw error;
         }
         const id = `req_${++this.requestId}`;
         const fullCommand = { ...command, id };
         return new Promise((resolve, reject) => {
-            this.pendingRequests.set(id, { resolve, reject });
             const timeout = setTimeout(() => {
                 this.pendingRequests.delete(id);
                 reject(new Error(`Timeout waiting for response to ${command.type}. Stderr: ${this.stderr}`));
@@ -196653,7 +197669,15 @@ class RpcClient {
                     reject(error);
                 },
             });
-            this.process.stdin.write(serializeJsonLine(fullCommand));
+            try {
+                stdin.write(serializeJsonLine(fullCommand));
+            }
+            catch (error) {
+                const writeError = error instanceof Error ? error : new Error(String(error));
+                const pending = this.pendingRequests.get(id);
+                this.pendingRequests.delete(id);
+                pending?.reject(writeError);
+            }
         });
     }
     getData(response) {
@@ -196668,7 +197692,7 @@ class RpcClient {
     }
 }
 //# sourceMappingURL=rpc-client.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/rpc/rpc-mode.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/rpc/rpc-mode.js
 /**
  * RPC mode: Headless operation with JSON stdin/stdout protocol.
  *
@@ -196694,6 +197718,7 @@ async function runRpcMode(runtimeHost) {
     takeOverStdout();
     let session = runtimeHost.session;
     let unsubscribe;
+    let unsubscribeBackpressure;
     const output = (obj) => {
         writeRawStdout(serializeJsonLine(obj));
     };
@@ -196929,8 +197954,12 @@ async function runRpcMode(runtimeHost) {
             },
         });
         unsubscribe?.();
+        unsubscribeBackpressure?.();
         unsubscribe = session.subscribe((event) => {
             output(event);
+        });
+        unsubscribeBackpressure = session.agent.subscribe(async () => {
+            await waitForRawStdoutBackpressure();
         });
     };
     const registerSignalHandlers = () => {
@@ -196941,7 +197970,7 @@ async function runRpcMode(runtimeHost) {
         for (const signal of signals) {
             const handler = () => {
                 killTrackedDetachedChildren();
-                void shutdown(signal === "SIGHUP" ? 129 : 143);
+                void shutdown(signal === "SIGHUP" ? 129 : 143, signal);
             };
             process.on(signal, handler);
             signalCleanupHandlers.push(() => process.off(signal, handler));
@@ -197093,7 +198122,9 @@ async function runRpcMode(runtimeHost) {
             // Bash
             // =================================================================
             case "bash": {
-                const result = await session.executeBash(command.command);
+                const result = await session.executeBash(command.command, undefined, {
+                    excludeFromContext: command.excludeFromContext,
+                });
                 return success(id, "bash", result);
             }
             case "abort_bash": {
@@ -197200,7 +198231,7 @@ async function runRpcMode(runtimeHost) {
      * Called after handling each command when waiting for the next command.
      */
     let detachInput = () => { };
-    async function shutdown(exitCode = 0) {
+    async function shutdown(exitCode = 0, signal) {
         if (shuttingDown) {
             process.exit(exitCode);
         }
@@ -197209,9 +198240,13 @@ async function runRpcMode(runtimeHost) {
             cleanup();
         }
         unsubscribe?.();
+        unsubscribeBackpressure?.();
         await runtimeHost.dispose();
         detachInput();
         process.stdin.pause();
+        if (signal !== "SIGTERM") {
+            await flushRawStdout();
+        }
         process.exit(exitCode);
     }
     async function checkShutdownRequested() {
@@ -197226,6 +198261,7 @@ async function runRpcMode(runtimeHost) {
         }
         catch (parseError) {
             output(error(undefined, "parse", `Failed to parse command: ${parseError instanceof Error ? parseError.message : String(parseError)}`));
+            await waitForRawStdoutBackpressure();
             return;
         }
         // Handle extension UI responses
@@ -197246,11 +198282,13 @@ async function runRpcMode(runtimeHost) {
             const response = await handleCommand(command);
             if (response) {
                 output(response);
+                await waitForRawStdoutBackpressure();
             }
             await checkShutdownRequested();
         }
         catch (commandError) {
             output(error(command.id, command.type, commandError instanceof Error ? commandError.message : String(commandError)));
+            await waitForRawStdoutBackpressure();
         }
     };
     const onInputEnd = () => {
@@ -197270,7 +198308,7 @@ async function runRpcMode(runtimeHost) {
     return new Promise(() => { });
 }
 //# sourceMappingURL=rpc-mode.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/index.js
 /**
  * Run modes for the coding agent.
  */
@@ -197279,7 +198317,7 @@ async function runRpcMode(runtimeHost) {
 
 
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/config-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/config-selector.js
 /**
  * TUI component for managing package resources (enable/disable)
  */
@@ -197786,7 +198824,7 @@ class ConfigSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=config-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/config-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/cli/config-selector.js
 /**
  * TUI config selector for `pi config` command
  */
@@ -197818,7 +198856,7 @@ async function selectConfig(options) {
     });
 }
 //# sourceMappingURL=config-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/windows-self-update.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/utils/windows-self-update.js
 
 
 
@@ -197896,7 +198934,7 @@ function quarantineWindowsNativeDependencies(packageDir) {
     }
 }
 //# sourceMappingURL=windows-self-update.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/package-manager-cli.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/package-manager-cli.js
 
 
 
@@ -198412,7 +199450,7 @@ async function handlePackageCommand(args) {
     }
 }
 //# sourceMappingURL=package-manager-cli.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/main.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/main.js
 /**
  * Main entry point for the coding agent CLI.
  *
@@ -198519,6 +199557,11 @@ async function prepareInitialMessage(parsed, autoResizeImages, stdinContent) {
  * Resolve a session argument to a file path.
  * If it looks like a path, use as-is. Otherwise try to match as session ID prefix.
  */
+async function findLocalSessionByExactId(sessionId, cwd, sessionDir) {
+    const localSessions = await SessionManager.list(cwd, sessionDir);
+    const localMatch = localSessions.find((s) => s.id === sessionId);
+    return localMatch ? { type: "local", path: localMatch.path } : undefined;
+}
 async function resolveSessionPath(sessionArg, cwd, sessionDir) {
     // If it looks like a file path, resolve it before handing it to the session manager.
     if (sessionArg.includes("/") || sessionArg.includes("\\") || sessionArg.endsWith(".jsonl")) {
@@ -198526,16 +199569,15 @@ async function resolveSessionPath(sessionArg, cwd, sessionDir) {
     }
     // Try to match as session ID in current project first
     const localSessions = await SessionManager.list(cwd, sessionDir);
-    const localMatches = localSessions.filter((s) => s.id.startsWith(sessionArg));
-    if (localMatches.length >= 1) {
-        return { type: "local", path: localMatches[0].path };
+    const localMatch = localSessions.find((s) => s.id === sessionArg) ?? localSessions.find((s) => s.id.startsWith(sessionArg));
+    if (localMatch) {
+        return { type: "local", path: localMatch.path };
     }
     // Try global search across all projects
-    const allSessions = await SessionManager.listAll();
-    const globalMatches = allSessions.filter((s) => s.id.startsWith(sessionArg));
-    if (globalMatches.length >= 1) {
-        const match = globalMatches[0];
-        return { type: "global", path: match.path, cwd: match.cwd };
+    const allSessions = await SessionManager.listAll(sessionDir);
+    const globalMatch = allSessions.find((s) => s.id === sessionArg) ?? allSessions.find((s) => s.id.startsWith(sessionArg));
+    if (globalMatch) {
+        return { type: "global", path: globalMatch.path, cwd: globalMatch.cwd };
     }
     // Not found anywhere
     return { type: "not_found", arg: sessionArg };
@@ -198567,9 +199609,31 @@ function validateForkFlags(parsed) {
         process.exit(1);
     }
 }
-function forkSessionOrExit(sourcePath, cwd, sessionDir) {
+function validateSessionIdFlags(parsed) {
+    if (parsed.sessionId === undefined)
+        return;
+    const conflictingFlags = [
+        parsed.session ? "--session" : undefined,
+        parsed.continue ? "--continue" : undefined,
+        parsed.resume ? "--resume" : undefined,
+        parsed.noSession ? "--no-session" : undefined,
+    ].filter((flag) => flag !== undefined);
+    if (conflictingFlags.length > 0) {
+        console.error(chalk_source/* default */.Ay.red(`Error: --session-id cannot be combined with ${conflictingFlags.join(", ")}`));
+        process.exit(1);
+    }
     try {
-        return SessionManager.forkFrom(sourcePath, cwd, sessionDir);
+        assertValidSessionId(parsed.sessionId);
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(chalk_source/* default */.Ay.red(`Error: ${message}`));
+        process.exit(1);
+    }
+}
+function forkSessionOrExit(sourcePath, cwd, sessionDir, sessionId) {
+    try {
+        return SessionManager.forkFrom(sourcePath, cwd, sessionDir, { id: sessionId });
     }
     catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -198578,16 +199642,23 @@ function forkSessionOrExit(sourcePath, cwd, sessionDir) {
     }
 }
 async function createSessionManager(parsed, cwd, sessionDir, settingsManager) {
-    if (parsed.noSession) {
-        return SessionManager.inMemory();
+    if (parsed.noSession || parsed.help || parsed.listModels !== undefined) {
+        return SessionManager.inMemory(cwd);
     }
     if (parsed.fork) {
+        if (parsed.sessionId) {
+            const existingTarget = await findLocalSessionByExactId(parsed.sessionId, cwd, sessionDir);
+            if (existingTarget) {
+                console.error(chalk_source/* default */.Ay.red(`Session already exists with id '${parsed.sessionId}'`));
+                process.exit(1);
+            }
+        }
         const resolved = await resolveSessionPath(parsed.fork, cwd, sessionDir);
         switch (resolved.type) {
             case "path":
             case "local":
             case "global":
-                return forkSessionOrExit(resolved.path, cwd, sessionDir);
+                return forkSessionOrExit(resolved.path, cwd, sessionDir, parsed.sessionId);
             case "not_found":
                 console.error(chalk_source/* default */.Ay.red(`No session found matching '${resolved.arg}'`));
                 process.exit(1);
@@ -198616,7 +199687,7 @@ async function createSessionManager(parsed, cwd, sessionDir, settingsManager) {
     if (parsed.resume) {
         initTheme(settingsManager.getTheme(), true);
         try {
-            const selectedPath = await selectSession((onProgress) => SessionManager.list(cwd, sessionDir, onProgress), SessionManager.listAll);
+            const selectedPath = await selectSession((onProgress) => SessionManager.list(cwd, sessionDir, onProgress), (onProgress) => SessionManager.listAll(sessionDir, onProgress));
             if (!selectedPath) {
                 console.log(chalk_source/* default */.Ay.dim("No session selected"));
                 process.exit(0);
@@ -198630,7 +199701,13 @@ async function createSessionManager(parsed, cwd, sessionDir, settingsManager) {
     if (parsed.continue) {
         return SessionManager.continueRecent(cwd, sessionDir);
     }
-    return SessionManager.create(cwd, sessionDir);
+    if (parsed.sessionId) {
+        const existingSession = await findLocalSessionByExactId(parsed.sessionId, cwd, sessionDir);
+        if (existingSession) {
+            return SessionManager.open(existingSession.path, sessionDir);
+        }
+    }
+    return SessionManager.create(cwd, sessionDir, { id: parsed.sessionId });
 }
 function buildSessionOptions(parsed, scopedModels, hasExistingSession, modelRegistry, settingsManager) {
     const options = {};
@@ -198706,6 +199783,9 @@ function buildSessionOptions(parsed, scopedModels, hasExistingSession, modelRegi
     }
     if (parsed.tools) {
         options.tools = [...parsed.tools];
+    }
+    if (parsed.excludeTools) {
+        options.excludeTools = [...parsed.excludeTools];
     }
     return { options, cliThinkingFromModel, diagnostics };
 }
@@ -198788,6 +199868,7 @@ async function main(args, options) {
         process.exit(1);
     }
     validateForkFlags(parsed);
+    validateSessionIdFlags(parsed);
     // Run migrations (pass cwd for project-local migrations)
     const { migratedAuthProviders: migratedProviders, deprecationWarnings } = runMigrations(process.cwd());
     time("runMigrations");
@@ -198818,6 +199899,14 @@ async function main(args, options) {
             console.error(chalk_source/* default */.Ay.red(new MissingSessionCwdError(missingSessionCwdIssue).message));
             process.exit(1);
         }
+    }
+    if (parsed.name !== undefined) {
+        const name = parsed.name.trim();
+        if (!name) {
+            console.error(chalk_source/* default */.Ay.red("Error: --name requires a non-empty value"));
+            process.exit(1);
+        }
+        sessionManager.appendSessionInfo(name);
     }
     time("createSessionManager");
     const resolvedExtensionPaths = resolveCliPaths(cwd, parsed.extensions);
@@ -198878,6 +199967,7 @@ async function main(args, options) {
             thinkingLevel: sessionOptions.thinkingLevel,
             scopedModels: sessionOptions.scopedModels,
             tools: sessionOptions.tools,
+            excludeTools: sessionOptions.excludeTools,
             noTools: sessionOptions.noTools,
             customTools: sessionOptions.customTools,
         });
@@ -198897,6 +199987,7 @@ async function main(args, options) {
         agentDir,
         sessionManager,
     });
+    time("createAgentSessionRuntime");
     const { services, session, modelFallbackMessage } = runtime;
     const { settingsManager, modelRegistry, resourceLoader } = services;
     configureHttpDispatcher(settingsManager.getHttpIdleTimeoutMs());
@@ -198991,7 +200082,7 @@ async function main(args, options) {
     }
 }
 //# sourceMappingURL=main.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/show-images-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/show-images-selector.js
 
 
 
@@ -199031,7 +200122,7 @@ class ShowImagesSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=show-images-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/theme-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/theme-selector.js
 
 
 
@@ -199082,7 +200173,7 @@ class ThemeSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=theme-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/thinking-selector.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/thinking-selector.js
 
 
 
@@ -199134,7 +200225,7 @@ class ThinkingSelectorComponent extends Container {
     }
 }
 //# sourceMappingURL=thinking-selector.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/modes/interactive/components/index.js
 // UI Components for extensions
 
 
@@ -199168,8 +200259,9 @@ class ThinkingSelectorComponent extends Container {
 
 
 //# sourceMappingURL=index.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/index.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-coding-agent@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent/dist/index.js
 // Core session management
+
 // Config paths
 
 
@@ -199201,6 +200293,7 @@ class ThinkingSelectorComponent extends Container {
 // Theme utilities for custom tools and extensions
 
 // Clipboard utilities
+
 
 
 

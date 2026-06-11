@@ -1,8 +1,8 @@
-export const id = 809;
-export const ids = [809];
+export const id = 669;
+export const ids = [669];
 export const modules = {
 
-/***/ 41809:
+/***/ 17669:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -7075,28 +7075,25 @@ Anthropic.Beta = Beta;
 
 
 //# sourceMappingURL=index.mjs.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/env-api-keys.js
-var env_api_keys = __webpack_require__(46776);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
-var models = __webpack_require__(94040);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js
-var event_stream = __webpack_require__(7304);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/headers.js
-var headers = __webpack_require__(2305);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/json-parse.js
-var json_parse = __webpack_require__(54199);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/sanitize-unicode.js
-var sanitize_unicode = __webpack_require__(54142);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/cloudflare.js
-var cloudflare = __webpack_require__(5201);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/github-copilot-headers.js
-var github_copilot_headers = __webpack_require__(72375);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/simple-options.js
-var simple_options = __webpack_require__(32007);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/transform-messages.js
-var transform_messages = __webpack_require__(81641);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/anthropic.js
-
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
+var models = __webpack_require__(63068);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js
+var event_stream = __webpack_require__(98060);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/headers.js
+var headers = __webpack_require__(67309);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/json-parse.js
+var json_parse = __webpack_require__(11043);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/sanitize-unicode.js
+var sanitize_unicode = __webpack_require__(49986);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/cloudflare.js
+var cloudflare = __webpack_require__(82765);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/github-copilot-headers.js
+var github_copilot_headers = __webpack_require__(70747);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/simple-options.js
+var simple_options = __webpack_require__(78379);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/transform-messages.js
+var transform_messages = __webpack_require__(1901);
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/anthropic.js
 
 
 
@@ -7214,6 +7211,7 @@ function getAnthropicCompat(model) {
         supportsLongCacheRetention: model.compat?.supportsLongCacheRetention ?? !isFireworks,
         sendSessionAffinityHeaders: model.compat?.sendSessionAffinityHeaders ?? !!(isFireworks || isCloudflareAiGatewayAnthropic),
         supportsCacheControlOnTools: model.compat?.supportsCacheControlOnTools ?? !isFireworks,
+        allowEmptySignature: model.compat?.allowEmptySignature ?? false,
     };
 }
 function mergeHeaders(...headerSources) {
@@ -7404,7 +7402,10 @@ const streamAnthropic = (model, context, options) => {
                 isOAuth = false;
             }
             else {
-                const apiKey = options?.apiKey ?? (0,env_api_keys/* getEnvApiKey */.P)(model.provider) ?? "";
+                const apiKey = options?.apiKey;
+                if (!apiKey) {
+                    throw new Error(`No API key for provider: ${model.provider}`);
+                }
                 let copilotDynamicHeaders;
                 if (model.provider === "github-copilot") {
                     const hasImages = (0,github_copilot_headers/* hasCopilotVisionInput */.d1)(context.messages);
@@ -7427,7 +7428,7 @@ const streamAnthropic = (model, context, options) => {
             const requestOptions = {
                 ...(options?.signal ? { signal: options.signal } : {}),
                 ...(options?.timeoutMs !== undefined ? { timeout: options.timeoutMs } : {}),
-                ...(options?.maxRetries !== undefined ? { maxRetries: options.maxRetries } : {}),
+                maxRetries: options?.maxRetries ?? 0,
             };
             const response = await client.messages.create({ ...params, stream: true }, requestOptions).asResponse();
             await options?.onResponse?.({ status: response.status, headers: (0,headers/* headersToRecord */.j)(response.headers) }, model);
@@ -7646,7 +7647,7 @@ function mapThinkingLevelToEffort(model, level) {
     }
 }
 const streamSimpleAnthropic = (model, context, options) => {
-    const apiKey = options?.apiKey || (0,env_api_keys/* getEnvApiKey */.P)(model.provider);
+    const apiKey = options?.apiKey;
     if (!apiKey) {
         throw new Error(`No API key for provider: ${model.provider}`);
     }
@@ -7755,7 +7756,7 @@ function buildParams(model, context, isOAuthToken, options) {
     const { cacheControl } = getCacheControl(model, options?.cacheRetention);
     const params = {
         model: model.id,
-        messages: convertMessages(context.messages, model, isOAuthToken, cacheControl),
+        messages: convertMessages(context.messages, model, isOAuthToken, cacheControl, getAnthropicCompat(model).allowEmptySignature),
         max_tokens: options?.maxTokens ?? model.maxTokens,
         stream: true,
     };
@@ -7844,7 +7845,7 @@ function buildParams(model, context, isOAuthToken, options) {
 function normalizeToolCallId(id) {
     return id.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 64);
 }
-function convertMessages(messages, model, isOAuthToken, cacheControl) {
+function convertMessages(messages, model, isOAuthToken, cacheControl, allowEmptySignature = false) {
     const params = [];
     // Transform messages for cross-provider compatibility
     const transformedMessages = (0,transform_messages/* transformMessages */.b)(messages, model, normalizeToolCallId);
@@ -7915,13 +7916,19 @@ function convertMessages(messages, model, isOAuthToken, cacheControl) {
                     if (block.thinking.trim().length === 0)
                         continue;
                     // If thinking signature is missing/empty (e.g., from aborted stream),
-                    // convert to plain text block without <thinking> tags to avoid API rejection
-                    // and prevent Claude from mimicking the tags in responses
+                    // convert to plain text for Anthropic. Some compatible providers emit
+                    // and accept empty signatures, so let marked models preserve the block.
                     if (!block.thinkingSignature || block.thinkingSignature.trim().length === 0) {
-                        blocks.push({
-                            type: "text",
-                            text: (0,sanitize_unicode/* sanitizeSurrogates */.J)(block.thinking),
-                        });
+                        blocks.push(allowEmptySignature
+                            ? {
+                                type: "thinking",
+                                thinking: (0,sanitize_unicode/* sanitizeSurrogates */.J)(block.thinking),
+                                signature: "",
+                            }
+                            : {
+                                type: "text",
+                                text: (0,sanitize_unicode/* sanitizeSurrogates */.J)(block.thinking),
+                            });
                     }
                     else {
                         blocks.push({
@@ -8048,7 +8055,7 @@ function mapStopReason(reason) {
 
 /***/ }),
 
-/***/ 5201:
+/***/ 82765:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8085,7 +8092,7 @@ function resolveCloudflareBaseUrl(model) {
 
 /***/ }),
 
-/***/ 72375:
+/***/ 70747:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8125,7 +8132,7 @@ function buildCopilotDynamicHeaders(params) {
 
 /***/ }),
 
-/***/ 32007:
+/***/ 78379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8146,6 +8153,7 @@ function buildBaseOptions(_model, options, apiKey) {
         onPayload: options?.onPayload,
         onResponse: options?.onResponse,
         timeoutMs: options?.timeoutMs,
+        websocketConnectTimeoutMs: options?.websocketConnectTimeoutMs,
         maxRetries: options?.maxRetries,
         maxRetryDelayMs: options?.maxRetryDelayMs,
         metadata: options?.metadata,
@@ -8177,7 +8185,7 @@ baseMaxTokens, modelMaxTokens, reasoningLevel, customBudgets) {
 
 /***/ }),
 
-/***/ 81641:
+/***/ 1901:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8370,7 +8378,7 @@ function transformMessages(messages, model, normalizeToolCallId) {
 
 /***/ }),
 
-/***/ 2305:
+/***/ 67309:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8387,7 +8395,7 @@ function headersToRecord(headers) {
 
 /***/ }),
 
-/***/ 54142:
+/***/ 49986:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {

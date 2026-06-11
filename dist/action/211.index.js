@@ -15566,7 +15566,7 @@ async function resolveEntry(nameOrPath, repoRoot, options, config) {
     // 1. Remote repository resolution takes priority when specified
     if (remote) {
         // Dynamic import to avoid circular dependencies
-        const { resolveRemoteSkill, resolveRemoteAgent } = await __webpack_require__.e(/* import() */ 733).then(__webpack_require__.bind(__webpack_require__, 80114));
+        const { resolveRemoteSkill, resolveRemoteAgent } = await __webpack_require__.e(/* import() */ 114).then(__webpack_require__.bind(__webpack_require__, 80114));
         const resolver = config.kind === 'skill' ? resolveRemoteSkill : resolveRemoteAgent;
         return resolver(remote, nameOrPath, { offline });
     }

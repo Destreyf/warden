@@ -1,5 +1,5 @@
-export const id = 830;
-export const ids = [830];
+export const id = 610;
+export const ids = [610];
 export const modules = {
 
 /***/ 92685:
@@ -19873,7 +19873,7 @@ var __rewriteRelativeImportExtension;
 
 /***/ }),
 
-/***/ 68830:
+/***/ 53610:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -19888,17 +19888,17 @@ __webpack_require__.d(__webpack_exports__, {
 var dist_cjs = __webpack_require__(64883);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/@smithy+node-http-handler@4.7.3/node_modules/@smithy/node-http-handler/dist-cjs/index.js
 var node_http_handler_dist_cjs = __webpack_require__(71745);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
-var models = __webpack_require__(94040);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js
-var event_stream = __webpack_require__(7304);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/json-parse.js
-var json_parse = __webpack_require__(54199);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/models.js + 1 modules
+var models = __webpack_require__(63068);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/event-stream.js
+var event_stream = __webpack_require__(98060);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/json-parse.js
+var json_parse = __webpack_require__(11043);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/http-proxy-agent@7.0.2/node_modules/http-proxy-agent/dist/index.js
 var dist = __webpack_require__(6965);
 // EXTERNAL MODULE: ../../node_modules/.pnpm/https-proxy-agent@7.0.6/node_modules/https-proxy-agent/dist/index.js
 var https_proxy_agent_dist = __webpack_require__(4599);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/node-http-proxy.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/node-http-proxy.js
 
 
 const DEFAULT_PROXY_PORTS = {
@@ -19996,13 +19996,13 @@ function createHttpProxyAgentsForTarget(targetUrl) {
     };
 }
 //# sourceMappingURL=node-http-proxy.js.map
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/sanitize-unicode.js
-var sanitize_unicode = __webpack_require__(54142);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/simple-options.js
-var simple_options = __webpack_require__(32007);
-// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/transform-messages.js
-var transform_messages = __webpack_require__(81641);
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/amazon-bedrock.js
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/utils/sanitize-unicode.js
+var sanitize_unicode = __webpack_require__(49986);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/simple-options.js
+var simple_options = __webpack_require__(78379);
+// EXTERNAL MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/transform-messages.js
+var transform_messages = __webpack_require__(1901);
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/providers/amazon-bedrock.js
 
 
 
@@ -20094,6 +20094,9 @@ const streamBedrock = (model, context, options = {}) => {
         }
         try {
             const client = new dist_cjs.BedrockRuntimeClient(config);
+            if (options.headers && Object.keys(options.headers).length > 0) {
+                addCustomHeadersMiddleware(client, options.headers);
+            }
             const cacheRetention = resolveCacheRetention(options.cacheRetention);
             const inferenceMaxTokens = options.maxTokens ?? (isAnthropicClaudeModel(model) ? model.maxTokens : undefined);
             let commandInput = {
@@ -20209,6 +20212,39 @@ function formatBedrockError(error) {
         return `${prefix}: ${message}`;
     }
     return message;
+}
+/**
+ * Header keys that must never be overwritten by caller-supplied headers.
+ * `host` and `x-amz-*` participate in the SigV4 canonical request; `authorization`
+ * is owned by SigV4 or the bearer-token path (config.token + authSchemePreference).
+ * Compared case-insensitively (caller key is lower-cased before lookup).
+ */
+const RESERVED_HEADER_EXACT = new Set(["authorization", "host"]);
+function isReservedHeader(key) {
+    const lower = key.toLowerCase();
+    return lower.startsWith("x-amz-") || RESERVED_HEADER_EXACT.has(lower);
+}
+/**
+ * Attach caller-supplied headers to the outgoing Bedrock request via a Smithy
+ * `build`-step middleware. The `build` step runs after request serialisation but
+ * before SigV4 signing, so injected headers are covered by the signature. Reserved
+ * SigV4 / auth headers (`x-amz-*`, `authorization`, `host`) are silently skipped;
+ * all other caller headers override any existing same-named header on the request.
+ */
+function addCustomHeadersMiddleware(client, headers) {
+    const middleware = (next) => async (args) => {
+        const request = args.request;
+        if (request && typeof request === "object" && "headers" in request) {
+            const requestHeaders = request.headers;
+            for (const [key, value] of Object.entries(headers)) {
+                if (!isReservedHeader(key)) {
+                    requestHeaders[key] = value;
+                }
+            }
+        }
+        return next(args);
+    };
+    client.middlewareStack.add(middleware, { step: "build", name: "pi-ai-custom-headers", priority: "low" });
 }
 const streamSimpleBedrock = (model, context, options) => {
     const base = (0,simple_options/* buildBaseOptions */.QP)(model, options, undefined);
@@ -20355,11 +20391,11 @@ function getModelMatchCandidates(modelId, modelName) {
 }
 function supportsAdaptiveThinking(modelId, modelName) {
     const candidates = getModelMatchCandidates(modelId, modelName);
-    return candidates.some((s) => s.includes("opus-4-6") || s.includes("opus-4-7") || s.includes("sonnet-4-6"));
+    return candidates.some((s) => s.includes("opus-4-6") || s.includes("opus-4-7") || s.includes("opus-4-8") || s.includes("sonnet-4-6"));
 }
 function supportsNativeXhighEffort(model) {
     const candidates = getModelMatchCandidates(model.id, model.name);
-    return candidates.some((s) => s.includes("opus-4-7"));
+    return candidates.some((s) => s.includes("opus-4-7") || s.includes("opus-4-8"));
 }
 function mapThinkingLevelToEffort(model, level) {
     if (level === "xhigh" && supportsNativeXhighEffort(model))
@@ -20766,7 +20802,7 @@ function createImageBlock(mimeType, data) {
     return { source: { bytes }, format };
 }
 //# sourceMappingURL=amazon-bedrock.js.map
-;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.75.5_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/bedrock-provider.js
+;// CONCATENATED MODULE: ../../node_modules/.pnpm/@earendil-works+pi-ai@0.78.0_@modelcontextprotocol+sdk@1.29.0_zod@4.4.3__ws@8.21.0_zod@4.4.3/node_modules/@earendil-works/pi-ai/dist/bedrock-provider.js
 
 const bedrockProviderModule = {
     streamBedrock: streamBedrock,
@@ -20776,7 +20812,7 @@ const bedrockProviderModule = {
 
 /***/ }),
 
-/***/ 32007:
+/***/ 78379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -20797,6 +20833,7 @@ function buildBaseOptions(_model, options, apiKey) {
         onPayload: options?.onPayload,
         onResponse: options?.onResponse,
         timeoutMs: options?.timeoutMs,
+        websocketConnectTimeoutMs: options?.websocketConnectTimeoutMs,
         maxRetries: options?.maxRetries,
         maxRetryDelayMs: options?.maxRetryDelayMs,
         metadata: options?.metadata,
@@ -20828,7 +20865,7 @@ baseMaxTokens, modelMaxTokens, reasoningLevel, customBudgets) {
 
 /***/ }),
 
-/***/ 81641:
+/***/ 1901:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -21021,7 +21058,7 @@ function transformMessages(messages, model, normalizeToolCallId) {
 
 /***/ }),
 
-/***/ 54142:
+/***/ 49986:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {

@@ -1,8 +1,8 @@
-export const id = 85;
-export const ids = [85];
+export const id = 761;
+export const ids = [761];
 export const modules = {
 
-/***/ 5201:
+/***/ 82765:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -39,7 +39,7 @@ function resolveCloudflareBaseUrl(model) {
 
 /***/ }),
 
-/***/ 72375:
+/***/ 70747:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -79,7 +79,7 @@ function buildCopilotDynamicHeaders(params) {
 
 /***/ }),
 
-/***/ 43085:
+/***/ 31761:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -88,16 +88,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   streamSimpleOpenAIResponses: () => (/* binding */ streamSimpleOpenAIResponses)
 /* harmony export */ });
 /* harmony import */ var openai__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(56722);
-/* harmony import */ var _env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46776);
-/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(94040);
-/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(7304);
-/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(2305);
-/* harmony import */ var _cloudflare_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(5201);
-/* harmony import */ var _github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(72375);
-/* harmony import */ var _openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(54056);
-/* harmony import */ var _openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(22299);
-/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(32007);
-
+/* harmony import */ var _models_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(63068);
+/* harmony import */ var _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(98060);
+/* harmony import */ var _utils_headers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(67309);
+/* harmony import */ var _cloudflare_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(82765);
+/* harmony import */ var _github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(70747);
+/* harmony import */ var _openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(80524);
+/* harmony import */ var _openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(13551);
+/* harmony import */ var _simple_options_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(78379);
 
 
 
@@ -150,7 +148,7 @@ function formatOpenAIResponsesError(error) {
  * Generate function for OpenAI Responses API
  */
 const streamOpenAIResponses = (model, context, options) => {
-    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_3__/* .AssistantMessageEventStream */ .Q2();
+    const stream = new _utils_event_stream_js__WEBPACK_IMPORTED_MODULE_2__/* .AssistantMessageEventStream */ .Q2();
     // Start async processing
     (async () => {
         const output = {
@@ -172,7 +170,10 @@ const streamOpenAIResponses = (model, context, options) => {
         };
         try {
             // Create OpenAI client
-            const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider) || "";
+            const apiKey = options?.apiKey;
+            if (!apiKey) {
+                throw new Error(`No API key for provider: ${model.provider}`);
+            }
             const cacheRetention = resolveCacheRetention(options?.cacheRetention);
             const cacheSessionId = cacheRetention === "none" ? undefined : options?.sessionId;
             const client = createClient(model, context, apiKey, options?.headers, cacheSessionId);
@@ -184,12 +185,12 @@ const streamOpenAIResponses = (model, context, options) => {
             const requestOptions = {
                 ...(options?.signal ? { signal: options.signal } : {}),
                 ...(options?.timeoutMs !== undefined ? { timeout: options.timeoutMs } : {}),
-                ...(options?.maxRetries !== undefined ? { maxRetries: options.maxRetries } : {}),
+                maxRetries: options?.maxRetries ?? 0,
             };
             const { data: openaiStream, response } = await client.responses.create(params, requestOptions).withResponse();
-            await options?.onResponse?.({ status: response.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_5__/* .headersToRecord */ .j)(response.headers) }, model);
+            await options?.onResponse?.({ status: response.status, headers: (0,_utils_headers_js__WEBPACK_IMPORTED_MODULE_4__/* .headersToRecord */ .j)(response.headers) }, model);
             stream.push({ type: "start", partial: output });
-            await (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .processResponsesStream */ .KB)(openaiStream, output, stream, model, {
+            await (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .processResponsesStream */ .KB)(openaiStream, output, stream, model, {
                 serviceTier: options?.serviceTier,
                 applyServiceTierPricing: (usage, serviceTier) => applyServiceTierPricing(usage, serviceTier, model),
             });
@@ -217,12 +218,12 @@ const streamOpenAIResponses = (model, context, options) => {
     return stream;
 };
 const streamSimpleOpenAIResponses = (model, context, options) => {
-    const apiKey = options?.apiKey || (0,_env_api_keys_js__WEBPACK_IMPORTED_MODULE_1__/* .getEnvApiKey */ .P)(model.provider);
+    const apiKey = options?.apiKey;
     if (!apiKey) {
         throw new Error(`No API key for provider: ${model.provider}`);
     }
-    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_6__/* .buildBaseOptions */ .QP)(model, options, apiKey);
-    const clampedReasoning = options?.reasoning ? (0,_models_js__WEBPACK_IMPORTED_MODULE_2__/* .clampThinkingLevel */ .Kt)(model, options.reasoning) : undefined;
+    const base = (0,_simple_options_js__WEBPACK_IMPORTED_MODULE_5__/* .buildBaseOptions */ .QP)(model, options, apiKey);
+    const clampedReasoning = options?.reasoning ? (0,_models_js__WEBPACK_IMPORTED_MODULE_1__/* .clampThinkingLevel */ .Kt)(model, options.reasoning) : undefined;
     const reasoningEffort = clampedReasoning === "off" ? undefined : clampedReasoning;
     return streamOpenAIResponses(model, context, {
         ...base,
@@ -230,17 +231,11 @@ const streamSimpleOpenAIResponses = (model, context, options) => {
     });
 };
 function createClient(model, context, apiKey, optionsHeaders, sessionId) {
-    if (!apiKey) {
-        if (!process.env.OPENAI_API_KEY) {
-            throw new Error("OpenAI API key is required. Set OPENAI_API_KEY environment variable or pass it as an argument.");
-        }
-        apiKey = process.env.OPENAI_API_KEY;
-    }
     const compat = getCompat(model);
     const headers = { ...model.headers };
     if (model.provider === "github-copilot") {
-        const hasImages = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_7__/* .hasCopilotVisionInput */ .d1)(context.messages);
-        const copilotHeaders = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_7__/* .buildCopilotDynamicHeaders */ .G0)({
+        const hasImages = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_6__/* .hasCopilotVisionInput */ .d1)(context.messages);
+        const copilotHeaders = (0,_github_copilot_headers_js__WEBPACK_IMPORTED_MODULE_6__/* .buildCopilotDynamicHeaders */ .G0)({
             messages: context.messages,
             hasImages,
         });
@@ -265,20 +260,20 @@ function createClient(model, context, apiKey, optionsHeaders, sessionId) {
         : headers;
     return new openai__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Ay({
         apiKey,
-        baseURL: (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_8__/* .isCloudflareProvider */ .vk)(model.provider) ? (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_8__/* .resolveCloudflareBaseUrl */ .S7)(model) : model.baseUrl,
+        baseURL: (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_7__/* .isCloudflareProvider */ .vk)(model.provider) ? (0,_cloudflare_js__WEBPACK_IMPORTED_MODULE_7__/* .resolveCloudflareBaseUrl */ .S7)(model) : model.baseUrl,
         dangerouslyAllowBrowser: true,
         defaultHeaders,
     });
 }
 function buildParams(model, context, options) {
-    const messages = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .convertResponsesMessages */ .iq)(model, context, OPENAI_TOOL_CALL_PROVIDERS);
+    const messages = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .convertResponsesMessages */ .iq)(model, context, OPENAI_TOOL_CALL_PROVIDERS);
     const cacheRetention = resolveCacheRetention(options?.cacheRetention);
     const compat = getCompat(model);
     const params = {
         model: model.id,
         input: messages,
         stream: true,
-        prompt_cache_key: cacheRetention === "none" ? undefined : (0,_openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_9__/* .clampOpenAIPromptCacheKey */ .l)(options?.sessionId),
+        prompt_cache_key: cacheRetention === "none" ? undefined : (0,_openai_prompt_cache_js__WEBPACK_IMPORTED_MODULE_8__/* .clampOpenAIPromptCacheKey */ .l)(options?.sessionId),
         prompt_cache_retention: getPromptCacheRetention(compat, cacheRetention),
         store: false,
     };
@@ -292,7 +287,7 @@ function buildParams(model, context, options) {
         params.service_tier = options.serviceTier;
     }
     if (context.tools && context.tools.length > 0) {
-        params.tools = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_4__/* .convertResponsesTools */ .hX)(context.tools);
+        params.tools = (0,_openai_responses_shared_js__WEBPACK_IMPORTED_MODULE_3__/* .convertResponsesTools */ .hX)(context.tools);
     }
     if (model.reasoning) {
         if (options?.reasoningEffort || options?.reasoningSummary) {
