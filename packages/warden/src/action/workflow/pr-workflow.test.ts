@@ -458,7 +458,7 @@ describe('runPRWorkflow', () => {
       );
     });
 
-    it('report mode accepts full incremental no-trigger artifacts with different file metadata', async () => {
+    it('report mode accepts full incremental no-trigger artifacts with report-only input differences', async () => {
       await runPRWorkflow(
         mockOctokit,
         createDefaultInputs({ mode: 'analyze', incremental: true }),
@@ -478,7 +478,13 @@ describe('runPRWorkflow', () => {
       try {
         await runPRWorkflow(
           mockOctokit,
-          createDefaultInputs({ mode: 'report', findingsFile, incremental: true }),
+          createDefaultInputs({
+            mode: 'report',
+            findingsFile,
+            incremental: true,
+            reportOn: 'medium',
+            requestChanges: true,
+          }),
           'pull_request',
           EVENT_PAYLOAD_PATH,
           NO_MATCH_FIXTURES_DIR

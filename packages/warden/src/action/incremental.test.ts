@@ -72,6 +72,24 @@ afterEach(() => {
   }
 });
 
+describe('buildIncrementalConfigFingerprint', () => {
+  it('ignores action-level report delivery inputs', () => {
+    const triggers = [createTrigger()];
+    const analyzeInputs = createInputs();
+    const reportInputs = createInputs({
+      failOn: 'high',
+      reportOn: 'medium',
+      requestChanges: true,
+      failCheck: false,
+      maxFindings: 5,
+    });
+
+    expect(buildIncrementalConfigFingerprint(reportInputs, triggers)).toBe(
+      buildIncrementalConfigFingerprint(analyzeInputs, triggers)
+    );
+  });
+});
+
 describe('buildLocalDeltaFiles', () => {
   it('returns patches for files changed between two commits', () => {
     const repoPath = createRepo();
