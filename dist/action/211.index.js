@@ -15337,10 +15337,13 @@ function resolveSkillPath(nameOrPath, repoRoot) {
 function resolvePackageRootCandidates() {
     const __filename = (0,node_url__WEBPACK_IMPORTED_MODULE_3__.fileURLToPath)(import.meta.url);
     const moduleRoot = (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)((0,node_path__WEBPACK_IMPORTED_MODULE_1__.dirname)(__filename), '..', '..');
+    const actionPath = process.env['GITHUB_ACTION_PATH'];
     const candidates = [
         moduleRoot,
         (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(moduleRoot, 'packages', 'warden'),
-        process.env['GITHUB_ACTION_PATH'] ? (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(process.env['GITHUB_ACTION_PATH'], 'packages', 'warden') : undefined,
+        (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(moduleRoot, 'dist', 'action'),
+        actionPath ? (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(actionPath, 'dist', 'action') : undefined,
+        actionPath ? (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(actionPath, 'packages', 'warden') : undefined,
         (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(process.cwd(), 'packages', 'warden'),
     ].filter((candidate) => candidate !== undefined);
     return [...new Set(candidates)];
