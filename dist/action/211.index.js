@@ -547,12 +547,16 @@ function shouldFingerprintTriggerError(code) {
  */
 function captureActionTriggerError(error, context) {
     const { code } = (0,_sdk_errors_js__WEBPACK_IMPORTED_MODULE_1__/* .classifyError */ .fe)(error);
+    const providerContext = error instanceof _sdk_errors_js__WEBPACK_IMPORTED_MODULE_1__/* .SkillRunnerError */ .cy ? error.providerContext : undefined;
     _sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .Sentry.captureException */ .sQ.captureException(error, {
         tags: {
             'warden.trigger.name': context.triggerName,
             'gen_ai.agent.name': context.skillName,
             'warden.error.code': code,
+            ...(providerContext?.provider ? { 'gen_ai.provider.name': providerContext.provider } : {}),
+            ...(providerContext?.model ? { 'gen_ai.request.model': providerContext.model } : {}),
         },
+        ...(providerContext ? { contexts: { provider_error: { ...providerContext } } } : {}),
         ...(shouldFingerprintTriggerError(code) ? { fingerprint: ['warden', code] } : {}),
     });
     return code;
@@ -1610,7 +1614,7 @@ const FindingObservationSchema = schemas/* discriminatedUnion */.gM('outcome', [
         outcome: schemas/* literal */.eu('skipped'),
         finding: types/* FindingSchema */.p_,
         skill: schemas/* string */.Yj().optional(),
-        skippedReason: schemas/* enum */.k5(['max_findings', 'duplicate_in_batch']),
+        skippedReason: schemas/* enum */.k5(['max_findings', 'duplicate_in_batch', 'no_inline_location']),
     }),
     schemas/* object */.Ik({
         outcome: schemas/* literal */.eu('resolved'),
@@ -1714,6 +1718,9 @@ const FindingsOutputSchema = schemas/* object */.Ik({
         model: schemas/* string */.Yj().optional(),
         durationMs: schemas/* number */.ai().nonnegative().optional(),
         usage: types/* UsageStatsSchema */.Ur.optional(),
+        failedHunks: schemas/* number */.ai().int().nonnegative().optional(),
+        failedExtractions: schemas/* number */.ai().int().nonnegative().optional(),
+        error: types/* SkillErrorSchema */.J1.optional(),
         findings: schemas/* array */.YO(ExportedFindingSchema),
     })),
     triggerResults: schemas/* array */.YO(TriggerRunResultSchema).optional(),
@@ -1797,6 +1804,9 @@ function buildFindingsOutput(reports, context, findingObservations = [], options
             model: r.model,
             durationMs: r.durationMs,
             usage: r.usage,
+            failedHunks: r.failedHunks,
+            failedExtractions: r.failedExtractions,
+            error: r.error,
             findings: r.findings.map((f) => ({
                 id: f.id,
                 severity: f.severity,
@@ -1953,20 +1963,15 @@ function recenterReportFindingIds(reportFindings, actions) {
         return recenteredId ? { ...finding, id: recenteredId } : finding;
     });
 }
-// -----------------------------------------------------------------------------
-// GitHub Review Posting
-// -----------------------------------------------------------------------------
 /**
  * Post a PR review to GitHub.
  */
-async function postReviewToGitHub(octokit, context, result) {
+async function postReviewToGitHub(octokit, context, result, feedbackGate) {
     if (!context.pullRequest) {
-        return;
+        return 'no_review';
     }
-    // Only post PR reviews with inline comments - skip standalone summary comments
-    // as they add noise without providing actionable inline feedback
     if (!result.review) {
-        return;
+        return 'no_review';
     }
     const { owner, name: repo } = context.repository;
     const pullNumber = context.pullRequest.number;
@@ -1981,15 +1986,26 @@ async function postReviewToGitHub(octokit, context, result) {
         start_line: c.start_line,
         start_side: c.start_line ? c.start_side ?? 'RIGHT' : undefined,
     }));
+    // Non-blocking body-only reviews cannot be resolved as review threads.
+    // Keep those findings in Checks instead of leaving stale PR timeline entries.
+    if (reviewComments.length === 0 && result.review.event === 'COMMENT') {
+        return 'checks_only';
+    }
+    // Duplicate-action comment updates between the poster's gate check and this
+    // write can outlive the gate's cache window; verify once more.
+    if (!(await feedbackGate.canWrite())) {
+        return 'blocked';
+    }
     await octokit.pulls.createReview({
         owner,
         repo,
         pull_number: pullNumber,
         commit_id: commitId,
         event: result.review.event,
-        body: result.review.body,
+        body: result.review.event === 'COMMENT' ? '' : result.review.body,
         comments: reviewComments,
     });
+    return 'posted';
 }
 /**
  * Move inline comments into the review body as markdown.
@@ -2119,6 +2135,12 @@ async function postTriggerReview(ctx, deps) {
                 }
             }
         }
+        // Consolidation and dedup above can spend minutes in LLM calls. Re-verify
+        // head freshness before the first GitHub write (duplicate-action comment
+        // updates below, then the review itself).
+        if (!(await deps.feedbackGate.canWrite())) {
+            return emptyReviewPostResult(newComments, activeWardenCommentIds, findingObservations);
+        }
         // Process duplicate actions (update Warden comments, add reactions)
         if (dedupResult?.duplicateActions.length) {
             const actionCounts = await (0,_output_dedup_js__WEBPACK_IMPORTED_MODULE_3__/* .processDuplicateActions */ .G$)(octokit, context.repository.owner, context.repository.name, dedupResult.duplicateActions, skill);
@@ -2174,18 +2196,42 @@ async function postTriggerReview(ctx, deps) {
                     skippedReason: 'max_findings',
                 });
             }
+            let postOutcome = 'no_review';
             try {
-                await postReviewToGitHub(octokit, context, renderResultToPost);
+                postOutcome = await postReviewToGitHub(octokit, context, renderResultToPost, deps.feedbackGate);
             }
             catch (error) {
                 if (!isLineResolutionError(error)) {
                     throw error;
                 }
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_6__/* .warnAction */ .T6)(`Inline comments failed for ${result.triggerName}, posting findings in review body`);
-                const fallback = moveCommentsToBody(renderResultToPost, postedFindings, skill);
-                await postReviewToGitHub(octokit, context, fallback);
+                if (renderResultToPost.review?.event === 'REQUEST_CHANGES') {
+                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_6__/* .warnAction */ .T6)(`Inline comments failed for ${result.triggerName}, posting findings in review body`);
+                    const fallback = moveCommentsToBody(renderResultToPost, postedFindings, skill);
+                    postOutcome = await postReviewToGitHub(octokit, context, fallback, deps.feedbackGate);
+                }
+                else {
+                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_6__/* .warnAction */ .T6)(`Inline comments failed for ${result.triggerName}, falling back to checks only`);
+                    postOutcome = 'checks_only';
+                }
             }
+            if (postOutcome === 'checks_only') {
+                for (const finding of postedFindings) {
+                    findingObservations.push({ outcome: 'skipped', finding, skill, skippedReason: 'no_inline_location' });
+                }
+                return emptyReviewPostResult(newComments, activeWardenCommentIds, findingObservations);
+            }
+            if (postOutcome !== 'posted') {
+                return emptyReviewPostResult(newComments, activeWardenCommentIds, findingObservations);
+            }
+            // COMMENT reviews post with an empty body, so locationless findings that
+            // the renderer placed in the body never reach the PR. Record them as
+            // checks-only instead of claiming they were posted.
+            const bodyStripped = renderResultToPost.review?.event === 'COMMENT';
             for (const finding of postedFindings) {
+                if (bodyStripped && !finding.location) {
+                    findingObservations.push({ outcome: 'skipped', finding, skill, skippedReason: 'no_inline_location' });
+                    continue;
+                }
                 findingObservations.push({ outcome: 'posted', finding, skill });
                 const comment = (0,_output_dedup_js__WEBPACK_IMPORTED_MODULE_3__/* .findingToExistingComment */ .Xi)(finding, skill);
                 if (comment) {
@@ -2223,6 +2269,104 @@ async function postTriggerReview(ctx, deps) {
 
 /***/ }),
 
+/***/ 6643:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   d: () => (/* binding */ ReviewFeedbackGate)
+/* harmony export */ });
+/* harmony import */ var _sentry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(30340);
+/* harmony import */ var _cli_output_tty_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(80029);
+/* harmony import */ var _sdk_retry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2022);
+/**
+ * Review Feedback Gate
+ *
+ * Single owner of the "is this run still analyzing the current PR head?"
+ * check that guards every PR review feedback mutation (posting reviews,
+ * resolving threads, replying, dismissing reviews).
+ */
+
+
+
+const FRESHNESS_TTL_MS = 10_000;
+const HEAD_FETCH_ATTEMPTS = 3;
+const HEAD_FETCH_RETRY_DELAY_MS = 500;
+/**
+ * Guards PR review feedback writes behind a head-freshness check.
+ *
+ * States returned by {@link ReviewFeedbackGate.check}:
+ * - `writable`: the PR head matched this run's head within the TTL window.
+ * - `blocked`: no PR context, or the head advanced past this run. Permanent
+ *   for the run; a head that advanced never becomes current again.
+ * - `unknown`: the head could not be verified after retries. Writes must be
+ *   skipped (fail closed), but the state is cached only briefly so later
+ *   phases retry instead of disabling feedback for the whole run. Callers
+ *   that suppress a blocking review because of `unknown` must fail the run
+ *   instead of letting it pass silently.
+ *
+ * Results are memoized for a short TTL so bursts of writes share one
+ * `pulls.get` call while long LLM phases still trigger a fresh check.
+ */
+class ReviewFeedbackGate {
+    octokit;
+    context;
+    options;
+    blocked = false;
+    cached;
+    constructor(octokit, context, options = {}) {
+        this.octokit = octokit;
+        this.context = context;
+        this.options = options;
+    }
+    /** Report whether this run may still mutate PR review feedback. */
+    async check() {
+        const pullRequest = this.context.pullRequest;
+        if (!pullRequest || this.blocked) {
+            return 'blocked';
+        }
+        const ttlMs = this.options.ttlMs ?? FRESHNESS_TTL_MS;
+        if (this.cached && Date.now() - this.cached.at < ttlMs) {
+            return this.cached.status;
+        }
+        const attempts = this.options.attempts ?? HEAD_FETCH_ATTEMPTS;
+        const retryDelayMs = this.options.retryDelayMs ?? HEAD_FETCH_RETRY_DELAY_MS;
+        let lastError;
+        for (let attempt = 1; attempt <= attempts; attempt++) {
+            try {
+                const { data } = await this.octokit.pulls.get({
+                    owner: this.context.repository.owner,
+                    repo: this.context.repository.name,
+                    pull_number: pullRequest.number,
+                });
+                if (data.head.sha !== pullRequest.headSha) {
+                    this.blocked = true;
+                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_2__/* .warnAction */ .T6)(`Skipping PR review feedback because run head ${pullRequest.headSha} is no longer the PR head ${data.head.sha}`);
+                    return 'blocked';
+                }
+                this.cached = { status: 'writable', at: Date.now() };
+                return 'writable';
+            }
+            catch (error) {
+                lastError = error;
+                if (attempt < attempts) {
+                    await (0,_sdk_retry_js__WEBPACK_IMPORTED_MODULE_1__/* .sleep */ .yy)(retryDelayMs * attempt);
+                }
+            }
+        }
+        _sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .Sentry.captureException */ .sQ.captureException(lastError, { tags: { operation: 'fetch_current_pr_head' } });
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_2__/* .warnAction */ .T6)(`Could not verify the current PR head after ${attempts} attempts; skipping review feedback writes: ${lastError}`);
+        this.cached = { status: 'unknown', at: Date.now() };
+        return 'unknown';
+    }
+    /** True when review feedback writes are allowed right now. */
+    async canWrite() {
+        return (await this.check()) === 'writable';
+    }
+}
+
+
+/***/ }),
+
 /***/ 61211:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -2250,7 +2394,6 @@ _runner_js__WEBPACK_IMPORTED_MODULE_2__ = (__webpack_async_dependencies__.then ?
         console.error(`::error::${error.message}`);
     }
     else {
-        _sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .Sentry.captureException */ .sQ.captureException(error);
         console.error(`::error::Unexpected error: ${error}`);
     }
     await (0,_sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .flushSentry */ .KR)();
@@ -2269,14 +2412,16 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   C: () => (/* binding */ runAction)
 /* harmony export */ });
-/* harmony import */ var _octokit_rest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(5798);
-/* harmony import */ var _sentry_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(30340);
-/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(93857);
-/* harmony import */ var _workflow_base_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(53537);
-/* harmony import */ var _workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(39422);
-/* harmony import */ var _workflow_schedule_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(30517);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_3__, _workflow_schedule_js__WEBPACK_IMPORTED_MODULE_4__]);
-([_workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_3__, _workflow_schedule_js__WEBPACK_IMPORTED_MODULE_4__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+/* harmony import */ var _octokit_rest__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(5798);
+/* harmony import */ var _sentry_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(40186);
+/* harmony import */ var _sdk_errors_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(98229);
+/* harmony import */ var _sentry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30340);
+/* harmony import */ var _inputs_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(93857);
+/* harmony import */ var _workflow_base_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(53537);
+/* harmony import */ var _workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(39422);
+/* harmony import */ var _workflow_schedule_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(30517);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_4__, _workflow_schedule_js__WEBPACK_IMPORTED_MODULE_5__]);
+([_workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_4__, _workflow_schedule_js__WEBPACK_IMPORTED_MODULE_5__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 /**
  * GitHub Action dispatcher.
  *
@@ -2289,33 +2434,65 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_wor
 
 
 
+
+
 function isPullRequestEvent(eventName) {
     return eventName === 'pull_request';
 }
 /** Run the GitHub Action dispatcher once. */
 async function runAction() {
-    const inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_1__/* .parseActionInputs */ .HC)();
-    (0,_inputs_js__WEBPACK_IMPORTED_MODULE_1__/* .validateInputs */ .C1)(inputs);
     const eventName = process.env['GITHUB_EVENT_NAME'];
-    const eventPath = process.env['GITHUB_EVENT_PATH'];
-    const repoPath = process.env['GITHUB_WORKSPACE'];
-    if (!eventName || !eventPath || !repoPath) {
-        (0,_workflow_base_js__WEBPACK_IMPORTED_MODULE_2__/* .setFailed */ .C1)('This action must be run in a GitHub Actions environment');
-    }
-    (0,_sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .setGitHubActionScope */ .gs)(eventName);
-    (0,_sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .setRepositoryScope */ .vx)(process.env['GITHUB_REPOSITORY']);
-    (0,_inputs_js__WEBPACK_IMPORTED_MODULE_1__/* .setupAuthEnv */ .Tw)(inputs);
-    const octokit = new _octokit_rest__WEBPACK_IMPORTED_MODULE_5__/* .Octokit */ .E({ auth: inputs.githubToken });
-    if (eventName === 'schedule' || eventName === 'workflow_dispatch') {
-        if (inputs.mode !== 'run') {
-            (0,_workflow_base_js__WEBPACK_IMPORTED_MODULE_2__/* .setFailed */ .C1)(`${inputs.mode} mode is only supported for pull request workflows`);
+    const actionAttributes = (0,_sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .setGitHubActionScope */ .gs)(eventName);
+    return _sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'cicd.workflow', name: 'run Warden action', attributes: actionAttributes }, async (span) => {
+        // Advance this before each phase so failures retain their startup stage.
+        let stage = 'input';
+        try {
+            const inputs = (0,_inputs_js__WEBPACK_IMPORTED_MODULE_2__/* .parseActionInputs */ .HC)();
+            (0,_inputs_js__WEBPACK_IMPORTED_MODULE_2__/* .validateInputs */ .C1)(inputs);
+            stage = 'environment';
+            const eventPath = process.env['GITHUB_EVENT_PATH'];
+            const repoPath = process.env['GITHUB_WORKSPACE'];
+            if (!eventName || !eventPath || !repoPath) {
+                (0,_workflow_base_js__WEBPACK_IMPORTED_MODULE_3__/* .setFailed */ .C1)('This action must be run in a GitHub Actions environment');
+            }
+            (0,_inputs_js__WEBPACK_IMPORTED_MODULE_2__/* .setupAuthEnv */ .Tw)(inputs);
+            const octokit = new _octokit_rest__WEBPACK_IMPORTED_MODULE_6__/* .Octokit */ .E({ auth: inputs.githubToken });
+            stage = 'dispatch';
+            if (eventName === 'schedule' || eventName === 'workflow_dispatch') {
+                if (inputs.mode !== 'run') {
+                    (0,_workflow_base_js__WEBPACK_IMPORTED_MODULE_3__/* .setFailed */ .C1)(`${inputs.mode} mode is only supported for pull request workflows`);
+                }
+                await (0,_workflow_schedule_js__WEBPACK_IMPORTED_MODULE_5__/* .runScheduleWorkflow */ .y)(octokit, inputs, repoPath);
+            }
+            else {
+                if (inputs.mode !== 'run' && !isPullRequestEvent(eventName)) {
+                    (0,_workflow_base_js__WEBPACK_IMPORTED_MODULE_3__/* .setFailed */ .C1)(`${inputs.mode} mode is only supported for pull request workflows`);
+                }
+                await (0,_workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_4__/* .runPRWorkflow */ .r)(octokit, inputs, eventName, eventPath, repoPath);
+            }
+            span.setAttribute('warden.action.outcome', 'success');
+            span.setStatus({ code: _sentry_core__WEBPACK_IMPORTED_MODULE_7__/* .SPAN_STATUS_OK */ .F3 });
+            (0,_sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .emitActionRunMetric */ .B4)('success', stage);
         }
-        return (0,_workflow_schedule_js__WEBPACK_IMPORTED_MODULE_4__/* .runScheduleWorkflow */ .y)(octokit, inputs, repoPath);
-    }
-    if (inputs.mode !== 'run' && !isPullRequestEvent(eventName)) {
-        (0,_workflow_base_js__WEBPACK_IMPORTED_MODULE_2__/* .setFailed */ .C1)(`${inputs.mode} mode is only supported for pull request workflows`);
-    }
-    return (0,_workflow_pr_workflow_js__WEBPACK_IMPORTED_MODULE_3__/* .runPRWorkflow */ .r)(octokit, inputs, eventName, eventPath, repoPath);
+        catch (error) {
+            const { code } = (0,_sdk_errors_js__WEBPACK_IMPORTED_MODULE_0__/* .classifyError */ .fe)(error);
+            span.setAttribute('warden.action.outcome', 'failure');
+            span.setAttribute('warden.action.stage', stage);
+            span.setAttribute('warden.error.code', code);
+            span.setStatus({ code: _sentry_core__WEBPACK_IMPORTED_MODULE_7__/* .SPAN_STATUS_ERROR */ .TJ, message: code });
+            (0,_sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .emitActionRunMetric */ .B4)('failure', stage, code);
+            // Expected action failures are outcomes, not Sentry Issues.
+            if (!(error instanceof _workflow_base_js__WEBPACK_IMPORTED_MODULE_3__/* .ActionFailedError */ .Ah)) {
+                _sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .Sentry.captureException */ .sQ.captureException(error, {
+                    tags: {
+                        'warden.error.code': code,
+                        'warden.action.stage': stage,
+                    },
+                });
+            }
+            throw error;
+        }
+    });
 }
 
 __webpack_async_result__();
@@ -2900,20 +3077,21 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _types_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(78481);
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(36137);
 /* harmony import */ var _fix_evaluation_index_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(45154);
-/* harmony import */ var _sdk_usage_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(44759);
-/* harmony import */ var _cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(80029);
+/* harmony import */ var _sdk_usage_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(44759);
+/* harmony import */ var _cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(80029);
 /* harmony import */ var _cli_output_formatters_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(43171);
 /* harmony import */ var _review_state_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(52552);
 /* harmony import */ var _triggers_executor_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(19533);
 /* harmony import */ var _review_poster_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(44602);
-/* harmony import */ var _review_coordination_js__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(48352);
-/* harmony import */ var _sdk_extract_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(29709);
-/* harmony import */ var _sdk_circuit_breaker_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(71794);
-/* harmony import */ var _checks_manager_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(47423);
-/* harmony import */ var _base_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(53537);
-/* harmony import */ var _output_renderer_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(21242);
-/* harmony import */ var _reporting_output_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(80961);
-/* harmony import */ var _incremental_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(13778);
+/* harmony import */ var _review_coordination_js__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(48352);
+/* harmony import */ var _review_review_feedback_gate_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(6643);
+/* harmony import */ var _sdk_extract_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(29709);
+/* harmony import */ var _sdk_circuit_breaker_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(71794);
+/* harmony import */ var _checks_manager_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(47423);
+/* harmony import */ var _base_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(53537);
+/* harmony import */ var _output_renderer_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(21242);
+/* harmony import */ var _reporting_output_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(80961);
+/* harmony import */ var _incremental_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(13778);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_triggers_executor_js__WEBPACK_IMPORTED_MODULE_13__]);
 _triggers_executor_js__WEBPACK_IMPORTED_MODULE_13__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
 /**
@@ -2924,6 +3102,7 @@ _triggers_executor_js__WEBPACK_IMPORTED_MODULE_13__ = (__webpack_async_dependenc
  * artifact creation, while report owns GitHub writes and must only replay an
  * artifact that matches the current PR context.
  */
+
 
 
 
@@ -3006,8 +3185,8 @@ function writeWorkflowFindingsOutput(reports, context, findingObservations, incr
         ...(incrementalMetadata ? { incremental: incrementalMetadata } : {}),
     };
     return Object.keys(options).length > 0
-        ? (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)(reports, context, findingObservations, options)
-        : (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)(reports, context, findingObservations);
+        ? (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)(reports, context, findingObservations, options)
+        : (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)(reports, context, findingObservations);
 }
 function applyPullRequestFiles(context, files) {
     if (!context.pullRequest) {
@@ -3073,13 +3252,13 @@ function logFixEvaluation(ev, index, total) {
     const verdict = ev.verdict;
     const line = `  [${index + 1}/${total}] ${idPrefix}${ev.path}:${ev.line} → ${verdict} (${(0,_cli_output_formatters_js__WEBPACK_IMPORTED_MODULE_11__/* .formatDuration */ .a3)(ev.durationMs)}, ${(0,_cli_output_formatters_js__WEBPACK_IMPORTED_MODULE_11__/* .formatTokens */ ._y)(totalTokens)} tok${costStr})`;
     if (ev.usedFallback) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(line);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(line);
     }
     else {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(line);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(line);
     }
     if (ev.verdict === 'attempted_failed' && ev.reasoning) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`        reason: "${ev.reasoning}"`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`        reason: "${ev.reasoning}"`);
     }
 }
 function groupCommentsForFixEvaluation(comments, headSha) {
@@ -3116,7 +3295,7 @@ function mergeFixEvaluationResults(results) {
         uniqueFindingsEvaluated: results.reduce((total, result) => total + result.uniqueFindingsEvaluated, 0),
         uniqueFindingsCodeChanged: results.reduce((total, result) => total + result.uniqueFindingsCodeChanged, 0),
         uniqueFindingsResolved: results.reduce((total, result) => total + result.uniqueFindingsResolved, 0),
-        usage: (0,_sdk_usage_js__WEBPACK_IMPORTED_MODULE_23__/* .aggregateUsage */ .Z$)(results.map((result) => result.usage)),
+        usage: (0,_sdk_usage_js__WEBPACK_IMPORTED_MODULE_24__/* .aggregateUsage */ .Z$)(results.map((result) => result.usage)),
         evaluations: results.flatMap((result) => result.evaluations),
     };
 }
@@ -3133,12 +3312,12 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
     }
     catch (error) {
         _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'read_event_payload' } });
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Failed to read event payload: ${error}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Failed to read event payload: ${error}`);
     }
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroup */ .QT)('Building event context');
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroup */ .QT)('Building event context');
     console.log(`Event: ${eventName}`);
     console.log(`Workspace: ${repoPath}`);
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroupEnd */ .TN)();
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
     let context;
     try {
         context = await (0,_event_context_js__WEBPACK_IMPORTED_MODULE_4__/* .buildEventContext */ .eU)(eventName, eventPayload, repoPath, octokit, {
@@ -3147,10 +3326,10 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
     }
     catch (error) {
         _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'build_event_context' } });
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Failed to build event context: ${error}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Failed to build event context: ${error}`);
     }
     (0,_sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .setRepositoryScope */ .vx)(context.repository.fullName);
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroup */ .QT)('Loading configuration');
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroup */ .QT)('Loading configuration');
     if (inputs.baseConfigPath) {
         console.log(`Base config path: ${inputs.baseConfigPath}`);
     }
@@ -3158,7 +3337,7 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
         console.log(`Base skill root: ${inputs.baseSkillRoot}`);
     }
     console.log(`Repo config path: ${inputs.configPath}`);
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroupEnd */ .TN)();
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
     let runnerConcurrency;
     let auxiliaryOptions = { runtime: 'pi' };
     let skillRootsByName;
@@ -3167,7 +3346,7 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
         mode: 'full',
         headSha: context.pullRequest?.headSha ?? '',
         files: context.pullRequest?.files ?? [],
-        mutationScope: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .buildMutationScope */ .QJ)('full', context.pullRequest?.files ?? []),
+        mutationScope: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .buildMutationScope */ .QJ)('full', context.pullRequest?.files ?? []),
     };
     try {
         const layered = (0,_config_loader_js__WEBPACK_IMPORTED_MODULE_3__/* .loadLayeredWardenConfig */ .M3)(repoPath, {
@@ -3186,7 +3365,7 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
         skillRootsByName = (0,_config_loader_js__WEBPACK_IMPORTED_MODULE_3__/* .buildSkillRootsByName */ .hd)(repoPath, layered, inputs.baseSkillRoot);
         const resolvedTriggers = (0,_config_loader_js__WEBPACK_IMPORTED_MODULE_3__/* .resolveLayeredSkillConfigs */ .Ln)(layered, undefined, skillRootsByName);
         if (context.pullRequest && inputs.incremental) {
-            incremental = await (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .resolveIncrementalState */ .Ec)({
+            incremental = await (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .resolveIncrementalState */ .Ec)({
                 octokit,
                 owner: context.repository.owner,
                 repo: context.repository.name,
@@ -3202,15 +3381,15 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
                 incremental = {
                     ...incremental,
                     files,
-                    mutationScope: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .buildMutationScope */ .QJ)('full', files),
+                    mutationScope: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .buildMutationScope */ .QJ)('full', files),
                 };
             }
             context = applyPullRequestFiles(context, incremental.files);
             if (incremental.mode === 'delta') {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Incremental run: analyzing ${incremental.files.length} files changed since ${incremental.previousHeadSha}`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Incremental run: analyzing ${incremental.files.length} files changed since ${incremental.previousHeadSha}`);
             }
             else {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Incremental run: no reusable baseline found, analyzing full PR diff');
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Incremental run: no reusable baseline found, analyzing full PR diff');
             }
         }
         else {
@@ -3219,17 +3398,17 @@ async function initializeWorkflow(octokit, inputs, eventName, eventPath, repoPat
                 mode: 'full',
                 headSha: context.pullRequest?.headSha ?? '',
                 files: context.pullRequest?.files ?? [],
-                mutationScope: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .buildMutationScope */ .QJ)('full', context.pullRequest?.files ?? []),
+                mutationScope: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .buildMutationScope */ .QJ)('full', context.pullRequest?.files ?? []),
             };
         }
         const matchedTriggers = resolvedTriggers.filter((t) => (0,_triggers_matcher_js__WEBPACK_IMPORTED_MODULE_5__/* .matchTrigger */ .QW)(t, context, 'github'));
         const skippedTriggers = resolvedTriggers.filter((t) => reportsPullRequestCheck(t, context) && !matchedTriggers.includes(t));
         if (matchedTriggers.length > 0) {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroup */ .QT)('Matched triggers');
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroup */ .QT)('Matched triggers');
             for (const trigger of matchedTriggers) {
                 console.log(`- ${trigger.name}: ${trigger.skill}`);
             }
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroupEnd */ .TN)();
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
         }
         else {
             console.log('No triggers matched for this event');
@@ -3267,9 +3446,9 @@ async function fetchPreviousReviewInfo(octokit, context) {
         return null;
     }
     try {
-        const botLogin = await (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .getAuthenticatedBotLogin */ .Uf)(octokit);
+        const botLogin = await (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .getAuthenticatedBotLogin */ .Uf)(octokit);
         if (!botLogin) {
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Skipping dismiss flow: cannot identify bot (using PAT or GITHUB_TOKEN instead of GitHub App)');
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Skipping dismiss flow: cannot identify bot (using PAT or GITHUB_TOKEN instead of GitHub App)');
             return null;
         }
         // Note: No pagination. PRs with 100+ reviews are rare; if Warden's review
@@ -3283,7 +3462,7 @@ async function fetchPreviousReviewInfo(octokit, context) {
         return (0,_review_state_js__WEBPACK_IMPORTED_MODULE_12__/* .findBotReviewState */ .a)(reviews, botLogin);
     }
     catch (error) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to fetch previous review info: ${error}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to fetch previous review info: ${error}`);
         return null;
     }
 }
@@ -3298,21 +3477,21 @@ async function setupGitHubState(octokit, context) {
     let previousReviewInfo = null;
     // Create core warden check
     try {
-        const coreCheck = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createCoreCheck */ .c)(octokit, {
+        const coreCheck = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createCoreCheck */ .c)(octokit, {
             owner: context.repository.owner,
             repo: context.repository.name,
             headSha: context.pullRequest.headSha,
         });
         coreCheckId = coreCheck.checkRunId;
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Created core check: ${coreCheck.url}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Created core check: ${coreCheck.url}`);
     }
     catch (error) {
         _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'create_core_check' } });
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to create core check: ${error}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to create core check: ${error}`);
     }
     previousReviewInfo = await fetchPreviousReviewInfo(octokit, context);
     if (previousReviewInfo) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Previous Warden review state: ${previousReviewInfo.state}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Previous Warden review state: ${previousReviewInfo.state}`);
     }
     return { coreCheckId, previousReviewInfo };
 }
@@ -3327,24 +3506,24 @@ function createTriggerCheckReporter(octokit, context) {
     }
     return {
         async start(skillName) {
-            const check = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createSkillCheck */ .uP)(octokit, skillName, checkOptions);
+            const check = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createSkillCheck */ .uP)(octokit, skillName, checkOptions);
             return {
                 url: check.url,
-                complete: (report, options) => (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .updateSkillCheck */ .Zv)(octokit, check.checkRunId, report, {
+                complete: (report, options) => (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .updateSkillCheck */ .Zv)(octokit, check.checkRunId, report, {
                     ...checkOptions,
                     ...options,
                 }),
-                fail: (error) => (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .failSkillCheck */ .OZ)(octokit, check.checkRunId, error, checkOptions),
+                fail: (error) => (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .failSkillCheck */ .OZ)(octokit, check.checkRunId, error, checkOptions),
             };
         },
     };
 }
 async function executeAllTriggers(matchedTriggers, context, runnerConcurrency, inputs, options = {}) {
     const concurrency = runnerConcurrency ?? inputs.parallel;
-    const runtimeEnv = await (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .prepareRuntimeEnvironment */ .bZ)(matchedTriggers, inputs);
+    const runtimeEnv = await (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .prepareRuntimeEnvironment */ .bZ)(matchedTriggers, inputs);
     const semaphore = new _utils_index_js__WEBPACK_IMPORTED_MODULE_9__/* .Semaphore */ .jf(concurrency);
     const abortController = new AbortController();
-    const circuitBreaker = new _sdk_circuit_breaker_js__WEBPACK_IMPORTED_MODULE_16__/* .ProviderFailureCircuitBreaker */ .j({ abortController });
+    const circuitBreaker = new _sdk_circuit_breaker_js__WEBPACK_IMPORTED_MODULE_17__/* .ProviderFailureCircuitBreaker */ .j({ abortController });
     // Limit trigger dispatch too; the semaphore only gates work after a trigger starts.
     return (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_9__/* .runPool */ .kD)(matchedTriggers, concurrency, (trigger) => (0,_triggers_executor_js__WEBPACK_IMPORTED_MODULE_13__/* .executeTrigger */ .k)(trigger, {
         context,
@@ -3364,25 +3543,28 @@ async function executeAllTriggers(matchedTriggers, context, runnerConcurrency, i
 /**
  * Fetch existing comments, post reviews with cross-trigger dedup, accumulate failure state.
  */
-async function postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, mutationScope, options = {}) {
-    // Fetch existing comments for deduplication (only for PRs)
+async function postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, gate, mutationScope, options = {}) {
+    // Skip the comment fetch only when the head has definitively advanced; on an
+    // unverifiable head the fetch is a harmless read and keeps later phases able
+    // to resolve comments once the API recovers.
     // Keep original list separate for stale detection (modified list includes newly posted comments)
     let fetchedComments = [];
     let existingComments = [];
-    if (context.pullRequest) {
+    let writability = await gate.check();
+    if (writability !== 'blocked' && context.pullRequest) {
         try {
             fetchedComments = await (0,_output_dedup_js__WEBPACK_IMPORTED_MODULE_6__/* .fetchExistingComments */ .kX)(octokit, context.repository.owner, context.repository.name, context.pullRequest.number);
             existingComments = [...fetchedComments];
             if (fetchedComments.length > 0) {
                 const wardenCount = fetchedComments.filter((c) => c.isWarden).length;
                 const externalCount = fetchedComments.length - wardenCount;
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Found ${fetchedComments.length} existing comments for deduplication (${wardenCount} Warden, ${externalCount} external)`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Found ${fetchedComments.length} existing comments for deduplication (${wardenCount} Warden, ${externalCount} external)`);
             }
             existingComments = filterCommentsByScope(existingComments, mutationScope);
         }
         catch (error) {
             _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'fetch_existing_comments' } });
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to fetch existing comments for deduplication: ${error}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to fetch existing comments for deduplication: ${error}`);
         }
     }
     // Post reviews to GitHub (sequentially to avoid rate limits)
@@ -3394,22 +3576,36 @@ async function postReviewsAndTrackFailures(octokit, context, results, inputs, au
     for (const result of results) {
         if (result.report) {
             reports.push(result.report);
-            // Post review
-            const postResult = await (0,_review_poster_js__WEBPACK_IMPORTED_MODULE_14__/* .postTriggerReview */ .v)({
-                result,
-                existingComments,
-                apiKey: inputs.anthropicApiKey,
-                runtime: auxiliaryOptions.runtime,
-                model: auxiliaryOptions.model,
-                maxRetries: auxiliaryOptions.maxRetries,
-                failOnPostError: options.failOnPostError,
-            }, { octokit, context });
-            // Add newly posted comments to existing comments for cross-trigger deduplication
-            existingComments.push(...postResult.newComments);
-            postResult.activeWardenCommentIds.forEach((id) => {
-                activeWardenCommentIds.add(id);
-            });
-            findingObservations.push(...postResult.findingObservations);
+            // Post review. The gate memoizes briefly, so this stays cheap between
+            // writes but re-verifies after slow phases (LLM dedup, consolidation).
+            if (writability !== 'blocked') {
+                writability = await gate.check();
+            }
+            let reviewPosted = false;
+            if (writability === 'writable') {
+                const postResult = await (0,_review_poster_js__WEBPACK_IMPORTED_MODULE_14__/* .postTriggerReview */ .v)({
+                    result,
+                    existingComments,
+                    apiKey: inputs.anthropicApiKey,
+                    runtime: auxiliaryOptions.runtime,
+                    model: auxiliaryOptions.model,
+                    maxRetries: auxiliaryOptions.maxRetries,
+                    failOnPostError: options.failOnPostError,
+                }, { octokit, context, feedbackGate: gate });
+                // Add newly posted comments to existing comments for cross-trigger deduplication
+                existingComments.push(...postResult.newComments);
+                postResult.activeWardenCommentIds.forEach((id) => activeWardenCommentIds.add(id));
+                findingObservations.push(...postResult.findingObservations);
+                reviewPosted = postResult.posted;
+            }
+            // A stale head skips silently (the newer run owns feedback), but an
+            // unverifiable head must not silently swallow a blocking review.
+            // Evaluated after the post attempt so a head that becomes unverifiable
+            // during the poster's own LLM phases is escalated too.
+            if (!reviewPosted && wouldPostBlockingReview(result) && (await gate.check()) === 'unknown') {
+                shouldFailAction = true;
+                failureReasons.push(`${result.triggerName}: Could not verify the PR head; blocking review was not posted`);
+            }
             // Check if we should fail based on this trigger's config
             // Filter by confidence first so low-confidence findings don't cause failure
             const failCheck = result.failCheck ?? false;
@@ -3433,30 +3629,70 @@ async function postReviewsAndTrackFailures(octokit, context, results, inputs, au
     };
 }
 /**
+ * Whether posting this trigger's review would produce a blocking
+ * REQUEST_CHANGES review. Mirrors the poster's posting predicate: the
+ * renderer can emit a REQUEST_CHANGES render result with zero reportable
+ * findings (reportOn stricter than failOn), which the poster never posts —
+ * its reportOn early return runs before the needsRequestChanges branch, so
+ * that branch is only reachable when this predicate is already true (the
+ * pre-dedup filtered set was non-empty or reportOnSuccess is set).
+ */
+function wouldPostBlockingReview(result) {
+    if (!result.report || result.renderResult?.review?.event !== 'REQUEST_CHANGES') {
+        return false;
+    }
+    const filteredFindings = (0,_types_index_js__WEBPACK_IMPORTED_MODULE_8__/* .filterFindings */ .Ni)(result.report.findings, result.reportOn, result.minConfidence);
+    return filteredFindings.length > 0 || (result.reportOnSuccess ?? false);
+}
+/**
  * Evaluate fix attempts on unresolved comments and resolve stale comments.
  *
  * Returns whether all Warden comments are resolved after evaluation.
  * Report mode passes failOnWriteError so GitHub write failures abort delivery.
  */
-async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, allFindings, activeWardenCommentIds, canResolveStale, anthropicApiKey, auxiliaryOptions, mutationScope, options = {}) {
+async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, allFindings, activeWardenCommentIds, canResolveStale, anthropicApiKey, auxiliaryOptions, gate, mutationScope, options = {}) {
     const wardenComments = fetchedComments.filter((c) => c.isWarden);
     const commentsResolvedByFixEval = new Set();
     const commentsEvaluatedByFixEval = new Set();
     const commentsResolvedByStale = new Set();
     const findingObservations = [];
+    const blockedReviewFeedbackWriteResult = () => ({
+        allResolved: false,
+        autoResolvedByFixEvaluation: commentsResolvedByFixEval.size,
+        autoResolvedByStaleCheck: commentsResolvedByStale.size,
+        findingObservations,
+    });
     const commentsForFixEvaluation = wardenComments.filter((c) => !activeWardenCommentIds.has(c.id) && isCommentInScope(c, mutationScope));
     const fixEvaluationRuntime = auxiliaryOptions.runtime ?? 'pi';
-    const canUseFixEvaluationRuntime = (0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_15__/* .canUseRuntimeAuth */ .ad)({
+    const canUseFixEvaluationRuntime = (0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_16__/* .canUseRuntimeAuth */ .ad)({
         apiKey: anthropicApiKey,
         runtime: fixEvaluationRuntime,
     });
+    // Check head freshness up front so a stale or unverifiable run skips the
+    // LLM fix evaluation entirely, not just the writes it would produce.
+    let writability = 'blocked';
+    if (wardenComments.length > 0) {
+        if (!canResolveStale) {
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Skipping stale comment resolution due to trigger failures');
+        }
+        else if (context.pullRequest) {
+            writability = await gate.check();
+            if (writability === 'blocked') {
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Skipping stale comment resolution because this run is no longer analyzing the current PR head');
+            }
+            else if (writability === 'unknown') {
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Skipping stale comment resolution because the current PR head could not be verified');
+            }
+        }
+    }
+    const canMutateFeedback = writability === 'writable';
     // Evaluate follow-up commit fix attempts
     if (context.pullRequest &&
         commentsForFixEvaluation.length > 0 &&
-        canResolveStale &&
+        canMutateFeedback &&
         canUseFixEvaluationRuntime) {
         try {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroup */ .QT)('Fix evaluation');
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroup */ .QT)('Fix evaluation');
             // Only evaluate comments that were posted on an earlier commit. If a comment was
             // posted on the current headSha there are no follow-up changes to evaluate yet, and
             // running fix evaluation would compare the entire PR diff (PR base to head) against a
@@ -3467,10 +3703,10 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
                 .flat()
                 .filter((c) => !c.isResolved && c.threadId).length;
             if (unresolvedCount > 0) {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Fix evaluation: evaluating ${unresolvedCount} unresolved comments`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Fix evaluation: evaluating ${unresolvedCount} unresolved comments`);
             }
             else {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Fix evaluation: no eligible comments (${currentHeadCount} current head, ` +
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Fix evaluation: no eligible comments (${currentHeadCount} current head, ` +
                     `${missingOriginalCommitCount} missing original commit)`);
             }
             const groupResults = [];
@@ -3489,6 +3725,10 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
             });
             // Resolve successful fixes
             if (fixEvaluation.toResolve.length > 0) {
+                if (!await gate.canWrite()) {
+                    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
+                    return blockedReviewFeedbackWriteResult();
+                }
                 const { resolvedCount, resolvedIds } = await (0,_output_stale_js__WEBPACK_IMPORTED_MODULE_7__/* .resolveStaleComments */ .AG)(octokit, fixEvaluation.toResolve, { failOnError: options.failOnWriteError }).catch((error) => {
                     if (options.failOnWriteError) {
                         throw new ReportWriteError('Failed to resolve comments via fix evaluation', error);
@@ -3496,7 +3736,7 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
                     throw error;
                 });
                 if (resolvedCount > 0) {
-                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Resolved ${resolvedCount} comments via fix evaluation`);
+                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Resolved ${resolvedCount} comments via fix evaluation`);
                 }
                 // Track only actually resolved comments for allResolved check
                 resolvedIds.forEach((id) => {
@@ -3514,6 +3754,10 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
                 }
             }
             // Post replies for failed fixes and track them so stale pass doesn't override
+            if (fixEvaluation.toReply.length > 0 && !await gate.canWrite()) {
+                (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
+                return blockedReviewFeedbackWriteResult();
+            }
             for (const reply of fixEvaluation.toReply) {
                 commentsEvaluatedByFixEval.add(reply.comment.id);
                 if (reply.comment.threadId) {
@@ -3534,26 +3778,26 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
                 if (totalTokens > 0) {
                     usageStr = `, ${(0,_cli_output_formatters_js__WEBPACK_IMPORTED_MODULE_11__/* .formatTokens */ ._y)(totalTokens)} tok, ${(0,_cli_output_formatters_js__WEBPACK_IMPORTED_MODULE_11__/* .formatCost */ .BD)(fixEvaluation.usage.costUSD)}`;
                 }
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Fix evaluation: ${fixEvaluation.toResolve.length} resolved, ` +
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Fix evaluation: ${fixEvaluation.toResolve.length} resolved, ` +
                     `${fixEvaluation.toReply.length} need attention, ` +
                     `${fixEvaluation.skipped} skipped` +
                     usageStr);
             }
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroupEnd */ .TN)();
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
         }
         catch (error) {
             _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'evaluate_fix_attempts' } });
             if (error instanceof ReportWriteError) {
-                (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroupEnd */ .TN)();
+                (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
                 throw error;
             }
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to evaluate fix attempts: ${error}`);
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .logGroupEnd */ .TN)();
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to evaluate fix attempts: ${error}`);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .logGroupEnd */ .TN)();
         }
     }
     // Resolve stale Warden comments (comments that no longer have matching findings)
     // Exclude comments already handled by fix evaluation (resolved or flagged as needing attention)
-    if (context.pullRequest && wardenComments.length > 0 && canResolveStale) {
+    if (context.pullRequest && wardenComments.length > 0 && canMutateFeedback) {
         try {
             const scope = (0,_output_stale_js__WEBPACK_IMPORTED_MODULE_7__/* .buildAnalyzedScope */ .B8)(context.pullRequest.files);
             const commentsForStaleCheck = wardenComments.filter((c) => !activeWardenCommentIds.has(c.id) &&
@@ -3563,6 +3807,9 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
                 outOfScope: mutationScope.allowOutOfScopeStale ? 'stale' : 'ignore',
             });
             if (staleComments.length > 0) {
+                if (!await gate.canWrite()) {
+                    return blockedReviewFeedbackWriteResult();
+                }
                 const { resolvedCount, resolvedIds } = await (0,_output_stale_js__WEBPACK_IMPORTED_MODULE_7__/* .resolveStaleComments */ .AG)(octokit, staleComments, { failOnError: options.failOnWriteError }).catch((error) => {
                     if (options.failOnWriteError) {
                         throw new ReportWriteError('Failed to resolve stale comments', error);
@@ -3570,7 +3817,7 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
                     throw error;
                 });
                 if (resolvedCount > 0) {
-                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Resolved ${resolvedCount} stale Warden comments`);
+                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Resolved ${resolvedCount} stale Warden comments`);
                     (0,_sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .emitStaleResolutionMetric */ .fL)(resolvedCount);
                     // Emit per-skill breakdown (only count actually resolved comments)
                     const bySkill = new Map();
@@ -3606,11 +3853,8 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
             if (error instanceof ReportWriteError) {
                 throw error;
             }
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to resolve stale comments: ${error}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to resolve stale comments: ${error}`);
         }
-    }
-    else if (!canResolveStale && wardenComments.length > 0) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Skipping stale comment resolution due to trigger failures');
     }
     // Determine if all unresolved Warden comments were resolved during this run
     const unresolvedBefore = wardenComments.filter((c) => !c.isResolved);
@@ -3626,7 +3870,7 @@ async function evaluateFixesAndResolveStale(octokit, context, fetchedComments, a
  * Dismiss a prior blocking Warden review only when current results prove it is clear.
  * Report mode sets failOnWriteError so dismissal write failures fail delivery.
  */
-async function dismissPreviousReviewIfResolved(octokit, context, previousReviewInfo, results, canResolveStale, mutationScope, allWardenCommentsResolved, options = {}) {
+async function dismissPreviousReviewIfResolved(octokit, context, previousReviewInfo, results, canResolveStale, gate, mutationScope, allWardenCommentsResolved, options = {}) {
     // Dismiss previous CHANGES_REQUESTED if all blocking issues are resolved.
     // Requires: all triggers succeeded, current run would not request changes,
     // and at least one trigger has an active failOn (prevents accidental dismiss when config changes).
@@ -3644,6 +3888,9 @@ async function dismissPreviousReviewIfResolved(octokit, context, previousReviewI
         incrementalAllowsDismissal &&
         !wouldRequestChanges &&
         hasActiveFailOn) {
+        if (!await gate.canWrite()) {
+            return;
+        }
         try {
             await octokit.pulls.dismissReview({
                 owner: context.repository.owner,
@@ -3652,53 +3899,53 @@ async function dismissPreviousReviewIfResolved(octokit, context, previousReviewI
                 review_id: previousReviewInfo.reviewId,
                 message: 'All previously reported issues have been resolved.',
             });
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Dismissed previous CHANGES_REQUESTED review');
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Dismissed previous CHANGES_REQUESTED review');
         }
         catch (error) {
             _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'dismiss_review' } });
             if (options.failOnWriteError) {
                 throw new ReportWriteError('Failed to dismiss previous review', error);
             }
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to dismiss previous review: ${error}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to dismiss previous review: ${error}`);
         }
     }
 }
 /**
  * Dismiss review, set outputs, update core check, fail action.
  */
-async function finalizeWorkflow(octokit, context, previousReviewInfo, coreCheckId, results, reports, findingObservations, shouldFailAction, failureReasons, canResolveStale, triggerErrors, incremental, allWardenCommentsResolved) {
-    await dismissPreviousReviewIfResolved(octokit, context, previousReviewInfo, results, canResolveStale, incremental.mutationScope, allWardenCommentsResolved);
+async function finalizeWorkflow(octokit, context, previousReviewInfo, coreCheckId, results, reports, findingObservations, shouldFailAction, failureReasons, canResolveStale, gate, triggerErrors, incremental, allWardenCommentsResolved) {
+    await dismissPreviousReviewIfResolved(octokit, context, previousReviewInfo, results, canResolveStale, gate, incremental.mutationScope, allWardenCommentsResolved);
     // Set outputs
-    const outputs = (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .computeWorkflowOutputs */ .dV)(reports);
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setWorkflowOutputs */ .wZ)(outputs);
+    const outputs = (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .computeWorkflowOutputs */ .dV)(reports);
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setWorkflowOutputs */ .wZ)(outputs);
     // Write structured findings to file for external export (GCS, S3, etc.)
     try {
         const findingsPath = writeWorkflowFindingsOutput(reports, context, findingObservations, incremental, toReplayTriggerResults(results));
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
     }
     catch (error) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
     }
     // Update core check with overall summary
     if (coreCheckId && context.pullRequest) {
         try {
-            const summaryData = (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .buildCoreSummaryData */ .YX)(results, reports);
-            const coreConclusion = (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .determineCoreConclusion */ .ar)(shouldFailAction || triggerErrors.length > 0, outputs.findingsCount);
-            await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .updateCoreCheck */ .R2)(octokit, coreCheckId, summaryData, coreConclusion, {
+            const summaryData = (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .buildCoreSummaryData */ .YX)(results, reports);
+            const coreConclusion = (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .determineCoreConclusion */ .ar)(shouldFailAction || triggerErrors.length > 0, outputs.findingsCount);
+            await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .updateCoreCheck */ .R2)(octokit, coreCheckId, summaryData, coreConclusion, {
                 owner: context.repository.owner,
                 repo: context.repository.name,
-                externalId: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint),
+                externalId: (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint),
             });
         }
         catch (error) {
             _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'update_core_check' } });
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to update core check: ${error}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to update core check: ${error}`);
         }
     }
     if (shouldFailAction) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(failureReasons.join('; '));
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(failureReasons.join('; '));
     }
-    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Analysis complete: ${outputs.findingsCount} total findings`);
+    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Analysis complete: ${outputs.findingsCount} total findings`);
 }
 /** Complete the core check for a PR run that intentionally skipped analysis. */
 async function completeSkippedCoreCheck(octokit, context, coreCheckId, skipped, externalId) {
@@ -3707,15 +3954,15 @@ async function completeSkippedCoreCheck(octokit, context, coreCheckId, skipped, 
         return;
     }
     try {
-        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .updateCoreCheck */ .R2)(octokit, coreCheckId, {
-            ...(0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .buildCoreSummaryData */ .YX)([], []),
+        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .updateCoreCheck */ .R2)(octokit, coreCheckId, {
+            ...(0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .buildCoreSummaryData */ .YX)([], []),
             title: skipped.title,
             message: skipped.message,
         }, 'neutral', { ...options, externalId });
     }
     catch (error) {
         _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(error, { tags: { operation: 'update_core_check_skipped' } });
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to update core check: ${error}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to update core check: ${error}`);
     }
 }
 /** Complete per-skill checks for configured PR triggers that did not run. */
@@ -3726,8 +3973,8 @@ async function completeSkippedSkillChecks(octokit, context, skippedTriggers) {
     }
     for (const trigger of skippedTriggers) {
         try {
-            const skillCheck = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createSkillCheck */ .uP)(octokit, trigger.skill, options);
-            await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .updateSkillCheck */ .Zv)(octokit, skillCheck.checkRunId, {
+            const skillCheck = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createSkillCheck */ .uP)(octokit, trigger.skill, options);
+            await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .updateSkillCheck */ .Zv)(octokit, skillCheck.checkRunId, {
                 skill: trigger.skill,
                 summary: 'Trigger did not run for this event.',
                 findings: [],
@@ -3749,7 +3996,7 @@ async function completeSkippedSkillChecks(octokit, context, skippedTriggers) {
                     skill_name: trigger.skill,
                 },
             });
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to update skipped skill check for ${trigger.skill}: ${error}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to update skipped skill check for ${trigger.skill}: ${error}`);
         }
     }
 }
@@ -3763,8 +4010,8 @@ async function failUndispatchedSkillChecks(octokit, context, triggers, error) {
     }
     for (const trigger of triggers) {
         try {
-            const skillCheck = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createSkillCheck */ .uP)(octokit, trigger.skill, options);
-            await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .failSkillCheck */ .OZ)(octokit, skillCheck.checkRunId, error, options);
+            const skillCheck = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createSkillCheck */ .uP)(octokit, trigger.skill, options);
+            await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .failSkillCheck */ .OZ)(octokit, skillCheck.checkRunId, error, options);
         }
         catch (checkError) {
             _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(checkError, {
@@ -3774,7 +4021,7 @@ async function failUndispatchedSkillChecks(octokit, context, triggers, error) {
                     skill_name: trigger.skill,
                 },
             });
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to mark skill check as failed for ${trigger.skill}: ${checkError}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to mark skill check as failed for ${trigger.skill}: ${checkError}`);
         }
     }
 }
@@ -3788,15 +4035,15 @@ async function failCoreCheck(octokit, context, coreCheckId, error) {
     }
     const errorMessage = error instanceof Error ? error.message : String(error);
     try {
-        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .updateCoreCheck */ .R2)(octokit, coreCheckId, {
-            ...(0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .buildCoreSummaryData */ .YX)([], []),
+        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .updateCoreCheck */ .R2)(octokit, coreCheckId, {
+            ...(0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .buildCoreSummaryData */ .YX)([], []),
             title: 'Warden failed',
             message: `Error: ${errorMessage}`,
         }, 'failure', options);
     }
     catch (checkError) {
         _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(checkError, { tags: { operation: 'fail_core_check' } });
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to mark core check as failed: ${checkError}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to mark core check as failed: ${checkError}`);
     }
 }
 async function runOrFailCore(octokit, context, coreCheckId, operation) {
@@ -3810,7 +4057,7 @@ async function runOrFailCore(octokit, context, coreCheckId, operation) {
 }
 function resolveFindingsFilePath(inputPath, repoPath) {
     if (!inputPath) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('findings-file is required when mode is report');
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)('findings-file is required when mode is report');
     }
     return (0,node_path__WEBPACK_IMPORTED_MODULE_1__.isAbsolute)(inputPath) ? inputPath : (0,node_path__WEBPACK_IMPORTED_MODULE_1__.join)(repoPath, inputPath);
 }
@@ -3820,10 +4067,10 @@ function resolveFindingsFilePath(inputPath, repoPath) {
 function readFindingsFile(inputPath, repoPath) {
     const filePath = resolveFindingsFilePath(inputPath, repoPath);
     try {
-        return _reporting_output_js__WEBPACK_IMPORTED_MODULE_20__/* .FindingsOutputSchema */ .DF.parse(JSON.parse((0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(filePath, 'utf-8')));
+        return _reporting_output_js__WEBPACK_IMPORTED_MODULE_21__/* .FindingsOutputSchema */ .DF.parse(JSON.parse((0,node_fs__WEBPACK_IMPORTED_MODULE_0__.readFileSync)(filePath, 'utf-8')));
     }
     catch (error) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Failed to read findings file ${filePath}: ${error}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Failed to read findings file ${filePath}: ${error}`);
     }
 }
 /**
@@ -3856,34 +4103,34 @@ function incrementalMismatchReasons(output, expected) {
 }
 function validateFindingsMatchContext(output, context, incremental) {
     if (output.repository.fullName !== context.repository.fullName) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file is for ${output.repository.fullName}, but this workflow is for ${context.repository.fullName}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Findings file is for ${output.repository.fullName}, but this workflow is for ${context.repository.fullName}`);
     }
     if (output.event !== context.eventType) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file event ${output.event} does not match ${context.eventType}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Findings file event ${output.event} does not match ${context.eventType}`);
     }
     if (!context.pullRequest) {
         return;
     }
     if (!output.pullRequest) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('Findings file is missing pull request metadata');
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)('Findings file is missing pull request metadata');
     }
     if (output.pullRequest.number !== context.pullRequest.number) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file is for PR #${output.pullRequest.number}, but this workflow is for PR #${context.pullRequest.number}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Findings file is for PR #${output.pullRequest.number}, but this workflow is for PR #${context.pullRequest.number}`);
     }
     if (output.pullRequest.headSha !== context.pullRequest.headSha) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file head SHA ${output.pullRequest.headSha} does not match current head SHA ${context.pullRequest.headSha}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Findings file head SHA ${output.pullRequest.headSha} does not match current head SHA ${context.pullRequest.headSha}`);
     }
     const expectedIncremental = incrementalOutput(incremental);
     if (!expectedIncremental && output.incremental) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('Findings file was produced with incremental metadata, but this report step is not incremental');
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)('Findings file was produced with incremental metadata, but this report step is not incremental');
     }
     if (expectedIncremental) {
         if (!output.incremental) {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('Findings file is missing incremental metadata');
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)('Findings file is missing incremental metadata');
         }
         const mismatchReasons = incrementalMismatchReasons(output.incremental, expectedIncremental);
         if (mismatchReasons.length > 0) {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Findings file incremental scope does not match the current report step: ${mismatchReasons.join(', ')}`);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Findings file incremental scope does not match the current report step: ${mismatchReasons.join(', ')}`);
         }
     }
 }
@@ -3921,7 +4168,7 @@ function toReplayTriggerResults(results) {
  */
 function buildReportModeResults(output, matchedTriggers, inputs) {
     if (!output.triggerResults) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)('Findings file was not produced by mode: analyze; missing triggerResults');
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)('Findings file was not produced by mode: analyze; missing triggerResults');
     }
     const outputResults = new Map();
     for (const result of output.triggerResults) {
@@ -4021,7 +4268,7 @@ function withRenderedReviewResult(result) {
     return {
         ...result,
         renderResult: result.reportOn !== 'off'
-            ? (0,_output_renderer_js__WEBPACK_IMPORTED_MODULE_19__/* .renderSkillReport */ .K)(result.report, {
+            ? (0,_output_renderer_js__WEBPACK_IMPORTED_MODULE_20__/* .renderSkillReport */ .K)(result.report, {
                 maxFindings: result.maxFindings,
                 reportOn: result.reportOn,
                 minConfidence: result.minConfidence,
@@ -4044,7 +4291,7 @@ async function createCompletedSkillChecksForReport(octokit, context, results) {
     const updatedResults = [];
     for (const result of results) {
         if (result.report) {
-            const check = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createCompletedSkillCheck */ .$R)(octokit, result.report, {
+            const check = await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createCompletedSkillCheck */ .$R)(octokit, result.report, {
                 ...options,
                 checkName: result.skillName,
                 failOn: result.failOn,
@@ -4055,7 +4302,7 @@ async function createCompletedSkillChecksForReport(octokit, context, results) {
             updatedResults.push(withRenderedReviewResult({ ...result, checkRunUrl: check.url }));
             continue;
         }
-        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createFailedSkillCheck */ .xB)(octokit, result.skillName, result.error ?? new Error('Trigger did not produce a report'), options);
+        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createFailedSkillCheck */ .xB)(octokit, result.skillName, result.error ?? new Error('Trigger did not produce a report'), options);
         updatedResults.push(result);
     }
     return updatedResults;
@@ -4069,7 +4316,7 @@ async function createCompletedSkippedSkillChecks(octokit, context, skippedTrigge
         return;
     }
     for (const trigger of skippedTriggers) {
-        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createCompletedSkillCheck */ .$R)(octokit, {
+        await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createCompletedSkillCheck */ .$R)(octokit, {
             skill: trigger.skill,
             summary: 'Trigger did not run for this event.',
             findings: [],
@@ -4092,10 +4339,10 @@ async function createCompletedCoreCheckForReport(octokit, context, results, repo
     if (!options) {
         return;
     }
-    await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .createCompletedCoreCheck */ .RR)(octokit, {
-        ...(0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .buildCoreSummaryData */ .YX)(results, reports),
+    await (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .createCompletedCoreCheck */ .RR)(octokit, {
+        ...(0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .buildCoreSummaryData */ .YX)(results, reports),
         ...overrides,
-    }, conclusion ?? (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_17__/* .determineCoreConclusion */ .ar)(shouldFailAction, outputs.findingsCount), { ...options, externalId });
+    }, conclusion ?? (0,_checks_manager_js__WEBPACK_IMPORTED_MODULE_18__/* .determineCoreConclusion */ .ar)(shouldFailAction, outputs.findingsCount), { ...options, externalId });
 }
 /**
  * Create the report-mode core failure check directly as a completed check run.
@@ -4110,29 +4357,29 @@ async function createFailedCoreCheckForReport(octokit, context, error) {
     }
     catch (checkError) {
         _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.captureException */ .sQ.captureException(checkError, { tags: { operation: 'create_failed_core_check_report' } });
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to create failed core check: ${checkError}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to create failed core check: ${checkError}`);
     }
 }
 /**
  * Finalize report mode after replay: write outputs, handle review dismissal,
  * create direct completed checks, and fail the action when policy requires it.
  */
-async function finalizeReportWorkflow(octokit, context, previousReviewInfo, results, reports, findingObservations, shouldFailAction, failureReasons, canResolveStale, triggerErrors, incremental, allWardenCommentsResolved, options = {}) {
-    await dismissPreviousReviewIfResolved(octokit, context, previousReviewInfo, results, canResolveStale, incremental.mutationScope, allWardenCommentsResolved, { failOnWriteError: options.failOnWriteError });
-    const outputs = (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .computeWorkflowOutputs */ .dV)(reports);
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setWorkflowOutputs */ .wZ)(outputs);
+async function finalizeReportWorkflow(octokit, context, previousReviewInfo, results, reports, findingObservations, shouldFailAction, failureReasons, canResolveStale, gate, triggerErrors, incremental, allWardenCommentsResolved, options = {}) {
+    await dismissPreviousReviewIfResolved(octokit, context, previousReviewInfo, results, canResolveStale, gate, incremental.mutationScope, allWardenCommentsResolved, { failOnWriteError: options.failOnWriteError });
+    const outputs = (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .computeWorkflowOutputs */ .dV)(reports);
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setWorkflowOutputs */ .wZ)(outputs);
     try {
         const findingsPath = writeWorkflowFindingsOutput(reports, context, findingObservations, incremental, toReplayTriggerResults(results));
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
     }
     catch (error) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
     }
-    await createCompletedCoreCheckForReport(octokit, context, results, reports, shouldFailAction || triggerErrors.length > 0, outputs, {}, undefined, (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
+    await createCompletedCoreCheckForReport(octokit, context, results, reports, shouldFailAction || triggerErrors.length > 0, outputs, {}, undefined, (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
     if (shouldFailAction) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(failureReasons.join('; '));
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(failureReasons.join('; '));
     }
-    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Analysis complete: ${outputs.findingsCount} total findings`);
+    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Analysis complete: ${outputs.findingsCount} total findings`);
 }
 /**
  * Clean up orphaned Warden comments when no triggers matched.
@@ -4140,6 +4387,7 @@ async function finalizeReportWorkflow(octokit, context, previousReviewInfo, resu
  * Runs fix evaluation and stale resolution on existing comments so that
  * comments from earlier pushes get resolved even when the current push
  * only touches files outside all skills' paths filters.
+ * Skips cleanup when this run is no longer analyzing the current PR head.
  */
 async function cleanupOrphanedComments(octokit, context, inputs, auxiliaryOptions, mutationScope, options = {}) {
     if (!context.pullRequest) {
@@ -4148,12 +4396,16 @@ async function cleanupOrphanedComments(octokit, context, inputs, auxiliaryOption
     if (mutationScope.kind === 'incremental' && mutationScope.files.size === 0) {
         return { findingObservations: [], allResolved: false };
     }
+    const gate = new _review_review_feedback_gate_js__WEBPACK_IMPORTED_MODULE_15__/* .ReviewFeedbackGate */ .d(octokit, context);
+    if (!await gate.canWrite()) {
+        return { findingObservations: [], allResolved: false };
+    }
     let existingComments;
     try {
         existingComments = await (0,_output_dedup_js__WEBPACK_IMPORTED_MODULE_6__/* .fetchExistingComments */ .kX)(octokit, context.repository.owner, context.repository.name, context.pullRequest.number);
     }
     catch (error) {
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to fetch existing comments for cleanup: ${error}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to fetch existing comments for cleanup: ${error}`);
         return { findingObservations: [], allResolved: false };
     }
     const wardenComments = existingComments.filter((c) => c.isWarden);
@@ -4161,10 +4413,10 @@ async function cleanupOrphanedComments(octokit, context, inputs, auxiliaryOption
         return { findingObservations: [], allResolved: true };
     }
     if ((auxiliaryOptions.runtime ?? 'pi') === 'claude') {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .ensureClaudeAuth */ .$m)(inputs);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .ensureClaudeAuth */ .$m)(inputs);
     }
-    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`No triggers matched, but found ${wardenComments.length} existing Warden comments. Running cleanup.`);
-    const { allResolved, autoResolvedByFixEvaluation, autoResolvedByStaleCheck, findingObservations } = await evaluateFixesAndResolveStale(octokit, context, existingComments, [], new Set(), true, inputs.anthropicApiKey, auxiliaryOptions, mutationScope, {
+    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`No triggers matched, but found ${wardenComments.length} existing Warden comments. Running cleanup.`);
+    const { allResolved, autoResolvedByFixEvaluation, autoResolvedByStaleCheck, findingObservations } = await evaluateFixesAndResolveStale(octokit, context, existingComments, [], new Set(), true, inputs.anthropicApiKey, auxiliaryOptions, gate, mutationScope, {
         failOnWriteError: options.failOnWriteError,
     });
     const activeSpan = _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.getActiveSpan */ .sQ.getActiveSpan();
@@ -4174,6 +4426,9 @@ async function cleanupOrphanedComments(octokit, context, inputs, auxiliaryOption
     if (allResolved) {
         const previousReviewInfo = await fetchPreviousReviewInfo(octokit, context);
         if (previousReviewInfo?.state === 'CHANGES_REQUESTED') {
+            if (!await gate.canWrite()) {
+                return { findingObservations, allResolved: false };
+            }
             try {
                 await octokit.pulls.dismissReview({
                     owner: context.repository.owner,
@@ -4182,10 +4437,10 @@ async function cleanupOrphanedComments(octokit, context, inputs, auxiliaryOption
                     review_id: previousReviewInfo.reviewId,
                     message: 'All previously reported issues have been resolved.',
                 });
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Dismissed previous CHANGES_REQUESTED review');
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Dismissed previous CHANGES_REQUESTED review');
             }
             catch (error) {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to dismiss previous review: ${error}`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to dismiss previous review: ${error}`);
                 if (options.failOnWriteError) {
                     throw new ReportWriteError('Failed to dismiss previous review', error);
                 }
@@ -4201,17 +4456,17 @@ async function cleanupOrphanedComments(octokit, context, inputs, auxiliaryOption
 async function runAnalyzeMode(inputs, initResult, span) {
     const { context, runnerConcurrency, matchedTriggers, incremental, skipCoreCheck, } = initResult;
     if (skipCoreCheck || matchedTriggers.length === 0) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('findings-count', 0);
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('high-count', 0);
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('summary', skipCoreCheck?.title ?? 'No triggers matched');
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('findings-count', 0);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('high-count', 0);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('summary', skipCoreCheck?.title ?? 'No triggers matched');
         try {
             const findingsPath = writeWorkflowFindingsOutput([], context, [], incremental, []);
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
         }
         catch (error) {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Failed to write findings output: ${error}`);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Failed to write findings output: ${error}`);
         }
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Analysis complete: 0 total findings');
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Analysis complete: 0 total findings');
         return;
     }
     const results = await _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({
@@ -4220,18 +4475,18 @@ async function runAnalyzeMode(inputs, initResult, span) {
         attributes: { 'warden.trigger.count': matchedTriggers.length },
     }, () => executeAllTriggers(matchedTriggers, context, runnerConcurrency, inputs));
     const reports = results.flatMap((result) => (result.report ? [result.report] : []));
-    const outputs = (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .computeWorkflowOutputs */ .dV)(reports);
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setWorkflowOutputs */ .wZ)(outputs);
+    const outputs = (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .computeWorkflowOutputs */ .dV)(reports);
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setWorkflowOutputs */ .wZ)(outputs);
     span.setAttribute('warden.finding.count', reports.flatMap((r) => r.findings).length);
     try {
         const findingsPath = writeWorkflowFindingsOutput(reports, context, [], incremental, toReplayTriggerResults(results));
-        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
+        (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
     }
     catch (error) {
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setFailed */ .C1)(`Failed to write findings output: ${error}`);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setFailed */ .C1)(`Failed to write findings output: ${error}`);
     }
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .handleTriggerErrors */ .a3)((0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .collectTriggerErrors */ .sl)(results), matchedTriggers.length, { failAll: false });
-    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Analysis complete: ${outputs.findingsCount} total findings`);
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .handleTriggerErrors */ .a3)((0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .collectTriggerErrors */ .sl)(results), matchedTriggers.length, { failAll: false });
+    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Analysis complete: ${outputs.findingsCount} total findings`);
 }
 /**
  * Run the reporting phase without rerunning skills.
@@ -4251,68 +4506,69 @@ async function runReportMode(octokit, inputs, initResult, repoPath, span) {
         await createCompletedSkippedSkillChecks(octokit, context, skippedTriggers);
         if (skipCoreCheck) {
             const outputs = { findingsCount: 0, highCount: 0, summary: skipCoreCheck.title };
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setWorkflowOutputs */ .wZ)(outputs);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setWorkflowOutputs */ .wZ)(outputs);
             try {
-                const findingsPath = (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)([], context, [], { triggerResults: [] });
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
+                const findingsPath = (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)([], context, [], { triggerResults: [] });
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
             }
             catch (error) {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
             }
             await createCompletedCoreCheckForReport(octokit, context, [], [], false, outputs, {
                 title: skipCoreCheck.title,
                 message: skipCoreCheck.message,
-            }, 'neutral', (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Analysis complete: 0 total findings');
+            }, 'neutral', (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Analysis complete: 0 total findings');
             return;
         }
         if (matchedTriggers.length === 0) {
             const cleanupResult = await cleanupOrphanedComments(octokit, context, inputs, auxiliaryOptions, incremental.mutationScope, { failOnWriteError: true });
             const outputs = { findingsCount: 0, highCount: 0, summary: 'No triggers matched' };
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setWorkflowOutputs */ .wZ)(outputs);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setWorkflowOutputs */ .wZ)(outputs);
             try {
                 const findingsPath = writeWorkflowFindingsOutput([], context, cleanupResult.findingObservations, incremental, []);
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Findings written to ${findingsPath}`);
             }
             catch (error) {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
             }
             await createCompletedCoreCheckForReport(octokit, context, [], [], false, outputs, {
                 title: 'No triggers matched',
                 message: 'No triggers matched for this event.',
-            }, 'neutral', (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)('Analysis complete: 0 total findings');
+            }, 'neutral', (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)('Analysis complete: 0 total findings');
             return;
         }
         results = await createCompletedSkillChecksForReport(octokit, context, results);
         previousReviewInfo = await fetchPreviousReviewInfo(octokit, context);
         if (previousReviewInfo) {
-            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .logAction */ .d5)(`Previous Warden review state: ${previousReviewInfo.state}`);
+            (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .logAction */ .d5)(`Previous Warden review state: ${previousReviewInfo.state}`);
         }
-        reviewPhase = await _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.review', name: 'post reviews' }, () => postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, incremental.mutationScope, {
+        const gate = new _review_review_feedback_gate_js__WEBPACK_IMPORTED_MODULE_15__/* .ReviewFeedbackGate */ .d(octokit, context);
+        reviewPhase = await _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.review', name: 'post reviews' }, () => postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, gate, incremental.mutationScope, {
             failOnPostError: true,
         }));
-        triggerErrors = (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .collectTriggerErrors */ .sl)(results);
-        canResolveStale = (0,_review_coordination_js__WEBPACK_IMPORTED_MODULE_24__/* .shouldResolveStaleComments */ .t)(results);
+        triggerErrors = (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .collectTriggerErrors */ .sl)(results);
+        canResolveStale = (0,_review_coordination_js__WEBPACK_IMPORTED_MODULE_25__/* .shouldResolveStaleComments */ .t)(results);
         const allFindings = reviewPhase.reports.flatMap((r) => r.findings);
         span.setAttribute('warden.finding.count', allFindings.length);
         await _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.resolve', name: 'resolve stale comments' }, async (resolveSpan) => {
-            const resolutionResult = await evaluateFixesAndResolveStale(octokit, context, reviewPhase.fetchedComments, allFindings, reviewPhase.activeWardenCommentIds, canResolveStale, inputs.anthropicApiKey, auxiliaryOptions, scopeFromReports(incremental.mutationScope, reviewPhase.reports), { failOnWriteError: true });
+            const resolutionResult = await evaluateFixesAndResolveStale(octokit, context, reviewPhase.fetchedComments, allFindings, reviewPhase.activeWardenCommentIds, canResolveStale, inputs.anthropicApiKey, auxiliaryOptions, gate, scopeFromReports(incremental.mutationScope, reviewPhase.reports), { failOnWriteError: true });
             reviewPhase.allWardenCommentsResolved = resolutionResult.allResolved;
             resolveSpan.setAttribute('warden.feedback.auto_resolve.fix_eval_count', resolutionResult.autoResolvedByFixEvaluation);
             resolveSpan.setAttribute('warden.feedback.auto_resolve.stale_count', resolutionResult.autoResolvedByStaleCheck);
             reviewPhase.findingObservations.push(...resolutionResult.findingObservations);
         });
-        await finalizeReportWorkflow(octokit, context, previousReviewInfo, results, reviewPhase.reports, reviewPhase.findingObservations, reviewPhase.shouldFailAction, reviewPhase.failureReasons, canResolveStale, triggerErrors, incremental, reviewPhase.allWardenCommentsResolved, { failOnWriteError: true });
+        await finalizeReportWorkflow(octokit, context, previousReviewInfo, results, reviewPhase.reports, reviewPhase.findingObservations, reviewPhase.shouldFailAction, reviewPhase.failureReasons, canResolveStale, gate, triggerErrors, incremental, reviewPhase.allWardenCommentsResolved, { failOnWriteError: true });
     }
     catch (error) {
-        if (error instanceof _base_js__WEBPACK_IMPORTED_MODULE_18__/* .ActionFailedError */ .Ah) {
+        if (error instanceof _base_js__WEBPACK_IMPORTED_MODULE_19__/* .ActionFailedError */ .Ah) {
             throw error;
         }
         await createFailedCoreCheckForReport(octokit, context, error);
         throw error;
     }
-    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .handleTriggerErrors */ .a3)(triggerErrors, matchedTriggers.length);
+    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .handleTriggerErrors */ .a3)(triggerErrors, matchedTriggers.length);
 }
 // -----------------------------------------------------------------------------
 // Main PR Workflow
@@ -4355,48 +4611,48 @@ async function runPRWorkflow(octokit, inputs, eventName, eventPath, repoPath) {
         const { coreCheckId, previousReviewInfo } = await _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.setup', name: 'setup github state' }, () => setupGitHubState(octokit, context));
         await completeSkippedSkillChecks(octokit, context, skippedTriggers);
         if (skipCoreCheck) {
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('findings-count', 0);
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('high-count', 0);
-            (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('summary', skipCoreCheck.title);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('findings-count', 0);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('high-count', 0);
+            (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('summary', skipCoreCheck.title);
             try {
                 const incrementalMetadata = incrementalOutput(incremental);
                 if (incrementalMetadata) {
-                    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)([], context, [], { incremental: incrementalMetadata });
+                    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)([], context, [], { incremental: incrementalMetadata });
                 }
                 else {
-                    (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)([], context);
+                    (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)([], context);
                 }
             }
             catch (error) {
-                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
+                (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
             }
-            await completeSkippedCoreCheck(octokit, context, coreCheckId, skipCoreCheck, (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
+            await completeSkippedCoreCheck(octokit, context, coreCheckId, skipCoreCheck, (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
             return;
         }
         if (matchedTriggers.length === 0) {
             await runOrFailCore(octokit, context, coreCheckId, async () => {
                 const cleanupResult = await cleanupOrphanedComments(octokit, context, inputs, auxiliaryOptions, incremental.mutationScope);
-                (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('findings-count', 0);
-                (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('high-count', 0);
-                (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .setOutput */ .uH)('summary', 'No triggers matched');
+                (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('findings-count', 0);
+                (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('high-count', 0);
+                (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .setOutput */ .uH)('summary', 'No triggers matched');
                 try {
                     const incrementalMetadata = incrementalOutput(incremental);
                     if (incrementalMetadata) {
-                        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)([], context, cleanupResult.findingObservations, {
+                        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)([], context, cleanupResult.findingObservations, {
                             incremental: incrementalMetadata,
                         });
                     }
                     else {
-                        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .writeFindingsOutput */ .JR)([], context, cleanupResult.findingObservations);
+                        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .writeFindingsOutput */ .JR)([], context, cleanupResult.findingObservations);
                     }
                 }
                 catch (error) {
-                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_22__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
+                    (0,_cli_output_tty_js__WEBPACK_IMPORTED_MODULE_23__/* .warnAction */ .T6)(`Failed to write findings output: ${error}`);
                 }
                 await completeSkippedCoreCheck(octokit, context, coreCheckId, {
                     title: 'No triggers matched',
                     message: 'No triggers matched for this event.',
-                }, (0,_incremental_js__WEBPACK_IMPORTED_MODULE_21__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
+                }, (0,_incremental_js__WEBPACK_IMPORTED_MODULE_22__/* .incrementalExternalId */ .Bc)(incremental.configFingerprint));
             });
             return;
         }
@@ -4415,20 +4671,21 @@ async function runPRWorkflow(octokit, inputs, eventName, eventPath, repoPath) {
             await failCoreCheck(octokit, context, coreCheckId, error);
             throw error;
         }
-        const reviewPhase = await runOrFailCore(octokit, context, coreCheckId, () => _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.review', name: 'post reviews' }, () => postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, incremental.mutationScope)));
-        const triggerErrors = (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .collectTriggerErrors */ .sl)(results);
-        const canResolveStale = (0,_review_coordination_js__WEBPACK_IMPORTED_MODULE_24__/* .shouldResolveStaleComments */ .t)(results);
+        const gate = new _review_review_feedback_gate_js__WEBPACK_IMPORTED_MODULE_15__/* .ReviewFeedbackGate */ .d(octokit, context);
+        const reviewPhase = await runOrFailCore(octokit, context, coreCheckId, () => _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.review', name: 'post reviews' }, () => postReviewsAndTrackFailures(octokit, context, results, inputs, auxiliaryOptions, gate, incremental.mutationScope)));
+        const triggerErrors = (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .collectTriggerErrors */ .sl)(results);
+        const canResolveStale = (0,_review_coordination_js__WEBPACK_IMPORTED_MODULE_25__/* .shouldResolveStaleComments */ .t)(results);
         const allFindings = reviewPhase.reports.flatMap((r) => r.findings);
         span.setAttribute('warden.finding.count', allFindings.length);
         await runOrFailCore(octokit, context, coreCheckId, () => _sentry_js__WEBPACK_IMPORTED_MODULE_2__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'workflow.resolve', name: 'resolve stale comments' }, async (resolveSpan) => {
-            const resolutionResult = await evaluateFixesAndResolveStale(octokit, context, reviewPhase.fetchedComments, allFindings, reviewPhase.activeWardenCommentIds, canResolveStale, inputs.anthropicApiKey, auxiliaryOptions, scopeFromReports(incremental.mutationScope, reviewPhase.reports));
+            const resolutionResult = await evaluateFixesAndResolveStale(octokit, context, reviewPhase.fetchedComments, allFindings, reviewPhase.activeWardenCommentIds, canResolveStale, inputs.anthropicApiKey, auxiliaryOptions, gate, scopeFromReports(incremental.mutationScope, reviewPhase.reports));
             reviewPhase.allWardenCommentsResolved = resolutionResult.allResolved;
             resolveSpan.setAttribute('warden.feedback.auto_resolve.fix_eval_count', resolutionResult.autoResolvedByFixEvaluation);
             resolveSpan.setAttribute('warden.feedback.auto_resolve.stale_count', resolutionResult.autoResolvedByStaleCheck);
             reviewPhase.findingObservations.push(...resolutionResult.findingObservations);
         }));
-        await finalizeWorkflow(octokit, context, previousReviewInfo, coreCheckId, results, reviewPhase.reports, reviewPhase.findingObservations, reviewPhase.shouldFailAction, reviewPhase.failureReasons, canResolveStale, triggerErrors, incremental, reviewPhase.allWardenCommentsResolved);
-        (0,_base_js__WEBPACK_IMPORTED_MODULE_18__/* .handleTriggerErrors */ .a3)(triggerErrors, matchedTriggers.length);
+        await finalizeWorkflow(octokit, context, previousReviewInfo, coreCheckId, results, reviewPhase.reports, reviewPhase.findingObservations, reviewPhase.shouldFailAction, reviewPhase.failureReasons, canResolveStale, gate, triggerErrors, incremental, reviewPhase.allWardenCommentsResolved);
+        (0,_base_js__WEBPACK_IMPORTED_MODULE_19__/* .handleTriggerErrors */ .a3)(triggerErrors, matchedTriggers.length);
     });
 }
 
@@ -4625,7 +4882,7 @@ async function runScheduleWorkflowInner(octokit, inputs, repoPath, workflowSpan)
                 chunking: resolved.chunking,
                 auxiliaryMaxRetries: resolved.auxiliaryMaxRetries,
                 verifyFindings: resolved.verifyFindings,
-                telemetryTriggerName: resolved.name,
+                triggerName: resolved.name,
                 pathToClaudeCodeExecutable: runtimeEnv.pathToClaudeCodeExecutable,
             });
             console.log(`Found ${report.findings.length} findings`);
@@ -4825,6 +5082,7 @@ async function buildFileEventContext(options) {
             files,
         },
         diffContextSource: { type: 'working-tree' },
+        explicitFileTargets: true,
         repoPath: cwd,
     };
 }
@@ -7803,9 +8061,11 @@ function firstAnalysisFailureMessage(hunkFailures, code) {
     return hunkFailures.find((failure) => failure.type === 'analysis' && failure.code === code)?.message;
 }
 function summarizeRunFailure(args) {
-    const { totalHunks, hunkFailures, circuitReason, runtime } = args;
+    const { totalHunks, hunkFailures, circuitBreaker, runtime } = args;
+    const circuitReason = circuitBreaker?.reason;
     if (circuitReason) {
-        return circuitReason;
+        const providerContext = circuitBreaker.providerContextFor(args.scope);
+        return { code: circuitReason.code, message: circuitReason.message, providerContext };
     }
     if (allAnalysisFailuresHaveCode(hunkFailures, 'auth_failed')) {
         return {
@@ -7873,7 +8133,9 @@ function formatFindingProcessingEvent(event) {
  * Run a single skill task.
  */
 async function runSkillTask(options, fileConcurrency, callbacks, semaphore) {
-    const { name, displayName = name, triggerName, failOn, minConfidence, resolveSkill, context, runnerOptions = {} } = options;
+    const { name, displayName = name, triggerName, failOn, minConfidence, resolveSkill, context, runnerOptions: configuredRunnerOptions = {}, } = options;
+    // This clone's identity scopes circuit-breaker provider diagnostics to this skill run.
+    const runnerOptions = { ...configuredRunnerOptions };
     return _sentry_js__WEBPACK_IMPORTED_MODULE_0__/* .Sentry.startSpan */ .sQ.startSpan({ op: 'skill.run', name: `run ${displayName}` }, async (span) => {
         span.setAttribute('gen_ai.agent.name', displayName);
         if (triggerName) {
@@ -8139,8 +8401,9 @@ async function runSkillTask(options, fileConcurrency, callbacks, semaphore) {
                 const error = summarizeRunFailure({
                     totalHunks,
                     hunkFailures: allHunkFailures,
-                    circuitReason,
+                    circuitBreaker: runnerOptions.circuitBreaker,
                     runtime: runnerOptions.runtime,
+                    scope: runnerOptions,
                 });
                 const errorReport = {
                     skill: skill.name,
@@ -8195,7 +8458,10 @@ async function runSkillTask(options, fileConcurrency, callbacks, semaphore) {
                 callbacks.onSkillComplete(name, errorReport);
                 // Carry a typed error alongside the report so consumers that re-throw
                 // (action executor, Sentry.captureException) preserve the ErrorCode.
-                const runnerError = new _sdk_errors_js__WEBPACK_IMPORTED_MODULE_1__/* .SkillRunnerError */ .cy(error.message, { code: error.code });
+                const runnerError = new _sdk_errors_js__WEBPACK_IMPORTED_MODULE_1__/* .SkillRunnerError */ .cy(error.message, {
+                    code: error.code,
+                    providerContext: error.providerContext,
+                });
                 return { name, report: errorReport, error: runnerError, failOn, minConfidence };
             }
             const processed = await (0,_sdk_runner_js__WEBPACK_IMPORTED_MODULE_2__/* .postProcessFindings */ .yp)(allFindings, {
@@ -9025,6 +9291,7 @@ function triggerIdentity(skill, trigger) {
         failCheck: trigger?.failCheck ?? skill.failCheck,
         model: trigger?.model ?? skill.model,
         maxTurns: trigger?.maxTurns ?? skill.maxTurns,
+        verification: trigger?.verification?.enabled ?? skill.verification?.enabled,
         minConfidence: trigger?.minConfidence ?? skill.minConfidence,
         type: trigger?.type ?? '*',
         actions: trigger?.actions,
@@ -9032,6 +9299,12 @@ function triggerIdentity(skill, trigger) {
         labels: trigger?.labels,
         schedule: trigger?.schedule,
     });
+}
+function resolveVerifyFindings(defaults, skill, trigger) {
+    return trigger?.verification?.enabled
+        ?? skill.verification?.enabled
+        ?? defaults?.verification?.enabled
+        ?? true;
 }
 function resolveSkillSource(skill, skillRootsByName) {
     if (!skillRootsByName || !Object.hasOwn(skillRootsByName, skill.name)) {
@@ -9075,7 +9348,6 @@ function resolveSkillConfigs(config, cliModel, skillRootsByName) {
         auxiliaryModel;
     const auxiliaryMaxRetries = defaults?.auxiliary?.maxRetries ??
         defaults?.auxiliaryMaxRetries;
-    const verifyFindings = defaults?.verification?.enabled !== false;
     for (const skill of config.skills) {
         const skillSource = resolveSkillSource(skill, skillRootsByName);
         const baseModel = emptyToUndefined(skill.model) ??
@@ -9117,7 +9389,7 @@ function resolveSkillConfigs(config, cliModel, skillRootsByName) {
                 auxiliaryModel,
                 synthesisModel,
                 auxiliaryMaxRetries,
-                verifyFindings,
+                verifyFindings: resolveVerifyFindings(defaults, skill),
                 minConfidence: skill.minConfidence ?? defaults?.minConfidence,
                 batchDelayMs: defaults?.batchDelayMs,
                 maxContextFiles: defaults?.chunking?.maxContextFiles,
@@ -9153,7 +9425,7 @@ function resolveSkillConfigs(config, cliModel, skillRootsByName) {
                     auxiliaryModel,
                     synthesisModel,
                     auxiliaryMaxRetries,
-                    verifyFindings,
+                    verifyFindings: resolveVerifyFindings(defaults, skill, trigger),
                     minConfidence: trigger.minConfidence ?? skill.minConfidence ?? defaults?.minConfidence,
                     batchDelayMs: defaults?.batchDelayMs,
                     maxContextFiles: defaults?.chunking?.maxContextFiles,
@@ -9264,7 +9536,7 @@ const ScheduleConfigSchema = schemas/* object */.Ik({
 // Trigger type: where the trigger runs
 const TriggerTypeSchema = schemas/* enum */.k5(['pull_request', 'local', 'schedule']);
 
-const EffortSchema = schemas/* enum */.k5(['off', 'low', 'medium', 'high', 'xhigh']);
+const EffortSchema = schemas/* enum */.k5(['off', 'low', 'medium', 'high', 'xhigh', 'max']);
 const AgentRuntimeConfigSchema = schemas/* object */.Ik({
     /** Model for repo-aware skill execution. Overrides legacy defaults.model. */
     model: schemas/* string */.Yj().optional(),
@@ -9308,6 +9580,8 @@ const SkillTriggerSchema = schemas/* object */.Ik({
     failCheck: schemas/* boolean */.zM().optional(),
     model: schemas/* string */.Yj().optional(),
     maxTurns: schemas/* number */.ai().int().positive().optional(),
+    /** Candidate finding verification. Overrides skill/defaults verification. */
+    verification: VerificationConfigSchema.optional(),
     /** Minimum confidence level for findings. Findings below this are filtered from output. */
     minConfidence: types/* ConfidenceThresholdSchema */.HA.optional(),
     /** Schedule-specific configuration. Only used when type is 'schedule'. */
@@ -9350,6 +9624,8 @@ const SkillConfigSchema = schemas/* object */.Ik({
     model: schemas/* string */.Yj().optional(),
     /** Maximum agentic turns (API round-trips) per hunk analysis. Overrides defaults.maxTurns. */
     maxTurns: schemas/* number */.ai().int().positive().optional(),
+    /** Candidate finding verification. Overrides defaults.verification. */
+    verification: VerificationConfigSchema.optional(),
     /** Minimum confidence level for findings. Findings below this are filtered from output. */
     minConfidence: types/* ConfidenceThresholdSchema */.HA.optional(),
     /** Triggers defining when/where this skill runs. Omit to run everywhere (wildcard). */
@@ -10332,11 +10608,13 @@ function filterFilesByPatterns(files, patterns, ignorePatterns) {
 /* unused harmony exports parseMarker, parseWardenFindingMetadata, parseWardenComment, isWardenComment, updateWardenCommentBody, fetchExistingWardenComments, updateWardenComment, addReactionToComment */
 /* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(77598);
 /* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(node_crypto__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(53391);
+/* harmony import */ var zod__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(53391);
 /* harmony import */ var _types_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(78481);
-/* harmony import */ var _sdk_runtimes_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(23473);
-/* harmony import */ var _sdk_extract_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(29709);
-/* harmony import */ var _sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(49893);
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(36137);
+/* harmony import */ var _sdk_runtimes_index_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(23473);
+/* harmony import */ var _sdk_extract_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(29709);
+/* harmony import */ var _sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(49893);
+
 
 
 
@@ -10358,8 +10636,10 @@ function generateContentHash(title, description) {
 function generateMarker(path, line, contentHash) {
     return `<!-- warden:v1:${path}:${line}:${contentHash} -->`;
 }
+/** Generate the hidden metadata marker embedded in Warden comments. */
 function generateFindingMetadata(finding) {
     const metadata = {
+        id: finding.id,
         severity: finding.severity,
         confidence: finding.confidence,
     };
@@ -10387,6 +10667,7 @@ function parseMarker(body) {
         contentHash,
     };
 }
+/** Parse and validate a Warden finding metadata marker. */
 function parseWardenFindingMetadata(body) {
     const match = body.match(/<!-- warden:finding:v1:([A-Za-z0-9_-]+) -->/);
     const encoded = match?.[1];
@@ -10394,6 +10675,9 @@ function parseWardenFindingMetadata(body) {
         return null;
     try {
         const parsed = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
+        const id = parsed.id;
+        if (id !== undefined && typeof id !== 'string')
+            return null;
         const severity = parsed.severity;
         if (severity !== 'high' && severity !== 'medium' && severity !== 'low')
             return null;
@@ -10404,7 +10688,7 @@ function parseWardenFindingMetadata(body) {
             confidence !== 'low') {
             return null;
         }
-        return { severity, confidence };
+        return { id, severity, confidence };
     }
     catch {
         return null;
@@ -10458,156 +10742,55 @@ function fallbackCommentTitle(body, commentId) {
     }
     return truncateText(description, 80);
 }
-/**
- * Parse the finding ID from a Warden comment's attribution or legacy title.
- */
+const FINDING_ID_PATTERN = '[^<\\r\\n]+';
+const SKILL_LIST_PATTERN = '[^<\\r\\n]+?';
+const CURRENT_FOOTER_PATTERN = new RegExp(`<sub>Identified by Warden · (${SKILL_LIST_PATTERN})(?: · (${FINDING_ID_PATTERN}))?</sub>`);
+const PRIOR_FOOTER_PATTERN = new RegExp(`<sub>Identified by Warden (${SKILL_LIST_PATTERN})(?: · (${FINDING_ID_PATTERN}))?</sub>`);
+function decodeFooterValue(value) {
+    return value.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&');
+}
+function parseSkillList(value) {
+    return value.split(',').map((skill) => decodeFooterValue(skill.trim()));
+}
+function parseWardenFooter(body) {
+    const currentMatch = body.match(CURRENT_FOOTER_PATTERN);
+    // TODO(2026-08-01): Remove PRIOR_FOOTER_PATTERN after comments using it have aged out.
+    const match = currentMatch ?? body.match(PRIOR_FOOTER_PATTERN);
+    const fullMatch = match?.[0];
+    const skillList = match?.[1];
+    if (!fullMatch || !skillList)
+        return null;
+    // Do not reinterpret historical bracket, backtick, or `via` footers as the prior plain format.
+    if (!currentMatch && (/^via\s+`/.test(skillList) || /^\[[^\]]+\](?:,\s*\[[^\]]+\])*$/.test(skillList))) {
+        return null;
+    }
+    return {
+        fullMatch,
+        skills: parseSkillList(skillList),
+        findingId: match[2] ? decodeFooterValue(match[2]) : undefined,
+    };
+}
+/** Parse the finding ID from hidden metadata or a supported transitional footer. */
 function parseWardenFindingId(body) {
-    const attributionMatch = body.match(/(?:<sub>)?Identified by Warden (?!via\s)([^<\n\r]*)(?:<\/sub>|$)/m);
-    if (attributionMatch?.[1]) {
-        const idMatch = attributionMatch[1].match(/·\s*(?:`([^`]+)`|([^`\n\r]+))/);
-        const id = (idMatch?.[1] ?? idMatch?.[2])?.trim();
-        if (id)
-            return id;
-    }
-    const titleMatch = body.match(/\*\*(?::[a-z_]+:\s*)?\[([^\]]+)\]\s*.+?\*\*/);
-    return titleMatch?.[1]?.trim() || undefined;
+    return parseWardenFindingMetadata(body)?.id ?? parseWardenFooter(body)?.findingId;
 }
-/**
- * Check if a comment body is a Warden-generated comment.
- * Supports current muted format (<sub>Identified by Warden skill</sub>), and
- * legacy formats: backtick (Identified by Warden `skill`), bracket
- * (<sub>Identified by Warden [skill]</sub>), via
- * (<sub>Identified by Warden via `skill`</sub>), old
- * (<sub>warden: skill</sub>).
- */
+/** Check if a comment body is a supported Warden comment. */
 function isWardenComment(body) {
-    return (body.includes('<sub>Identified by Warden ') ||
-        body.includes('Identified by Warden `') ||
-        body.includes('<sub>warden:') ||
-        body.includes('<!-- warden:v1:'));
+    return body.includes('<!-- warden:v1:') || parseWardenFooter(body) !== null;
 }
-function parsePlainSkillList(value) {
-    return value
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-}
-/**
- * Parse skill names from a Warden comment's attribution line.
- * Supports five formats:
- * - Current: "<sub>Identified by Warden skill1, skill2 · id</sub>"
- * - Legacy backtick: "Identified by Warden `skill1`, `skill2` · id"
- * - Legacy bracket: "<sub>Identified by Warden [skill1], [skill2] · id</sub>"
- * - Legacy via: "<sub>Identified by Warden via `skill1`, `skill2` · severity</sub>"
- * - Legacy old: "<sub>warden: skill1, skill2</sub>"
- */
+/** Parse skill names from a supported Warden attribution footer. */
 function parseWardenSkills(body) {
-    // Try current muted format: <sub>Identified by Warden skill1, skill2 · id</sub>
-    const plainSubMatch = body.match(/<sub>Identified by Warden (?!via\s)([^`[\]<]+?)(?:\s*·|<\/sub>)/);
-    if (plainSubMatch?.[1]) {
-        const skills = parsePlainSkillList(plainSubMatch[1]);
-        if (skills.length > 0)
-            return skills;
-    }
-    // Try legacy backtick format (no "via"): Identified by Warden `skill1`, `skill2` · id
-    const backtickMatch = body.match(/Identified by Warden ((?:`[^`]+`(?:, )?)+)/);
-    if (backtickMatch?.[1]) {
-        const skills = [...backtickMatch[1].matchAll(/`([^`]+)`/g)]
-            .map((m) => m[1])
-            .filter((s) => s !== undefined);
-        if (skills.length > 0)
-            return skills;
-    }
-    // Try legacy bracket format: <sub>Identified by Warden [skill1], [skill2] · id</sub>
-    const bracketMatch = body.match(/<sub>Identified by Warden ((?:\[[^\]]+\](?:, )?)+)/);
-    if (bracketMatch?.[1]) {
-        const skills = [...bracketMatch[1].matchAll(/\[([^\]]+)\]/g)]
-            .map((m) => m[1])
-            .filter((s) => s !== undefined);
-        if (skills.length > 0)
-            return skills;
-    }
-    // Try legacy via format: <sub>Identified by Warden via `skill1`, `skill2` · severity</sub>
-    const viaMatch = body.match(/<sub>Identified by Warden via ([^·<]+)/);
-    if (viaMatch?.[1]) {
-        const skills = [...viaMatch[1].matchAll(/`([^`]+)`/g)]
-            .map((m) => m[1])
-            .filter((s) => s !== undefined);
-        if (skills.length > 0)
-            return skills;
-    }
-    // Fall back to legacy old format: <sub>warden: skill1, skill2</sub>
-    const oldMatch = body.match(/<sub>warden:\s*([^<]+)<\/sub>/);
-    if (!oldMatch?.[1]) {
-        return [];
-    }
-    return oldMatch[1]
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
+    return parseWardenFooter(body)?.skills ?? [];
 }
-/**
- * Update a Warden comment body to add a new skill to the attribution.
- * Current format: Changes "<sub>Identified by Warden skill1 · id</sub>"
- *                 to "<sub>Identified by Warden skill1, skill2 · id</sub>"
- * Legacy backtick: Changes "Identified by Warden `skill1` · id"
- *                  to "Identified by Warden `skill1`, `skill2` · id"
- * Legacy bracket: Changes "<sub>Identified by Warden [skill1] · id</sub>"
- *                 to "<sub>Identified by Warden [skill1], [skill2] · id</sub>"
- * Legacy via: Changes "<sub>Identified by Warden via `skill1` · severity</sub>"
- *             to "<sub>Identified by Warden via `skill1`, `skill2` · severity</sub>"
- * Legacy old: Changes "<sub>warden: skill1</sub>" to "<sub>warden: skill1, skill2</sub>"
- * Returns null if skill is already listed or if no attribution tag exists.
- */
+/** Add a skill to a supported Warden attribution footer. */
 function updateWardenCommentBody(body, newSkill) {
-    const existingSkills = parseWardenSkills(body);
-    // If no existing attribution tag exists, we can't update it
-    if (existingSkills.length === 0) {
+    const footer = parseWardenFooter(body);
+    if (!footer || footer.skills.includes(newSkill))
         return null;
-    }
-    // Don't update if skill already listed
-    if (existingSkills.includes(newSkill)) {
-        return null;
-    }
-    // Check if it's the current muted format: <sub>Identified by Warden skill · id</sub>
-    const plainSubFormatMatch = body.match(/<sub>Identified by Warden (?!via\s)[^`[\]<]+<\/sub>/);
-    if (plainSubFormatMatch) {
-        const allSkills = [...existingSkills, newSkill].join(', ');
-        const subTagMatch = body.match(/<sub>Identified by Warden (?!via\s)([^<]*?)(\s*·[^<]*)?<\/sub>/);
-        const suffix = subTagMatch?.[2] || '';
-        return body.replace(/<sub>Identified by Warden (?!via\s)[^<]+<\/sub>/, () => `<sub>Identified by Warden ${allSkills}${suffix}</sub>`);
-    }
-    // Check if it's the legacy backtick format (no <sub>, no "via"): Identified by Warden `skill` · id
-    const backtickFormatMatch = body.match(/Identified by Warden `[^`]+`/) && !body.includes('<sub>Identified by Warden');
-    if (backtickFormatMatch) {
-        const existingSkillsFormatted = existingSkills.map((s) => `\`${s}\``).join(', ');
-        const lineMatch = body.match(/Identified by Warden ((?:`[^`]+`(?:, )?)+)(.*)/);
-        const suffix = lineMatch?.[2] || '';
-        return body.replace(/Identified by Warden (?:`[^`]+`(?:, )?)+.*/, () => `Identified by Warden ${existingSkillsFormatted}, \`${newSkill}\`${suffix}`);
-    }
-    // Check if it's the legacy bracket format: <sub>Identified by Warden [skill] · id</sub>
-    const bracketFormatMatch = body.match(/<sub>Identified by Warden \[[^\]]+\]/);
-    if (bracketFormatMatch) {
-        const existingSkillsFormatted = existingSkills.map((s) => `[${s}]`).join(', ');
-        const subTagMatch = body.match(/<sub>Identified by Warden ((?:\[[^\]]+\](?:, )?)+)(.*?)<\/sub>/);
-        const suffix = subTagMatch?.[2] || '';
-        return body.replace(/<sub>Identified by Warden [^<]+<\/sub>/, () => `<sub>Identified by Warden ${existingSkillsFormatted}, [${newSkill}]${suffix}</sub>`);
-    }
-    // Check if it's the legacy via format
-    const viaFormatMatch = body.match(/<sub>Identified by Warden via `[^`]+`/);
-    if (viaFormatMatch) {
-        const existingSkillsFormatted = existingSkills.map((s) => `\`${s}\``).join(', ');
-        // Extract the suffix (metadata) starting from the · separator, not from the skill list
-        const subTagMatch = body.match(/<sub>Identified by Warden via ([^<]+)<\/sub>/);
-        const fullContent = subTagMatch?.[1] || '';
-        const separatorIndex = fullContent.indexOf(' · ');
-        const suffix = separatorIndex >= 0 ? fullContent.slice(separatorIndex) : '';
-        return body.replace(/<sub>Identified by Warden via [^<]+<\/sub>/, () => `<sub>Identified by Warden via ${existingSkillsFormatted}, \`${newSkill}\`${suffix}</sub>`);
-    }
-    // Legacy old format: <sub>warden: skill1, skill2</sub>
-    const allSkills = [...existingSkills, newSkill].join(', ');
-    // Use a replacer function to avoid special $ character interpretation in skill names
-    return body.replace(/<sub>warden:\s*[^<]+<\/sub>/, () => `<sub>warden: ${allSkills}</sub>`);
+    const skills = [...footer.skills, newSkill].map(_utils_index_js__WEBPACK_IMPORTED_MODULE_2__/* .escapeHtml */ .ZD).join(', ');
+    const findingId = parseWardenFindingMetadata(body)?.id ?? footer.findingId;
+    const idSuffix = findingId ? ` · ${(0,_utils_index_js__WEBPACK_IMPORTED_MODULE_2__/* .escapeHtml */ .ZD)(findingId)}` : '';
+    return body.replace(footer.fullMatch, () => `<sub>Identified by Warden · ${skills}${idSuffix}</sub>`);
 }
 const REVIEW_THREADS_QUERY = `
   query($owner: String!, $repo: String!, $prNumber: Int!, $cursor: String) {
@@ -10712,9 +10895,9 @@ async function fetchExistingWardenComments(octokit, owner, repo, prNumber) {
     return allComments.filter((c) => c.isWarden);
 }
 /** Schema for validating LLM deduplication response with matched indices */
-const DuplicateMatchesSchema = zod__WEBPACK_IMPORTED_MODULE_5__/* .array */ .YO(zod__WEBPACK_IMPORTED_MODULE_5__/* .object */ .Ik({
-    findingIndex: zod__WEBPACK_IMPORTED_MODULE_5__/* .number */ .ai().int(),
-    existingIndex: zod__WEBPACK_IMPORTED_MODULE_5__/* .number */ .ai().int(),
+const DuplicateMatchesSchema = zod__WEBPACK_IMPORTED_MODULE_6__/* .array */ .YO(zod__WEBPACK_IMPORTED_MODULE_6__/* .object */ .Ik({
+    findingIndex: zod__WEBPACK_IMPORTED_MODULE_6__/* .number */ .ai().int(),
+    existingIndex: zod__WEBPACK_IMPORTED_MODULE_6__/* .number */ .ai().int(),
 }));
 /**
  * Use LLM to identify which findings are semantic duplicates of existing comments.
@@ -10727,8 +10910,8 @@ async function findSemanticDuplicates(findings, existingComments, apiKey, option
     const existingList = existingComments
         .map((c, i) => `${i + 1}. [${c.path}:${c.line}] "${c.title}" - ${c.description}`)
         .join('\n');
-    const findingsList = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__/* .formatIndexedFindingsForPrompt */ .kO)(findings);
-    const prompt = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__/* .joinPromptSections */ .hZ)([
+    const findingsList = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__/* .formatIndexedFindingsForPrompt */ .kO)(findings);
+    const prompt = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__/* .joinPromptSections */ .hZ)([
         `<task>
 Compare these code review findings and identify duplicates.
 </task>`,
@@ -10743,11 +10926,11 @@ Return a JSON array of objects identifying which findings are DUPLICATES of whic
 Only mark as duplicate if they describe the SAME issue at the SAME location (within a few lines).
 Different issues at the same location are NOT duplicates.
 </deduplication_rules>`,
-        (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__/* .buildJsonOutputSection */ .j2)(`[{"findingIndex": 1, "existingIndex": 2}]
+        (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__/* .buildJsonOutputSection */ .j2)(`[{"findingIndex": 1, "existingIndex": 2}]
 where findingIndex is the 1-based index of the new finding and existingIndex is the 1-based index of the matching existing comment.
 Return [] if none are duplicates.`),
     ]);
-    const result = await (0,_sdk_runtimes_index_js__WEBPACK_IMPORTED_MODULE_2__/* .getRuntime */ .fr)(options.runtime ?? 'claude').runAuxiliary({
+    const result = await (0,_sdk_runtimes_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getRuntime */ .fr)(options.runtime ?? 'claude').runAuxiliary({
         task: 'deduplication',
         agentName: options.currentSkill,
         apiKey,
@@ -10872,7 +11055,7 @@ function findingToExistingComment(finding, skill) {
 // -----------------------------------------------------------------------------
 const PROXIMITY_THRESHOLD = 5;
 /** Schema for LLM consolidation response: groups of finding indices that share a root cause. */
-const ConsolidationGroupsSchema = zod__WEBPACK_IMPORTED_MODULE_5__/* .array */ .YO(zod__WEBPACK_IMPORTED_MODULE_5__/* .array */ .YO(zod__WEBPACK_IMPORTED_MODULE_5__/* .number */ .ai().int()));
+const ConsolidationGroupsSchema = zod__WEBPACK_IMPORTED_MODULE_6__/* .array */ .YO(zod__WEBPACK_IMPORTED_MODULE_6__/* .array */ .YO(zod__WEBPACK_IMPORTED_MODULE_6__/* .number */ .ai().int()));
 /**
  * Group findings by file path, then identify clusters where findings are within
  * PROXIMITY_THRESHOLD lines of each other. Returns only clusters with 2+ findings.
@@ -10958,16 +11141,16 @@ async function consolidateBatchFindings(findings, options = {}) {
     // Phase 2: Proximity grouping
     const clusters = findProximityClusters(hashDeduped);
     // If no proximity clusters, hash-only mode, or no runtime auth, return hash-deduped results.
-    if (clusters.length === 0 || options.hashOnly || !(0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_3__/* .canUseRuntimeAuth */ .ad)(options)) {
+    if (clusters.length === 0 || options.hashOnly || !(0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_4__/* .canUseRuntimeAuth */ .ad)(options)) {
         return { findings: hashDeduped, removedCount: hashRemovedCount, removedFindings: hashRemovedFindings };
     }
     // Phase 3: LLM consolidation for proximity clusters
     // Only send clustered findings to the LLM (deduplicated across clusters)
     const clusteredList = [...new Set(clusters.flat())];
-    const findingsList = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__/* .formatIndexedFindingsForPrompt */ .kO)(clusteredList, {
+    const findingsList = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__/* .formatIndexedFindingsForPrompt */ .kO)(clusteredList, {
         includeSeverity: true,
     });
-    const prompt = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__/* .joinPromptSections */ .hZ)([
+    const prompt = (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__/* .joinPromptSections */ .hZ)([
         `<task>
 Group findings that describe the SAME root cause or bug.
 </task>`,
@@ -10979,9 +11162,9 @@ Return a JSON array of arrays, where each inner array contains the 1-based indic
 Only group findings that are truly about the same underlying issue. Findings about different issues should NOT be grouped even if they're nearby.
 Singletons (findings with no duplicates) should not appear in any group.
 </deduplication_rules>`,
-        (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_4__/* .buildJsonOutputSection */ .j2)('Return the JSON array. Return [] if no findings share a root cause.'),
+        (0,_sdk_prompt_sections_js__WEBPACK_IMPORTED_MODULE_5__/* .buildJsonOutputSection */ .j2)('Return the JSON array. Return [] if no findings share a root cause.'),
     ]);
-    const result = await (0,_sdk_runtimes_index_js__WEBPACK_IMPORTED_MODULE_2__/* .getRuntime */ .fr)(options.runtime ?? 'claude').runAuxiliary({
+    const result = await (0,_sdk_runtimes_index_js__WEBPACK_IMPORTED_MODULE_3__/* .getRuntime */ .fr)(options.runtime ?? 'claude').runAuxiliary({
         task: 'deduplication',
         agentName: options.agentName,
         apiKey: options.apiKey,
@@ -10995,7 +11178,7 @@ Singletons (findings with no duplicates) should not appear in any group.
         console.warn(`LLM batch consolidation failed, keeping all findings: ${result.error}`);
         return { findings: hashDeduped, removedCount: hashRemovedCount, removedFindings: hashRemovedFindings, usage: result.usage };
     }
-    const { absorbed, replacements } = (0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_3__/* .applyMergeGroups */ .HN)(clusteredList, result.data);
+    const { absorbed, replacements } = (0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_4__/* .applyMergeGroups */ .HN)(clusteredList, result.data);
     if (absorbed.size === 0) {
         return { findings: hashDeduped, removedCount: hashRemovedCount, removedFindings: hashRemovedFindings, usage: result.usage };
     }
@@ -11075,7 +11258,7 @@ async function deduplicateFindings(findings, existingComments, options = {}) {
         console.log(`Dedup: ${duplicateActions.length} findings matched by content hash`);
     }
     // If hash-only mode, no runtime auth, or no remaining findings, stop here.
-    if (options.hashOnly || !(0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_3__/* .canUseRuntimeAuth */ .ad)(options) || hashDedupedFindings.length === 0) {
+    if (options.hashOnly || !(0,_sdk_extract_js__WEBPACK_IMPORTED_MODULE_4__/* .canUseRuntimeAuth */ .ad)(options) || hashDedupedFindings.length === 0) {
         return { newFindings: hashDedupedFindings, duplicateActions };
     }
     // Second pass: LLM semantic comparison for remaining findings
@@ -11462,7 +11645,7 @@ function renderHiddenFindingsLink(hiddenCount, checkRunUrl) {
 }
 function renderAttributionFooter(skill, findingId) {
     const idSuffix = findingId ? ` · ${(0,_utils_index_js__WEBPACK_IMPORTED_MODULE_3__/* .escapeHtml */ .ZD)(findingId)}` : '';
-    return `<sub>Identified by Warden ${(0,_utils_index_js__WEBPACK_IMPORTED_MODULE_3__/* .escapeHtml */ .ZD)(skill)}${idSuffix}</sub>`;
+    return `<sub>Identified by Warden · ${(0,_utils_index_js__WEBPACK_IMPORTED_MODULE_3__/* .escapeHtml */ .ZD)(skill)}${idSuffix}</sub>`;
 }
 function renderSummaryComment(report, findings, groupByFile, checkRunUrl, hiddenCount) {
     const lines = [];
@@ -11747,17 +11930,19 @@ async function resolveStaleComments(octokit, staleComments, options = {}) {
 /* harmony import */ var _diff_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(96497);
 /* harmony import */ var _sentry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30340);
 /* harmony import */ var _errors_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(98229);
-/* harmony import */ var _retry_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(2022);
-/* harmony import */ var _usage_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(44759);
-/* harmony import */ var _prompt_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(12204);
-/* harmony import */ var _extract_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(29709);
-/* harmony import */ var _post_process_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(10048);
-/* harmony import */ var _report_files_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(79418);
-/* harmony import */ var _runtimes_index_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(23473);
-/* harmony import */ var _types_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(88973);
-/* harmony import */ var _prepare_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(15507);
-/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(36137);
-/* harmony import */ var _sentry_trace_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(68016);
+/* harmony import */ var _otel_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(85884);
+/* harmony import */ var _retry_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(2022);
+/* harmony import */ var _usage_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(44759);
+/* harmony import */ var _prompt_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12204);
+/* harmony import */ var _extract_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(29709);
+/* harmony import */ var _post_process_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(10048);
+/* harmony import */ var _report_files_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(79418);
+/* harmony import */ var _runtimes_index_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(23473);
+/* harmony import */ var _types_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(88973);
+/* harmony import */ var _prepare_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(15507);
+/* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(36137);
+/* harmony import */ var _sentry_trace_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(68016);
+
 
 
 
@@ -11788,7 +11973,7 @@ function isCircuitBreakerCode(code) {
 function hunkFailureFromCircuit(reason, usage, attempts, trace) {
     return {
         findings: [],
-        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(usage),
+        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(usage),
         failed: true,
         extractionFailed: false,
         failureCode: reason.code,
@@ -11797,11 +11982,23 @@ function hunkFailureFromCircuit(reason, usage, attempts, trace) {
         trace,
     };
 }
-function recordCircuitFailure(options, code, message) {
+function recordCircuitFailure(options, code, message, providerContext) {
     if (!isCircuitBreakerCode(code))
         return undefined;
-    options.circuitBreaker?.recordFailure(code, message);
+    options.circuitBreaker?.recordFailure(code, message, providerContext, providerContext ? options : undefined);
     return options.circuitBreaker?.reason;
+}
+function providerErrorContext(options, result, message) {
+    const model = result.responseModel ?? options.model;
+    const runtime = options.runtime ?? 'pi';
+    return {
+        runtime,
+        provider: (0,_otel_js__WEBPACK_IMPORTED_MODULE_3__/* .genAiProviderName */ .Jo)(runtime, model, result.responseProvider),
+        model,
+        status: result.status,
+        responseId: result.responseId,
+        message: (0,_errors_js__WEBPACK_IMPORTED_MODULE_2__/* .sanitizeErrorMessage */ .$w)(message),
+    };
 }
 function allHunksFailedGuidance(runtime) {
     if ((runtime ?? 'pi') === 'pi') {
@@ -11812,7 +12009,7 @@ function allHunksFailedGuidance(runtime) {
 function buildHunkTrace(args) {
     if (!args.enabled)
         return undefined;
-    const spanContext = (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_10__/* .getSpanContext */ .w8)(args.span);
+    const spanContext = (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_11__/* .getSpanContext */ .w8)(args.span);
     const spans = args.traceRecorder?.snapshot();
     const childTraceId = spans?.find((span) => span.traceId)?.traceId;
     const trace = {
@@ -11844,12 +12041,12 @@ async function parseHunkOutput(result, filename, skillName, options) {
         return { findings: [], extractionFailed: false, extractionMethod: 'none' };
     }
     // Tier 1: Try regex-based extraction first (fast)
-    const extracted = (0,_extract_js__WEBPACK_IMPORTED_MODULE_5__/* .extractFindingsJson */ .Kz)(result.text);
+    const extracted = (0,_extract_js__WEBPACK_IMPORTED_MODULE_6__/* .extractFindingsJson */ .Kz)(result.text);
     if (extracted.success) {
-        return { findings: (0,_extract_js__WEBPACK_IMPORTED_MODULE_5__/* .validateFindings */ .Fk)(extracted.findings, filename), extractionFailed: false, extractionMethod: 'regex' };
+        return { findings: (0,_extract_js__WEBPACK_IMPORTED_MODULE_6__/* .validateFindings */ .Fk)(extracted.findings, filename), extractionFailed: false, extractionMethod: 'regex' };
     }
     // Tier 2: Try LLM fallback for malformed output
-    const fallback = await (0,_extract_js__WEBPACK_IMPORTED_MODULE_5__/* .extractFindingsWithLLM */ .l1)(result.text, {
+    const fallback = await (0,_extract_js__WEBPACK_IMPORTED_MODULE_6__/* .extractFindingsWithLLM */ .l1)(result.text, {
         apiKey: options.apiKey,
         runtime: options.runtime,
         model: options.auxiliaryModel,
@@ -11857,7 +12054,7 @@ async function parseHunkOutput(result, filename, skillName, options) {
         agentName: skillName,
     });
     if (fallback.success) {
-        return { findings: (0,_extract_js__WEBPACK_IMPORTED_MODULE_5__/* .validateFindings */ .Fk)(fallback.findings, filename), extractionFailed: false, extractionMethod: 'llm', extractionUsage: fallback.usage };
+        return { findings: (0,_extract_js__WEBPACK_IMPORTED_MODULE_6__/* .validateFindings */ .Fk)(fallback.findings, filename), extractionFailed: false, extractionMethod: 'llm', extractionUsage: fallback.usage };
     }
     // Both tiers failed - return extraction failure info
     return {
@@ -11969,23 +12166,23 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
     }, async (span) => {
         const { abortController, retry } = options;
         const runtimeName = options.runtime ?? 'pi';
-        const traceRecorder = options.captureTraces ? (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_10__/* .startTraceRecorder */ .qr)(span) : undefined;
-        const systemPrompt = (0,_prompt_js__WEBPACK_IMPORTED_MODULE_4__/* .buildHunkSystemPrompt */ .q)(skill);
-        const userPrompt = (0,_prompt_js__WEBPACK_IMPORTED_MODULE_4__/* .buildHunkUserPrompt */ ._)(skill, hunkCtx, prContext);
+        const traceRecorder = options.captureTraces ? (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_11__/* .startTraceRecorder */ .qr)(span) : undefined;
+        const systemPrompt = (0,_prompt_js__WEBPACK_IMPORTED_MODULE_5__/* .buildHunkSystemPrompt */ .q)(skill);
+        const userPrompt = (0,_prompt_js__WEBPACK_IMPORTED_MODULE_5__/* .buildHunkUserPrompt */ ._)(skill, hunkCtx, prContext);
         // Report prompt size information
         const systemChars = systemPrompt.length;
         const userChars = userPrompt.length;
         const totalChars = systemChars + userChars;
-        const estimatedTokensCount = (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .estimateTokens */ .bP)(totalChars);
+        const estimatedTokensCount = (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .estimateTokens */ .bP)(totalChars);
         // Always call onPromptSize if provided (for debug mode)
         callbacks?.onPromptSize?.(callbacks.lineRange, systemChars, userChars, totalChars, estimatedTokensCount);
         // Warn about large prompts
-        if (totalChars > _types_js__WEBPACK_IMPORTED_MODULE_12__/* .LARGE_PROMPT_THRESHOLD_CHARS */ .j) {
+        if (totalChars > _types_js__WEBPACK_IMPORTED_MODULE_13__/* .LARGE_PROMPT_THRESHOLD_CHARS */ .j) {
             callbacks?.onLargePrompt?.(callbacks.lineRange, totalChars, estimatedTokensCount);
         }
         // Merge retry config with defaults
         const retryConfig = {
-            ..._retry_js__WEBPACK_IMPORTED_MODULE_3__/* .DEFAULT_RETRY_CONFIG */ .cI,
+            ..._retry_js__WEBPACK_IMPORTED_MODULE_4__/* .DEFAULT_RETRY_CONFIG */ .cI,
             ...retry,
         };
         let lastError;
@@ -12009,7 +12206,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                 callbacks?.onHunkFailed?.(callbacks.lineRange, 'Analysis aborted');
                 return {
                     findings: [],
-                    usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+                    usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
                     failed: true,
                     extractionFailed: false,
                     failureCode: 'aborted',
@@ -12027,8 +12224,8 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                 };
             }
             try {
-                const runtime = (0,_runtimes_index_js__WEBPACK_IMPORTED_MODULE_7__/* .getRuntime */ .fr)(runtimeName);
-                const { result: resultMessage, authError } = await (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_10__/* .withTraceRecorder */ .gP)(traceRecorder, () => runtime.runSkill({
+                const runtime = (0,_runtimes_index_js__WEBPACK_IMPORTED_MODULE_8__/* .getRuntime */ .fr)(runtimeName);
+                const { result: resultMessage, authError } = await (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_11__/* .withTraceRecorder */ .gP)(traceRecorder, () => runtime.runSkill({
                     apiKey: options.apiKey,
                     systemPrompt,
                     userPrompt,
@@ -12043,7 +12240,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                         effort: options.effort,
                         abortController: options.abortController,
                     },
-                    providerOptions: (0,_runtimes_index_js__WEBPACK_IMPORTED_MODULE_7__/* .getRuntimeProviderOptions */ .g_)(runtimeName, {
+                    providerOptions: (0,_runtimes_index_js__WEBPACK_IMPORTED_MODULE_8__/* .getRuntimeProviderOptions */ .g_)(runtimeName, {
                         pathToClaudeCodeExecutable: options.pathToClaudeCodeExecutable,
                     }),
                 }));
@@ -12056,7 +12253,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                     notifyHunkFailed(callbacks, callbacks?.lineRange ?? lineRange, 'SDK returned no result');
                     return {
                         findings: [],
-                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
                         failed: true,
                         extractionFailed: false,
                         failureCode: 'sdk_error',
@@ -12097,7 +12294,9 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                             ? 'provider_unavailable'
                             : 'sdk_error';
                     const failureMessage = `Runtime execution failed: ${errorSummary}`;
-                    const openReason = recordCircuitFailure(options, failureCode, failureMessage);
+                    const openReason = recordCircuitFailure(options, failureCode, failureMessage, failureCode === 'provider_unavailable'
+                        ? providerErrorContext(options, resultMessage, errorSummary)
+                        : undefined);
                     notifyHunkFailed(callbacks, callbacks?.lineRange ?? lineRange, failureMessage);
                     if (openReason) {
                         return hunkFailureFromCircuit(openReason, accumulatedUsage, attempt + 1, buildHunkTrace({
@@ -12113,7 +12312,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                     }
                     return {
                         findings: [],
-                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
                         failed: true,
                         extractionFailed: false,
                         failureCode,
@@ -12132,7 +12331,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                     };
                 }
                 options.circuitBreaker?.recordSuccess();
-                const parseResult = await (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_10__/* .withTraceRecorder */ .gP)(traceRecorder, () => parseHunkOutput(resultMessage, hunkCtx.filename, skill.name, options));
+                const parseResult = await (0,_sentry_trace_js__WEBPACK_IMPORTED_MODULE_11__/* .withTraceRecorder */ .gP)(traceRecorder, () => parseHunkOutput(resultMessage, hunkCtx.filename, skill.name, options));
                 // Filter findings outside hunk line range (defense-in-depth)
                 const hunkRange = (0,_diff_index_js__WEBPACK_IMPORTED_MODULE_0__/* .getHunkLineRange */ .sK)(hunkCtx.hunk);
                 const { filtered, dropped } = filterOutOfRangeFindings(parseResult.findings, hunkRange);
@@ -12162,7 +12361,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                 span.setAttribute('warden.finding.count', filteredFindings.length);
                 return {
                     findings: filteredFindings,
-                    usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+                    usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
                     failed: false,
                     extractionFailed: parseResult.extractionFailed,
                     extractionError: parseResult.extractionError,
@@ -12193,7 +12392,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                     callbacks?.onHunkFailed?.(callbacks.lineRange, 'Analysis aborted');
                     return {
                         findings: [],
-                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
                         failed: true,
                         extractionFailed: false,
                         failureCode: 'aborted',
@@ -12236,7 +12435,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                     break;
                 }
                 // Calculate delay and wait before retry
-                const delayMs = (0,_retry_js__WEBPACK_IMPORTED_MODULE_3__/* .calculateRetryDelay */ .gE)(attempt, retryConfig);
+                const delayMs = (0,_retry_js__WEBPACK_IMPORTED_MODULE_4__/* .calculateRetryDelay */ .gE)(attempt, retryConfig);
                 const errorMessage = (0,_errors_js__WEBPACK_IMPORTED_MODULE_2__/* .sanitizeErrorMessage */ .$w)(error instanceof Error ? error.message : String(error));
                 _sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .Sentry.addBreadcrumb */ .sQ.addBreadcrumb({
                     category: 'retry',
@@ -12248,14 +12447,14 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
                 // Notify about retry in verbose mode
                 callbacks?.onRetry?.(callbacks.lineRange, attempt + 1, retryConfig.maxRetries, errorMessage, delayMs);
                 try {
-                    await (0,_retry_js__WEBPACK_IMPORTED_MODULE_3__/* .sleep */ .yy)(delayMs, abortController?.signal);
+                    await (0,_retry_js__WEBPACK_IMPORTED_MODULE_4__/* .sleep */ .yy)(delayMs, abortController?.signal);
                 }
                 catch {
                     // Aborted during sleep
                     callbacks?.onHunkFailed?.(callbacks.lineRange, 'Analysis aborted during retry delay');
                     return {
                         findings: [],
-                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+                        usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
                         failed: true,
                         extractionFailed: false,
                         failureCode: 'aborted',
@@ -12288,7 +12487,16 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
         span.setAttribute('warden.finding.count', 0);
         const { code: retryCode, message } = (0,_errors_js__WEBPACK_IMPORTED_MODULE_2__/* .classifyError */ .fe)(lastError);
         const retryMsg = (0,_errors_js__WEBPACK_IMPORTED_MODULE_2__/* .sanitizeErrorMessage */ .$w)(message);
-        const openReason = recordCircuitFailure(options, retryCode, retryMsg);
+        const openReason = recordCircuitFailure(options, retryCode, retryMsg, retryCode === 'provider_unavailable'
+            ? {
+                runtime: runtimeName,
+                provider: (0,_otel_js__WEBPACK_IMPORTED_MODULE_3__/* .genAiProviderName */ .Jo)(runtimeName, options.model),
+                model: options.model,
+                status: 'provider_error',
+                attempts: retryConfig.maxRetries + 1,
+                message: retryMsg,
+            }
+            : undefined);
         if (openReason) {
             return hunkFailureFromCircuit(openReason, accumulatedUsage, retryConfig.maxRetries + 1, buildHunkTrace({
                 enabled: options.captureTraces,
@@ -12302,7 +12510,7 @@ async function analyzeHunk(skill, hunkCtx, repoPath, options, callbacks, prConte
         }
         return {
             findings: [],
-            usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(accumulatedUsage),
+            usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(accumulatedUsage),
             failed: true,
             extractionFailed: false,
             failureCode: retryCode,
@@ -12442,7 +12650,7 @@ async function analyzeFile(skill, file, repoPath, options = {}, callbacks, prCon
         return {
             filename: file.filename,
             findings: fileFindings,
-            usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(fileUsage),
+            usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(fileUsage),
             failedHunks,
             failedExtractions,
             hunkFailures,
@@ -12475,17 +12683,21 @@ function generateSummary(skillName, findings) {
  * Run a skill on a PR, analyzing each hunk separately.
  */
 async function runSkill(skill, context, options = {}) {
+    // This clone's identity scopes circuit-breaker provider diagnostics to this skill run.
+    const scopedOptions = {
+        ...options,
+    };
     return _sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .Sentry.startSpan */ .sQ.startSpan({
         op: 'skill.run',
         name: `run ${skill.name}`,
         attributes: {
             'gen_ai.agent.name': skill.name,
-            ...(options.telemetryTriggerName ? { 'warden.trigger.name': options.telemetryTriggerName } : {}),
+            ...(options.triggerName ? { 'warden.trigger.name': options.triggerName } : {}),
             'warden.file.count': context.pullRequest?.files.length ?? 0,
         },
     }, async (span) => {
         try {
-            const report = await runSkillAnalysis(skill, context, options);
+            const report = await runSkillAnalysis(skill, context, scopedOptions);
             span.setAttribute('warden.finding.count', report.findings.length);
             (0,_sentry_js__WEBPACK_IMPORTED_MODULE_1__/* .emitSkillMetrics */ .s7)(report);
             return report;
@@ -12502,7 +12714,7 @@ async function runSkillAnalysis(skill, context, options = {}) {
     if (!context.pullRequest) {
         throw new _errors_js__WEBPACK_IMPORTED_MODULE_2__/* .SkillRunnerError */ .cy('Pull request context required for skill execution');
     }
-    const { files: fileHunks, skippedFiles } = (0,_prepare_js__WEBPACK_IMPORTED_MODULE_8__/* .prepareFiles */ .t)(context, {
+    const { files: fileHunks, skippedFiles } = (0,_prepare_js__WEBPACK_IMPORTED_MODULE_9__/* .prepareFiles */ .t)(context, {
         contextLines: options.contextLines,
         ignore: options.ignore,
         scan: options.scan,
@@ -12513,7 +12725,7 @@ async function runSkillAnalysis(skill, context, options = {}) {
             skill: skill.name,
             summary: 'No code changes to analyze',
             findings: [],
-            usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .emptyUsage */ .ly)(),
+            usage: (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .emptyUsage */ .ly)(),
             durationMs: Date.now() - startTime,
             model: options.model,
             runtime: options.runtime ?? 'pi',
@@ -12606,9 +12818,9 @@ async function runSkillAnalysis(skill, context, options = {}) {
     // Process files - parallel or sequential based on options
     if (parallel) {
         // Process files with sliding-window concurrency pool
-        const fileConcurrency = options.concurrency ?? _types_js__WEBPACK_IMPORTED_MODULE_12__/* .DEFAULT_FILE_CONCURRENCY */ .f;
+        const fileConcurrency = options.concurrency ?? _types_js__WEBPACK_IMPORTED_MODULE_13__/* .DEFAULT_FILE_CONCURRENCY */ .f;
         const batchDelayMs = options.batchDelayMs ?? 0;
-        fileResults.push(...await (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_9__/* .runPool */ .kD)(fileHunks, fileConcurrency, async (fileHunkEntry, index) => {
+        fileResults.push(...await (0,_utils_index_js__WEBPACK_IMPORTED_MODULE_10__/* .runPool */ .kD)(fileHunks, fileConcurrency, async (fileHunkEntry, index) => {
             // Rate-limit: delay items beyond the first concurrent wave
             if (index >= fileConcurrency && batchDelayMs > 0) {
                 await new Promise((resolve) => setTimeout(resolve, batchDelayMs));
@@ -12652,7 +12864,10 @@ async function runSkillAnalysis(skill, context, options = {}) {
     const totalAttemptFailures = totalFailedHunks + totalFailedExtractions;
     const circuitReason = options.circuitBreaker?.reason;
     if (circuitReason && totalAttemptFailures > 0 && allFindings.length === 0) {
-        throw new _errors_js__WEBPACK_IMPORTED_MODULE_2__/* .SkillRunnerError */ .cy(circuitReason.message, { code: circuitReason.code });
+        throw new _errors_js__WEBPACK_IMPORTED_MODULE_2__/* .SkillRunnerError */ .cy(circuitReason.message, {
+            code: circuitReason.code,
+            providerContext: options.circuitBreaker?.providerContextFor(options),
+        });
     }
     if (totalAttemptFailures > 0 && totalAttemptFailures === totalHunks && allFindings.length === 0) {
         const analysisFailures = allHunkFailures.filter((failure) => failure.type === 'analysis');
@@ -12669,7 +12884,7 @@ async function runSkillAnalysis(skill, context, options = {}) {
     }
     let finalFindings = allFindings;
     if (options.postProcessFindings !== false) {
-        const processed = await (0,_post_process_js__WEBPACK_IMPORTED_MODULE_6__/* .postProcessFindings */ .y)(allFindings, {
+        const processed = await (0,_post_process_js__WEBPACK_IMPORTED_MODULE_7__/* .postProcessFindings */ .y)(allFindings, {
             skill,
             repoPath: context.repoPath,
             apiKey: options.apiKey,
@@ -12691,7 +12906,7 @@ async function runSkillAnalysis(skill, context, options = {}) {
     // Generate summary
     const summary = generateSummary(skill.name, finalFindings);
     // Aggregate usage across all hunks
-    const totalUsage = (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateUsage */ .Z$)(allUsage);
+    const totalUsage = (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateUsage */ .Z$)(allUsage);
     const report = {
         skill: skill.name,
         summary,
@@ -12699,7 +12914,7 @@ async function runSkillAnalysis(skill, context, options = {}) {
         usage: totalUsage,
         durationMs: Date.now() - startTime,
         model: options.model,
-        files: (0,_report_files_js__WEBPACK_IMPORTED_MODULE_13__/* .buildFileReports */ .K)(fileResults.map((fr) => ({
+        files: (0,_report_files_js__WEBPACK_IMPORTED_MODULE_14__/* .buildFileReports */ .K)(fileResults.map((fr) => ({
             filename: fr.filename,
             durationMs: fr.durationMs,
             usage: fr.result.usage,
@@ -12721,11 +12936,11 @@ async function runSkillAnalysis(skill, context, options = {}) {
     if (options.captureTraces && allTraces.length > 0) {
         report.traces = allTraces;
     }
-    const auxUsage = (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateAuxiliaryUsage */ .RL)(allAuxiliaryUsage);
+    const auxUsage = (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateAuxiliaryUsage */ .RL)(allAuxiliaryUsage);
     if (auxUsage) {
         report.auxiliaryUsage = auxUsage;
     }
-    const auxAttribution = (0,_usage_js__WEBPACK_IMPORTED_MODULE_11__/* .aggregateAuxiliaryUsageAttribution */ .UN)(allAuxiliaryUsage);
+    const auxAttribution = (0,_usage_js__WEBPACK_IMPORTED_MODULE_12__/* .aggregateAuxiliaryUsageAttribution */ .UN)(allAuxiliaryUsage);
     if (auxAttribution) {
         report.auxiliaryUsageAttribution = auxAttribution;
     }
@@ -12803,6 +13018,8 @@ function providerUnavailableMessage(count, lastMessage) {
 class ProviderFailureCircuitBreaker {
     consecutiveProviderFailures = 0;
     openReason;
+    /** Avoid retaining sensitive runner options or adding them to the serializable reason. */
+    providerContextScope;
     maxConsecutiveProviderFailures;
     abortController;
     constructor(options = {}) {
@@ -12818,7 +13035,7 @@ class ProviderFailureCircuitBreaker {
             return;
         this.consecutiveProviderFailures = 0;
     }
-    recordFailure(code, message) {
+    recordFailure(code, message, providerContext, providerContextScope) {
         if (this.openReason)
             return;
         if (code === 'auth_failed' || code === 'invalid_model_selector') {
@@ -12829,11 +13046,23 @@ class ProviderFailureCircuitBreaker {
             return;
         this.consecutiveProviderFailures++;
         if (this.consecutiveProviderFailures >= this.maxConsecutiveProviderFailures) {
+            this.providerContextScope = providerContext && providerContextScope
+                ? new WeakRef(providerContextScope)
+                : undefined;
             this.open({
                 code,
                 message: providerUnavailableMessage(this.consecutiveProviderFailures, message),
+                providerContext: providerContext
+                    ? { ...providerContext, attempts: this.consecutiveProviderFailures }
+                    : undefined,
             });
         }
+    }
+    /** Return provider diagnostics only to the skill run that recorded them. */
+    providerContextFor(scope) {
+        if (!scope || this.providerContextScope?.deref() !== scope)
+            return undefined;
+        return this.openReason?.providerContext;
     }
     open(reason) {
         this.openReason = reason;
@@ -13605,6 +13834,7 @@ function prepareFiles(context, options = {}) {
         ignore: options.ignore,
         scan: options.scan,
         diffContextSource: context.diffContextSource,
+        enforceChangedLineBudget: context.explicitFileTargets !== true,
     });
     skippedFiles.push(...scanPolicy.skippedFiles);
     for (const file of scanPolicy.files) {
@@ -14002,7 +14232,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var _auth_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30640);
 /* harmony import */ var _retry_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2022);
 /* harmony import */ var _usage_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(44759);
-/* harmony import */ var _pricing_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(56260);
+/* harmony import */ var _pricing_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(64602);
 /* harmony import */ var _prompt_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(12204);
 /* harmony import */ var _extract_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(29709);
 /* harmony import */ var _json_output_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(81572);
@@ -14080,8 +14310,8 @@ var sentry_trace = __webpack_require__(68016);
 var haiku = __webpack_require__(39026);
 // EXTERNAL MODULE: ./src/sdk/otel.ts
 var otel = __webpack_require__(85884);
-// EXTERNAL MODULE: ./src/sdk/pricing.ts + 1 modules
-var pricing = __webpack_require__(56260);
+// EXTERNAL MODULE: ./src/sdk/pricing.ts
+var pricing = __webpack_require__(64602);
 // EXTERNAL MODULE: ./src/sdk/usage.ts
 var sdk_usage = __webpack_require__(44759);
 ;// CONCATENATED MODULE: ./src/sdk/runtimes/claude.ts
@@ -14283,6 +14513,7 @@ function normalizeResult(result, usage, responseModel) {
         text: result.subtype === 'success' ? result.result : '',
         errors,
         usage: usage ?? (0,sdk_usage/* extractUsage */.f5)(result),
+        responseProvider: 'anthropic',
         responseId: result.uuid,
         responseModel: responseModel ?? singleResponseModel(result.modelUsage),
         sessionId: result.session_id,
@@ -14946,6 +15177,7 @@ function getPrePatchFileSkip(filename, options, file) {
 function applyScanPolicy(files, options) {
     const scan = effectiveScanConfig(options.scan);
     const diffContextSource = options.diffContextSource ?? { type: 'working-tree' };
+    const enforceChangedLineBudget = options.enforceChangedLineBudget ?? true;
     const skippedFiles = [];
     const eligible = [];
     for (const file of files) {
@@ -14972,7 +15204,7 @@ function applyScanPolicy(files, options) {
             continue;
         }
         const fileChangedLines = changedLines(file);
-        if (consumedChangedLines + fileChangedLines > scan.maxChangedLines) {
+        if (enforceChangedLineBudget && consumedChangedLines + fileChangedLines > scan.maxChangedLines) {
             skippedFiles.push({ filename: file.filename, reason: 'limit:changed_lines' });
             continue;
         }

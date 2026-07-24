@@ -1,0 +1,158 @@
+import { z } from 'zod';
+export declare const SKILL_BUILD_STATE_SCHEMA_VERSION = 1;
+export declare const SKILL_BUILD_STATE_KIND = "skill-build-state";
+export declare const GeneratedSkillArtifactStateSchema: z.ZodObject<{
+    version: z.ZodLiteral<5>;
+    sourceHash: z.ZodString;
+    outlineHash: z.ZodString;
+    buildVersion: z.ZodString;
+    authoringProvider: z.ZodObject<{
+        name: z.ZodString;
+        rootDir: z.ZodString;
+        contentHash: z.ZodString;
+    }, z.core.$strict>;
+    name: z.ZodString;
+    fileManifest: z.ZodArray<z.ZodObject<{
+        path: z.ZodString;
+        bytes: z.ZodNumber;
+    }, z.core.$strict>>;
+    deterministicWarnings: z.ZodDefault<z.ZodArray<z.ZodString>>;
+    bytes: z.ZodNumber;
+    durationMs: z.ZodNumber;
+    usage: z.ZodObject<{
+        inputTokens: z.ZodNumber;
+        outputTokens: z.ZodNumber;
+        cacheReadInputTokens: z.ZodOptional<z.ZodNumber>;
+        cacheCreationInputTokens: z.ZodOptional<z.ZodNumber>;
+        cacheCreation5mInputTokens: z.ZodOptional<z.ZodNumber>;
+        cacheCreation1hInputTokens: z.ZodOptional<z.ZodNumber>;
+        webSearchRequests: z.ZodOptional<z.ZodNumber>;
+        costUSD: z.ZodNumber;
+    }, z.core.$strip>;
+    externalSources: z.ZodArray<z.ZodObject<{
+        title: z.ZodString;
+        url: z.ZodString;
+        reason: z.ZodString;
+    }, z.core.$strict>>;
+    missingInputs: z.ZodArray<z.ZodString>;
+    authoringWarnings: z.ZodDefault<z.ZodArray<z.ZodString>>;
+    responseModel: z.ZodOptional<z.ZodString>;
+    numTurns: z.ZodOptional<z.ZodNumber>;
+    generatedAt: z.ZodString;
+}, z.core.$strict>;
+export type GeneratedSkillArtifactState = z.infer<typeof GeneratedSkillArtifactStateSchema>;
+export declare const SkillBuildStateSchema: z.ZodObject<{
+    version: z.ZodLiteral<1>;
+    kind: z.ZodLiteral<"skill-build-state">;
+    identity: z.ZodOptional<z.ZodObject<{
+        requestedModel: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>>;
+    outline: z.ZodObject<{
+        version: z.ZodLiteral<1>;
+        skill: z.ZodString;
+        sourceHash: z.ZodString;
+        buildVersion: z.ZodString;
+        scopeProfile: z.ZodObject<{
+            kind: z.ZodEnum<{
+                repository: "repository";
+                ecosystem: "ecosystem";
+                domain: "domain";
+                product: "product";
+            }>;
+            subject: z.ZodString;
+            localContextUsed: z.ZodBoolean;
+            observedContext: z.ZodArray<z.ZodString>;
+            unresolvedContext: z.ZodDefault<z.ZodArray<z.ZodString>>;
+        }, z.core.$strict>;
+        build: z.ZodObject<{
+            phases: z.ZodArray<z.ZodObject<{
+                id: z.ZodString;
+                status: z.ZodEnum<{
+                    cached: "cached";
+                    generated: "generated";
+                    validated: "validated";
+                }>;
+            }, z.core.$strict>>;
+            externalSources: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                title: z.ZodString;
+                url: z.ZodString;
+                reason: z.ZodString;
+            }, z.core.$strict>>>;
+        }, z.core.$strict>;
+        tracks: z.ZodArray<z.ZodObject<{
+            id: z.ZodString;
+            title: z.ZodString;
+            goal: z.ZodString;
+            rationale: z.ZodString;
+            sourceSignals: z.ZodArray<z.ZodString>;
+            owns: z.ZodArray<z.ZodString>;
+            excludes: z.ZodDefault<z.ZodArray<z.ZodString>>;
+            relevanceSignals: z.ZodArray<z.ZodString>;
+            evidenceFocus: z.ZodArray<z.ZodString>;
+            checks: z.ZodArray<z.ZodString>;
+            safeCounterpatterns: z.ZodArray<z.ZodString>;
+            falsePositiveTraps: z.ZodArray<z.ZodString>;
+            researchHints: z.ZodDefault<z.ZodArray<z.ZodString>>;
+        }, z.core.$strict>>;
+    }, z.core.$strict>;
+    outlineRun: z.ZodOptional<z.ZodObject<{
+        durationMs: z.ZodOptional<z.ZodNumber>;
+        usage: z.ZodOptional<z.ZodObject<{
+            inputTokens: z.ZodNumber;
+            outputTokens: z.ZodNumber;
+            cacheReadInputTokens: z.ZodOptional<z.ZodNumber>;
+            cacheCreationInputTokens: z.ZodOptional<z.ZodNumber>;
+            cacheCreation5mInputTokens: z.ZodOptional<z.ZodNumber>;
+            cacheCreation1hInputTokens: z.ZodOptional<z.ZodNumber>;
+            webSearchRequests: z.ZodOptional<z.ZodNumber>;
+            costUSD: z.ZodNumber;
+        }, z.core.$strip>>;
+        responseModel: z.ZodOptional<z.ZodString>;
+        numTurns: z.ZodOptional<z.ZodNumber>;
+    }, z.core.$strict>>;
+    artifact: z.ZodOptional<z.ZodObject<{
+        version: z.ZodLiteral<5>;
+        sourceHash: z.ZodString;
+        outlineHash: z.ZodString;
+        buildVersion: z.ZodString;
+        authoringProvider: z.ZodObject<{
+            name: z.ZodString;
+            rootDir: z.ZodString;
+            contentHash: z.ZodString;
+        }, z.core.$strict>;
+        name: z.ZodString;
+        fileManifest: z.ZodArray<z.ZodObject<{
+            path: z.ZodString;
+            bytes: z.ZodNumber;
+        }, z.core.$strict>>;
+        deterministicWarnings: z.ZodDefault<z.ZodArray<z.ZodString>>;
+        bytes: z.ZodNumber;
+        durationMs: z.ZodNumber;
+        usage: z.ZodObject<{
+            inputTokens: z.ZodNumber;
+            outputTokens: z.ZodNumber;
+            cacheReadInputTokens: z.ZodOptional<z.ZodNumber>;
+            cacheCreationInputTokens: z.ZodOptional<z.ZodNumber>;
+            cacheCreation5mInputTokens: z.ZodOptional<z.ZodNumber>;
+            cacheCreation1hInputTokens: z.ZodOptional<z.ZodNumber>;
+            webSearchRequests: z.ZodOptional<z.ZodNumber>;
+            costUSD: z.ZodNumber;
+        }, z.core.$strip>;
+        externalSources: z.ZodArray<z.ZodObject<{
+            title: z.ZodString;
+            url: z.ZodString;
+            reason: z.ZodString;
+        }, z.core.$strict>>;
+        missingInputs: z.ZodArray<z.ZodString>;
+        authoringWarnings: z.ZodDefault<z.ZodArray<z.ZodString>>;
+        responseModel: z.ZodOptional<z.ZodString>;
+        numTurns: z.ZodOptional<z.ZodNumber>;
+        generatedAt: z.ZodString;
+    }, z.core.$strict>>;
+    updatedAt: z.ZodOptional<z.ZodString>;
+}, z.core.$strict>;
+export type SkillBuildState = z.infer<typeof SkillBuildStateSchema>;
+export declare function getBuildStatePath(rootDir: string): string;
+export declare function readSkillBuildState(path: string): SkillBuildState | undefined;
+export declare function writeSkillBuildState(path: string, state: SkillBuildState): void;
+//# sourceMappingURL=outline-state.d.ts.map
