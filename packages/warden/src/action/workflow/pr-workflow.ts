@@ -1798,12 +1798,9 @@ async function finalizeReportWorkflow(
     previousReviewInfo,
     results,
     canResolveStale,
-<<<<<<< HEAD
     gate,
-=======
     incremental.mutationScope,
     allWardenCommentsResolved,
->>>>>>> 9aaf6c2 (feat(action): add incremental PR mode)
     { failOnWriteError: options.failOnWriteError }
   );
 
@@ -1869,7 +1866,7 @@ async function cleanupOrphanedComments(
   const gate = new ReviewFeedbackGate(octokit, context);
 
   if (!await gate.canWrite()) {
-    return [];
+    return { findingObservations: [], allResolved: false };
   }
 
   let existingComments: ExistingComment[];
@@ -1912,7 +1909,7 @@ async function cleanupOrphanedComments(
     const previousReviewInfo = await fetchPreviousReviewInfo(octokit, context);
     if (previousReviewInfo?.state === 'CHANGES_REQUESTED') {
       if (!await gate.canWrite()) {
-        return findingObservations;
+        return { findingObservations, allResolved: false };
       }
 
       try {
