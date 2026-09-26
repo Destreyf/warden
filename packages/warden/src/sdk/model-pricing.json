@@ -119,6 +119,14 @@
     "cacheWrite1hPerMTok": 10,
     "webSearchPer1K": 10
   },
+  "claude-opus-5": {
+    "inputPerMTok": 5,
+    "outputPerMTok": 25,
+    "cacheReadPerMTok": 0.5,
+    "cacheWritePerMTok": 6.25,
+    "cacheWrite1hPerMTok": 10,
+    "webSearchPer1K": 10
+  },
   "claude-sonnet-4-0": {
     "inputPerMTok": 3,
     "outputPerMTok": 15,
@@ -136,6 +144,14 @@
     "webSearchPer1K": 10
   },
   "claude-sonnet-4-6": {
+    "inputPerMTok": 3,
+    "outputPerMTok": 15,
+    "cacheReadPerMTok": 0.3,
+    "cacheWritePerMTok": 3.75,
+    "cacheWrite1hPerMTok": 6,
+    "webSearchPer1K": 10
+  },
+  "claude-sonnet-5": {
     "inputPerMTok": 3,
     "outputPerMTok": 15,
     "cacheReadPerMTok": 0.3,
